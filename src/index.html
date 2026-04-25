@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BranchErpUi</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Iconify (Solar Icons) - Updated to latest reliable CDN -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+</head>
+<body >
+  <app-root></app-root>
+
+   <script>
+  window.onload = () => {
+    // --- 1. Theming (Dark/Light Mode) ---
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const rootHtml = document.documentElement;
+
+    function updateThemeIcon(isDark) {
+      if (!themeToggleBtn) return;
+      themeToggleBtn.innerHTML = isDark
+        ? '<iconify-icon icon="solar:sun-bold-duotone" width="22" class="text-[#FFC107]"></iconify-icon>'
+        : '<iconify-icon icon="solar:moon-bold-duotone" width="22" class="text-[var(--text-main)]"></iconify-icon>';
+    }
+
+    // Auto-detect preference or local storage
+    if (
+      localStorage.getItem('theme') === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      rootHtml.classList.add('dark');
+      updateThemeIcon(true);
+    } else {
+      rootHtml.classList.remove('dark');
+      updateThemeIcon(false);
+    }
+
+    function toggleTheme() {
+      rootHtml.classList.toggle('dark');
+      const isDark = rootHtml.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+      updateChartsTheme();
+    }
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+
+    // --- 2. Sidebar Toggle (Mobile) ---
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('mobile-overlay');
+
+    function toggleSidebar() {
+      if (!sidebar || !overlay) return;
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // --- 3. Simple SPA Navigation ---
+    const views = ['dashboard', 'pendaftar', 'verifikasi'];
+    const headerTitle = document.getElementById('header-title');
+
+    const titles = {
+      dashboard: 'Dashboard Utama',
+      pendaftar: 'Manajemen Pendaftar',
+      verifikasi: 'Verifikasi Berkas',
+    };
+
+    function switchTab(tabId) {
+      views.forEach((view) => {
+        const viewEl = document.getElementById('view-' + view);
+        if (viewEl) viewEl.classList.remove('active');
+
+        const navItem = document.getElementById('nav-' + view);
+        if (navItem) navItem.classList.remove('active');
+      });
+
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.add('active');
+
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) activeNav.classList.add('active');
+
+      if (headerTitle) headerTitle.textContent = titles[tabId];
+
+      if (window.innerWidth < 768) {
+        toggleSidebar();
+      }
+
+      const mainScroll = document.getElementById('main-scroll-area');
+      if (mainScroll) mainScroll.scrollTop = 0;
+
+      if (tabId === 'dashboard') {
+        setTimeout(() => {
+          if (chart1) chart1.resize();
+          if (chart2) chart2.resize();
+        }, 10);
+      }
+    }
+
+    // --- 4. Chart.js Initialization ---
+    let chart1, chart2;
+
+    function getCssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function initCharts() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const primaryColor = isDark ? '#634bea' : '#190182';
+      const gridColor = isDark ? '#2A3645' : '#E9ECEF';
+      const textColor = isDark ? '#94A3B8' : '#6C757D';
+      const areaBgColor = isDark ? 'rgba(99, 75, 234, 0.1)' : 'rgba(25, 1, 130, 0.08)';
+
+      const canvasTren = document.getElementById('chartTren');
+      if (canvasTren) {
+        const ctxTren = canvasTren.getContext('2d');
+        chart1 = new Chart(ctxTren, {
+          type: 'line',
+          data: {
+            labels: ['1 Mar', '5 Mar', '10 Mar', '15 Mar', '20 Mar', '25 Mar', '30 Mar'],
+            datasets: [
+              {
+                label: 'Pendaftar Harian',
+                data: [120, 190, 250, 210, 380, 420, 560],
+                borderColor: primaryColor,
+                backgroundColor: areaBgColor,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: isDark ? '#1E1E1E' : '#FFFFFF',
+                pointBorderColor: primaryColor,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { top: 10 } },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: isDark ? '#2A3645' : '#212529',
+                titleColor: '#FFFFFF',
+                bodyColor: '#FFFFFF',
+                padding: 12,
+                cornerRadius: 8,
+                displayColors: false,
+                callbacks: {
+                  label: function (context) {
+                    return context.parsed.y + ' Pendaftar Baru';
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: gridColor, drawBorder: false, borderDash: [5, 5] },
+                ticks: {
+                  color: textColor,
+                  font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
+                  padding: 10,
+                },
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  color: textColor,
+                  font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 },
+                  padding: 10,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      const canvasStatus = document.getElementById('chartStatus');
+      if (canvasStatus) {
+        const ctxStatus = canvasStatus.getContext('2d');
+        chart2 = new Chart(ctxStatus, {
+          type: 'doughnut',
+          data: {
+            labels: ['Diterima', 'Cadangan', 'Ditolak'],
+            datasets: [
+              {
+                data: [320, 80, 120],
+                backgroundColor: ['#28A745', '#6F42C1', '#DC3545'],
+                borderWidth: 0,
+                hoverOffset: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: isDark ? '#2A3645' : '#212529',
+                bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13 },
+                padding: 12,
+                cornerRadius: 8,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    function updateChartsTheme() {
+      if (chart1) chart1.destroy();
+      if (chart2) chart2.destroy();
+      initCharts();
+    }
+
+    // تشغيل الشارتات أول ما الصفحة تجهز
+    initCharts();
+  };
+</script>
+
+
+</body>
+</html>

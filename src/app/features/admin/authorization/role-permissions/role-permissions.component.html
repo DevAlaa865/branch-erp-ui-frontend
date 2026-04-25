@@ -1,0 +1,93 @@
+<div class="max-w-4xl mx-auto 
+            bg-[var(--panel-bg)] 
+            border border-[var(--panel-border)] 
+            text-[var(--text)] 
+            rounded-2xl p-6 shadow-xl backdrop-blur-xl">
+
+  <h2 class="text-lg font-semibold mb-4">
+    إدارة صلاحيات الأدوار
+  </h2>
+
+  <!-- اختيار الدور -->
+  <div class="mb-4">
+      <label class="text-sm text-[var(--label-text)]">اختر الدور</label>
+    <select
+      [(ngModel)]="selectedRoleId"
+      (change)="onRoleChange()"
+   class="w-full bg-[var(--input-bg)] border border-[var(--input-border)] 
+       text-[var(--input-text)] rounded-lg px-3 py-2 text-sm">
+      <option value="">-- اختر الدور --</option>
+
+      <!-- عرض اسم الدور بالعربي -->
+      <option *ngFor="let role of roles" [value]="role.id">
+        {{ roleLabels[role.name] || role.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- قائمة الصلاحيات -->
+  <div *ngIf="selectedRoleId" class="mt-4 space-y-2 max-h-80 overflow-y-auto pr-2">
+
+    <div *ngFor="let perm of permissions" class="flex items-center justify-between 
+       bg-[var(--input-bg)] border border-[var(--input-border)]
+       text-[var(--input-text)]
+       px-3 py-2 rounded-lg">
+
+      <div>
+        <!-- عرض اسم الصلاحية بالعربي -->
+        <div class="text-sm font-medium">
+          {{ permissionLabels[perm.code] || perm.name }}
+        </div>
+
+        <!-- لو عايز تظهر الكود الإنجليزي تحتها -->
+        <!-- <div class="text-xs text-blue-200">{{ perm.code }}</div> -->
+      </div>
+
+      <div>
+        <input
+          type="checkbox"
+          [checked]="isPermissionChecked(perm.id)"
+          (change)="togglePermission(perm.id, $event)"
+          class="w-4 h-4 accent-[var(--checkbox-color)]">
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- رسالة لو مفيش دور مختار -->
+  <div *ngIf="!selectedRoleId" class="ext-sm text-[var(--label-text)]">
+    من فضلك اختر دور لعرض وتعديل صلاحياته.
+  </div>
+
+  <!-- زرار الحفظ -->
+  <div class="mt-6 flex items-center justify-between">
+    <button
+      (click)="save()"
+      [disabled]="!selectedRoleId || isLoading"
+    class="px-4 py-2 rounded-lg 
+       bg-[var(--btn-green-bg)]
+       border border-[var(--btn-green-border)]
+       text-[var(--btn-text)]
+       hover:bg-[var(--btn-green-hover)]
+       shadow-lg shadow-black/20">
+      {{ isLoading ? 'جارٍ الحفظ...' : 'حفظ الصلاحيات' }}
+    </button>
+
+    <div class="text-sm" [ngClass]="{'text-emerald-300': saveMessage.startsWith('تم'), 'text-rose-300': saveMessage.startsWith('حدث')}">
+      {{ saveMessage }}
+    </div>
+  </div>
+<div class="flex items-center justify-between mb-4">
+  <h2 class="text-lg font-semibold">
+    إدارة صلاحيات الأدوار
+  </h2>
+
+  <a
+    routerLink="/admin/permissions"
+    class="text-xs bg-emerald-500 hover:bg-emerald-400 text-white px-3 py-1 rounded-lg">
+    إدارة قائمة الصلاحيات
+  </a>
+</div>
+
+</div>

@@ -1,0 +1,426 @@
+<form [formGroup]="form" class="relative z-30 space-y-6" (keydown.enter)="preventEnter($event)">
+
+  <!-- هيدر اليومية -->
+<!-- هيدر اليومية -->
+<div class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-50 backdrop-blur-xl p-4 rounded-2xl shadow-lg border border-blue-200">  <div class="flex justify-start mb-2">
+    <button
+      (click)="goBackToDashboard()"
+      class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition text-sm font-medium">
+      <i class="fa fa-arrow-right"></i>
+      <span>رجوع للرئيسية</span>
+    </button>
+  </div>
+
+  <!-- لا توجد مبيعات -->
+  <div class="flex justify-end mb-3">
+    <label class="flex items-center gap-2 text-base text-slate-800 cursor-pointer">
+      <input type="checkbox"
+             formControlName="noSalesToday"
+             class="w-4 h-4 text-blue-600 border-blue-300 rounded focus:ring-blue-500">
+      <span>لا توجد مبيعات اليوم</span>
+    </label>
+  </div>
+
+<h2 class="text-xl font-bold text-blue-400 flex items-center gap-2 mb-2">
+  <i class="fa fa-receipt text-blue-500"></i>
+  <span>يومية مبيعات الفرع</span>
+</h2>
+
+<!-- التنبيه -->
+<div class="w-full flex justify-center m-2">
+  <div class="bg-amber-100 border border-amber-300 text-amber-800 px-6 py-3 rounded-xl shadow-sm text-center text-base font-semibold flex items-center gap-2">
+    <i class="fa fa-exclamation-triangle text-amber-600 text-lg"></i>
+    <span>يرجى تعبئة اليومية وفقًا للتقرير اليومي</span>
+  </div>
+</div>
+
+
+  <!-- الصف الأول: التاريخ + الفرع + المشرف -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-blue-100 p-4 rounded-xl border border-blue-200 shadow-sm">
+
+    <!-- التاريخ -->
+    <div class="space-y-1">
+      <label class="block text-base text-slate-700 mb-1 ">التاريخ</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-calendar text-blue-500 text-base"></i>
+        <input type="date"
+               [value]="salesDateDisplay"
+               class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
+               >
+      </div>
+    </div>
+
+    <!-- الفرع -->
+    <div class="space-y-1">
+      <label class="block text-base text-slate-700 mb-1">الفرع</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-store text-blue-500 text-base"></i>
+        <input type="text"
+               [value]="branchNameDisplay"
+               class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
+               readonly>
+      </div>
+    </div>
+
+    <!-- المشرف -->
+    <div class="space-y-1">
+      <label class="block text-base text-slate-700 mb-1">المشرف</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-user-tie text-blue-500 text-base"></i>
+        <input type="text"
+               [value]="supervisorNameDisplay"
+               class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
+               readonly>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- الصف الثاني: 3 أعمدة -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+
+    <!-- العمود الأول: نقدية / شبكة / آجل -->
+    <div class="space-y-4">
+
+      <!-- نقدية -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1 text-[var(--text)]">نقدية</label>
+        <div class="flex items-center gap-2 rounded-lg border border-emerald-300 bg-white/20 px-3 py-2 shadow-sm">
+          <i class="fa fa-money-bill-wave text-emerald-600 text-base"></i>
+          <input type="number"
+                 formControlName="cashAmount"
+                 placeholder="الرجاء إدخال قيمة النقدية"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- شبكة -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1 text-[var(--text)]">شبكة</label>
+        <div class="flex items-center gap-2 rounded-lg border border-sky-300 bg-white/20 px-3 py-2 shadow-sm">
+          <i class="fa fa-credit-card text-sky-600 text-base"></i>
+          <input type="number"
+                 formControlName="networkAmount"
+                 placeholder="الرجاء إدخال قيمة الشبكة"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- آجل -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1 text-[var(--text)]">آجل / Credit</label>
+        <div class="flex items-center gap-2 rounded-lg border border-amber-300 bg-white/20 px-3 py-2 shadow-sm">
+          <i class="fa fa-file-invoice-dollar text-amber-600 text-base"></i>
+          <input type="number"
+                 formControlName="creditAmount"
+                 placeholder="الرجاء إدخال قيمة الآجل"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+  <!-- صورة اليومية -->
+  <div class="mt-6">
+    <label class="block text-base text-slate-700 mb-1">صورة اليومية</label>
+    <input type="file"
+           (change)="onHeaderFileSelected($event)"
+           class="w-full rounded-lg border border-blue-200 bg-white/20 px-3 py-2 text-base text-slate-800">
+  </div>
+
+    </div>
+
+    <!-- العمود الثاني: عدد الفواتير / عدد القطع / إجمالي البيع / الإجمالي الكلي -->
+    <div class="space-y-4">
+
+      <!-- إجمالي عدد الفواتير -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1 text-[var(--text)]">إجمالي عدد الفواتير</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+          <i class="fa fa-file-invoice text-blue-500 text-base"></i>
+          <input type="number"
+                 formControlName="totalInvoicesCount"
+                 placeholder="الرجاء إدخال إجمالي عدد الفواتير"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- عدد القطع -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1">عدد القطع</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+          <i class="fa fa-cubes text-blue-500 text-base"></i>
+          <input type="number"
+                 formControlName="totalQuantities"
+                 placeholder="الرجاء إدخال عدد القطع"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- إجمالي البيع -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1">إجمالي البيع</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-100 px-3 py-2 shadow-sm">
+          <i class="fa fa-sack-dollar text-blue-500 text-base"></i>
+          <input type="number"
+                 formControlName="totalSales"
+            placeholder="الرجاء إدخال اجمالى البيع"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- الإجمالي الكلي -->
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1">الإجمالي الكلي</label>
+        <div class="flex items-center gap-2 rounded-lg border border-purple-300 bg-blue-50 px-3 py-2 shadow-sm">            <i class="fa fa-calculator text-purple-600 text-base"></i>
+          <input type="number"
+                 formControlName="grandTotal"
+                 placeholder="الرجاء إدخال الإجمالي الكلي"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- العمود الثالث: الفرق -->
+    <div class="space-y-1">
+      <label class="block text-base text-slate-700 mb-1">الفرق</label>
+
+      <div class="flex items-center gap-3 rounded-xl px-3 py-2 shadow-sm border transition"
+           [ngClass]="{
+             'bg-emerald-100 border-emerald-300': isDifferencePositive(),
+             'bg-rose-100 border-rose-300': isDifferencePositive() === false,
+             'bg-slate-100 border-slate-200': isDifferencePositive() === null
+           }">
+
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center transition"
+               [ngClass]="{
+                 'bg-emerald-500 text-white': isDifferencePositive(),
+                 'bg-rose-500 text-white': isDifferencePositive() === false,
+                 'bg-slate-400 text-white': isDifferencePositive() === null
+               }">
+            <i class="fa"
+               [ngClass]="{
+                 'fa-arrow-up': isDifferencePositive(),
+                 'fa-arrow-down animate-bounce': isDifferencePositive() === false,
+                 'fa-minus': isDifferencePositive() === null
+               }"></i>
+          </div>
+
+          <div class="flex flex-col">
+            <span class="text-xs text-slate-600">قيمة الفرق</span>
+            <input type="number"
+                   formControlName="difference"
+                   class="bg-transparent text-base font-semibold text-slate-900 focus:outline-none"
+                   readonly>
+          </div>
+        </div>
+
+        <div class="flex-1 text-right">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition"
+                [ngClass]="{
+                  'bg-emerald-300 text-slate-900': isDifferencePositive(),
+                  'bg-rose-300 text-slate-900': isDifferencePositive() === false,
+                  'bg-slate-300 text-slate-800': isDifferencePositive() === null
+                }">
+            {{ differenceLabel() || 'لا يوجد فرق' }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+
+  <!-- تفاصيل العجز -->
+  <div class="bg-white/85 backdrop-blur-xl p-6 rounded-2xl shadow-md border border-blue-200">
+
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
+        <i class="fa fa-triangle-exclamation text-amber-500"></i>
+        <span>تفاصيل العجز</span>
+      </h3>
+
+      <button type="button"
+              (click)="addShortageRow()"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white text-base font-medium hover:bg-blue-700 transition flex items-center gap-2">
+        <i class="fa fa-plus"></i>
+        <span>إضافة عجز</span>
+      </button>
+    </div>
+
+    <div formArrayName="shortageDetails" class="space-y-4">
+
+      <div *ngFor="let row of shortageDetails.controls; let i = index"
+           [formGroupName]="i"
+           class="p-4 rounded-xl border border-blue-200 bg-blue-50/70 shadow-sm">
+           
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4"  style="overflow: visible">
+
+          <!-- نوع العجز -->
+   <app-custom-select
+  label="نوع العجز"
+  [items]="shortageTypeOptions"
+  bindLabel="name"
+  bindValue="id"
+  placeholder="الرجاء اختيار نوع العجز"
+  [control]="getShortageControl(row)"
+  iconClass="fa fa-exclamation-triangle text-red-500 text-base"
+  errorMessage="الرجاء اختيار نوع العجز"
+  [searchable]="true"
+  [clearable]="false"
+  [dropdownPosition]="'bottom'">
+</app-custom-select>
+
+          <!-- الموظف -->
+       <div class="space-y-1  " *ngIf="row.get('employeeId')?.validator">
+  <app-custom-select
+    label="الموظف"
+    [items]="employeeOptions"
+    bindLabel="name"
+    bindValue="id"
+    placeholder="الرجاء اختيار الموظف"
+    [control]="getEmployeeControl(row)"
+    iconClass="fa fa-user text-blue-500 text-base"
+    errorMessage="الرجاء اختيار الموظف"
+    [searchable]="true"
+    [clearable]="false"
+    [dropdownPosition]="'bottom'">
+  </app-custom-select>
+</div>
+
+          <!-- قيمة العجز -->
+          <div class="space-y-1">
+            <label class="block text-base text-slate-700 mb-1">قيمة العجز</label>
+            <div class="flex items-center gap-2 rounded-lg border border-rose-200 bg-white/20 px-3 py-2 shadow-sm">
+              <i class="fa fa-sack-xmark text-rose-500 text-base"></i>
+              <input type="number"
+                     formControlName="amount"
+                     placeholder="الرجاء إدخال قيمة العجز"
+                     class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+            </div>
+            <p *ngIf="row.get('amount')?.touched && row.get('amount')?.invalid"
+               class="text-red-600 text-xs mt-1 font-medium">
+              الرجاء إدخال قيمة موجبة أكبر من صفر
+            </p>
+          </div>
+          <!-- ملاحظات المرتجعات -->
+        <!-- ملاحظات المرتجعات -->
+<div class="space-y-1" *ngIf="isReturnType(row)">
+  <label class="block text-base text-slate-700 mb-1">ملاحظات المرتجعات</label>
+  <div class="flex items-center gap-2 rounded-lg border border-amber-300 bg-white/20 px-3 py-2 shadow-sm">
+    <i class="fa fa-rotate-left text-amber-600 text-base"></i>
+    <input type="text"
+          formControlName="returnNotes"
+          placeholder="أدخل ملاحظات المرتجعات"
+          class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+  </div>
+</div>
+
+          <!-- ملاحظات الخصومات -->
+      <!-- ملاحظات الخصومات -->
+<div class="space-y-1 " *ngIf="isDiscountType(row)">
+  <label class="block text-base text-slate-700 mb-1">ملاحظات الخصومات</label>
+  <div class="flex items-center gap-2 rounded-lg border border-purple-300 bg-white/20 px-3 py-2 shadow-sm">
+    <i class="fa fa-percent text-purple-600 text-base"></i>
+    <input type="text"
+          formControlName="discountNotes"
+          placeholder="أدخل ملاحظات الخصومات"
+          class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+  </div>
+</div>
+
+
+
+
+    <div class="space-y-1">
+  <label class="block text-base text-slate-700 mb-1">مرفق</label>
+  <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+    <input type="file"
+           (change)="onShortageFileSelected($event, i)"
+           class="w-full text-base text-slate-800">
+  </div>
+  <p *ngIf="row.get('attachmentPath')?.touched && row.get('attachmentPath')?.invalid"
+     class="text-red-600 text-xs mt-1 font-medium">
+    الرجاء إرفاق مرفق العجز
+  </p>
+</div>
+
+
+        </div>
+
+        <!-- حذف -->
+        <div class="flex items-end mt-3">
+          <button type="button"
+                  (click)="removeShortageRow(i)"
+                  class="px-3 py-2 rounded-lg bg-rose-500 text-white text-xs font-medium hover:bg-rose-600 transition flex items-center gap-1">
+            <i class="fa fa-trash"></i>
+            <span>حذف</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ملاحظات الإدارات -->
+  <div class="bg-white/85 backdrop-blur-xl p-6 rounded-2xl shadow-md border border-blue-200">
+    <h3 class="text-lg font-semibold mb-3 text-slate-900 flex items-center gap-2">
+      <i class="fa fa-note-sticky text-sky-500"></i>
+      <span>ملاحظات الإدارات</span>
+    </h3>
+    <textarea formControlName="supervisorNotes"
+              placeholder="الرجاء إدخال ملاحظات المشرف / الإدارة..."
+              class="w-full rounded-lg border border-blue-200 bg-white/20 px-3 py-2 text-base text-slate-800 h-28 focus:ring-2 focus:ring-blue-400 focus:outline-none"></textarea>
+  </div>
+
+  <!-- الأزرار -->
+  <div class="flex flex-wrap gap-4">
+    <button type="button"
+            (click)="save()"
+            [disabled]="isSaving"
+            class="px-5 py-2.5 rounded-lg bg-emerald-600 text-white text-base font-semibold hover:bg-emerald-700 disabled:opacity-60 transition flex items-center gap-2">
+      <i class="fa fa-floppy-disk"></i>
+      <span>حفظ اليومية</span>
+    </button>
+  </div>
+<!-- بوب أب نجاح الحفظ -->
+<div *ngIf="showSuccessPopup"
+     class="fixed inset-0 flex items-center justify-center z-50">
+  <!-- خلفية شفافة -->
+  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+
+  <!-- الكارت -->
+  <div
+    class="relative bg-white rounded-2xl shadow-2xl border border-emerald-200 px-8 py-6 max-w-sm w-full
+           animate-[fadeIn_0.3s_ease-out]">
+
+    <div class="flex items-center gap-3 mb-3">
+      <div
+        class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white
+               animate-[bounce_1s_ease-in-out]">
+        <i class="fa fa-check text-lg"></i>
+      </div>
+      <div>
+        <div class="text-base font-semibold text-slate-900">
+          تم حفظ اليومية بنجاح
+        </div>
+        <div class="text-xs text-slate-500 mt-1">
+          سيتم تحويلك الآن إلى الصفحة الرئيسية للداشبورد.
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <span class="text-xs text-slate-400">
+        جارٍ التحويل...
+      </span>
+    </div>
+  </div>
+</div>
+
+</form>

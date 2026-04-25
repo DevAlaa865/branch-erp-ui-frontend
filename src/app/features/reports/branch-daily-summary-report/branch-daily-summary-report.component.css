@@ -1,0 +1,38 @@
+option {
+  color: #1e293b; /* slate-800 */
+  background: white;
+}
+
+
+/* إجبار لون الخط داخل الـ option */
+select option {
+  color: #1e293b !important;   /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* إجبار لون الخط داخل القائمة المفتوحة */
+select {
+  color: #1e293b !important;
+  background-color: #ffffff !important;
+}
+
+
+select option {
+  -webkit-text-fill-color: #1e293b !important;
+}
+.summary-table {
+  min-width: 900px; /* أو 1000 حسب عدد الأعمدة */
+}
+
+.summary-table th,
+.summary-table td {
+  white-space: nowrap;
+}
+::-webkit-scrollbar {
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}

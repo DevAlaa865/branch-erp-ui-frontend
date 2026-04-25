@@ -1,0 +1,106 @@
+<div class="p-6 space-y-6 text-blue-600">
+
+  <h1 class="text-xl font-bold text-slate-900 mb-2">
+    إدارة الصلاحيات
+  </h1>
+
+  <div class="text-sm" *ngIf="error" class="text-rose-600">
+    {{ error }}
+  </div>
+  <div class="text-sm text-emerald-600" *ngIf="message">
+    {{ message }}
+  </div>
+
+  <!-- الفورم -->
+  <div class="bg-white rounded-2xl border border-slate-200 p-4 space-y-3 shadow-sm">
+
+    <h2 class="text-sm font-semibold text-slate-800">
+      {{ isEditing ? 'تعديل صلاحية' : 'إضافة صلاحية جديدة' }}
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div>
+        <label class="block text-xs text-slate-600 mb-1">الاسم (Name)</label>
+        <input
+          [(ngModel)]="form.name"
+          class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div>
+        <label class="block text-xs text-slate-600 mb-1">الكود (Code)</label>
+        <input
+          [(ngModel)]="form.code"
+          class="w-full border rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <button
+      (click)="save()"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm">
+      حفظ
+    </button>
+
+    <button
+      *ngIf="isEditing"
+      (click)="startCreate()"
+      class="ml-2 bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 rounded-lg text-xs">
+      إلغاء التعديل
+    </button>
+  </div>
+
+  <!-- الجدول -->
+<div class="rounded-2xl p-4 shadow-xl backdrop-blur-xl
+            bg-[var(--panel-bg)]
+            border border-[var(--panel-border)]
+            text-[var(--text)]">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-sm font-semibold text-slate-800">
+        قائمة الصلاحيات
+      </h2>
+      <span class="text-xs text-slate-500" *ngIf="isLoading">جارٍ التحميل...</span>
+    </div>
+
+    <table class="w-full text-sm">
+      <thead>
+       <tr class="text-left text-xs text-[var(--table-head-text)] border-b border-[var(--table-border)]">
+          <th class="py-2">#</th>
+          <th>الاسم</th>
+          <th>الكود</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of permissions; let i = index" class="border-b border-[var(--table-border)] hover:bg-[var(--table-row-hover)] transition">
+          <td class="py-2 ">{{ i + 1 }}</td>
+          <td class="text-[var(--text)]">{{ p.name }}</td>
+          <td class="font-mono text-xs text-[var(--text)]">{{ p.code }}</td>
+          <td class="space-x-2 text-[var(--text)]">
+                  <button
+            (click)="startEdit(p)"
+            class="px-3 py-1 rounded-md text-xs font-semibold
+                  bg-[var(--btn-blue-bg)]
+                  border border-[var(--btn-blue-border)]
+                  text-[var(--btn-text)]
+                  hover:bg-[var(--btn-blue-hover)]
+                  transition-all duration-300 shadow-sm shadow-black/10">
+            تعديل
+          </button>
+
+          <button
+            (click)="delete(p)"
+            class="px-3 py-1 rounded-md text-xs font-semibold
+                  bg-[var(--btn-red-bg)]
+                  border border-[var(--btn-red-border)]
+                  text-[var(--btn-text)]
+                  hover:bg-[var(--btn-red-hover)]
+                  transition-all duration-300 shadow-sm shadow-black/10">
+            حذف
+          </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

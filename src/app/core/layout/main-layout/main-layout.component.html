@@ -1,0 +1,159 @@
+<div class="flex   h-screen ">
+
+  <!-- Sidebar -->
+  <aside id="sidebar"
+         class="w-[220px] bg-surface border-r border-custom flex flex-col h-full absolute z-30 md:relative transform -translate-x-full md:translate-x-0 shadow-lg md:shadow-none transition-transform duration-300"
+         [ngClass]="{ 'translate-x-0': isSidebarOpen }">
+
+    <!-- Logo -->
+<div class="h-[80px] flex items-center px-6 border-b border-custom shrink-0">
+  <div class="flex items-center gap-3 text-primary-custom">
+
+    <!-- LOGO HERE -->
+    <div class="w-25 h-25 rounded-xl overflow-hidden shadow-md flex items-center justify-center">
+      <img src="assets/logo/season-logo.png" alt="Logo" class="w-full h-full object-contain" />
+    </div>
+
+ 
+  </div>
+
+  <!-- Mobile Close Btn -->
+  <button class="md:hidden ml-auto btn-icon text-main" (click)="toggleSidebar()">
+    <iconify-icon icon="solar:close-circle-bold-duotone" width="24"></iconify-icon>
+  </button>
+</div>
+
+
+    <!-- Navigation -->
+    <div class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
+
+      <div class="text-caption px-4 mb-3">القائمة الرئيسية</div>
+
+      <a routerLink="/dashboard"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
+        <span>لوحة التحكم</span>
+      </a>
+
+      <!-- <a routerLink="/branches/daily-sales"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <iconify-icon icon="solar:receipt-bold-duotone"></iconify-icon>
+        <span>يوميات الفروع</span>
+      </a> -->
+
+      <a routerLink="/reports/returns-discounts-management"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>إدارة المرتجعات والخصومات</span>
+      </a>
+
+      <a routerLink="/reports/branch-daily-summary"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
+        <span>تقرير يوميات الفروع</span>
+      </a>
+
+    </div>
+
+    <!-- User Profile -->
+    <div class="p-5 border-t border-custom shrink-0 bg-[var(--bg)] m-4 rounded-xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-primary-custom border-2 border-surface shadow-sm"
+             style="background-color: var(--primary-light);">
+          {{ userName?.charAt(0) }}
+        </div>
+
+        <div class="flex-1 overflow-hidden">
+          <div class="text-sm font-bold truncate text-[var(--text-main)]">{{ userName }} </div>
+          <div class="text-xs font-medium text-[var(--text-tertiary)] truncate">{{ roles[0] }}</div>
+        </div>
+
+        <button class="btn-icon text-danger hover:bg-danger-light w-8 h-8" (click)="logout()">خروج
+          <iconify-icon icon="solar:logout-bold-duotone" width="20"></iconify-icon>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- Overlay for mobile -->
+<div id="mobile-overlay"
+     class="fixed inset-0 bg-[var(--surface)] bg-opacity-60 backdrop-blur-md z-20 md:hidden"
+     [class.hidden]="!isSidebarOpen"
+     (click)="closeSidebar()">
+</div>
+
+
+
+  <!-- Main Content -->
+  <div class="relative flex-1 flex flex-col z-10">
+
+    <!-- Header -->
+<header class="h-[80px] bg-surface border-b border-custom flex items-center px-6 shrink-0 z-[9999] fixed top-0 w-full">
+
+  <!-- 1) زرار التوجل (الشمال) -->
+  <button class="btn-icon md:hidden text-[var(--text-main)]" (click)="toggleSidebar()">
+    <iconify-icon icon="solar:hamburger-menu-bold-duotone" width="26"></iconify-icon>
+  </button>
+
+  <!-- 2) مساحة مرنة تفصل بين التوجل وباقي العناصر -->
+  <div class="flex-1"></div>
+
+  <!-- 3) العناصر اللي عايزها يمين -->
+  <div class="flex items-center gap-6 pr-6 lg:mr-40">
+
+    <!-- العنوان -->
+<div class="flex-1 flex justify-center">
+    <div class="flex items-center gap-3 text-2xl font-bold text-[var(--text-main)]">
+
+    
+
+    <!-- لوجو سيزون داخل الجملة -->
+    <img 
+      src="assets/logo/season-logo.png" 
+      alt="Season Logo" 
+      class="w-20 h-20 object-contain "
+    />
+
+    <span>لإدارة الأقسام الداخلية</span>
+
+  </div>
+
+</div>
+
+    <!-- زرار اللايت/دارك -->
+    <button id="theme-toggle"
+            class="btn-icon bg-[var(--bg)] rounded-full hover:bg-[var(--border)]"
+            (click)="toggleTheme()">
+    </button>
+
+    <!-- النوتيفيكيشن -->
+    <button class="btn-icon relative bg-[var(--bg)] rounded-full hover:bg-[var(--border)]">
+      <iconify-icon icon="solar:bell-bold-duotone" width="22" class="text-[var(--text-main)]"></iconify-icon>
+      <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-[#DC3545] rounded-full border-2 border-surface"></span>
+    </button>
+
+  </div>
+
+</header>
+
+
+
+    <!-- Page Content -->
+<main class="mt-[80px] flex-1 overflow-y-auto p-5 sm:p-8">
+  
+    <router-outlet></router-outlet>
+ 
+</main>
+
+  </div>
+
+</div>

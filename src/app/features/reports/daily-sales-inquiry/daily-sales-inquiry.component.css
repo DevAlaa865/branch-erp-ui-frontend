@@ -1,0 +1,97 @@
+/* أنيميشن دخول ناعم للتقرير */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* السماح للستايل بالدخول داخل ng-select */
+:host ::ng-deep .ng-select.ng-select-custom {
+  width: 100%;
+  font-size: 14px;
+}
+
+/* الكونتينر الأساسي */
+:host ::ng-deep .ng-select.ng-select-custom .ng-select-container {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid #3b82f6 !important;
+  border-radius: 8px !important;
+  min-height: 40px !important;
+  padding: 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-shadow: none !important;
+}
+
+/* placeholder */
+:host ::ng-deep .ng-select.ng-select-custom .ng-placeholder {
+  color: #64748b !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ✅ إخفاء الـ placeholder لما يكون فيه قيمة فعلية */
+:host ::ng-deep .ng-select.ng-select-custom .ng-select-container:has(.ng-value) .ng-placeholder {
+  display: none !important;
+}
+
+/* النص المختار */
+:host ::ng-deep .ng-select.ng-select-custom .ng-value {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* خانة البحث */
+:host ::ng-deep .ng-select.ng-select-custom .ng-input input {
+  height: 28px !important;
+  font-size: 14px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #1e293b !important;
+}
+
+/* القائمة */
+:host ::ng-deep .ng-dropdown-panel {
+  border-radius: 8px !important;
+  border: 1px solid #3b82f6 !important;
+  background: white !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  z-index: 99999 !important;
+}
+
+/* العناصر */
+:host ::ng-deep .ng-option {
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  color: #1e293b !important;
+}
+
+/* العنصر المحدد */
+:host ::ng-deep .ng-option-selected {
+  background: #e0f2fe !important;
+  font-weight: 600 !important;
+}
+
+/* hover */
+:host ::ng-deep .ng-option:hover {
+  background: #dbeafe !important;
+}
+
+/* 🔥 يمنع أي نص يظهر جنب القيمة */
+.ng-select .ng-value-label::after {
+  display: none !important;
+}
+

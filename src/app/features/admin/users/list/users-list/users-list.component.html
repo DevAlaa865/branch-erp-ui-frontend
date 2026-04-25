@@ -1,0 +1,320 @@
+
+<div class="relative min-h-screen">
+
+  <!-- خلفية الصورة -->
+  <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+       style="background-image: url('assets/backgroundImage/logoBack.jpeg');">
+  </div>
+
+  <!-- طبقة حماية فوق الصورة (Overlay) -->
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+<div class=" relative max-w-6xl mx-auto p-6">
+
+  <!-- العنوان + زر إضافة مستخدم -->
+  <div class="flex items-center justify-between mb-6 text-[var(--text)]">
+    <h2 class="text-2xl font-bold  tracking-wide">
+      إدارة المستخدمين والأدوار
+    </h2>
+
+    <button
+      routerLink="/admin/create-user"
+      class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 
+             hover:from-emerald-400 hover:to-emerald-300 transition-all duration-300
+             text-sm font-semibold text-white shadow-lg shadow-emerald-700/30">
+      + إضافة مستخدم جديد
+    </button>
+  </div>
+
+  <!-- كارت الجدول -->
+ <div class="rounded-2xl shadow-xl p-4
+            bg-[var(--table-bg)] 
+            border border-[var(--table-border)] 
+            text-[var(--text)]">
+
+    <div class="overflow-x-auto rounded-xl">
+      <table class="min-w-full text-sm text-[var(--text)]">
+        <thead>
+         <tr class="border-b border-[var(--table-border)] hover:bg-[var(--table-row-hover)] transition-all duration-200">
+
+            <th class="px-4 py-3 text-right font-semibold">اسم الدخول</th>
+            <th class="px-4 py-3 text-right font-semibold">الاسم الظاهر</th>
+            <!-- 🔥 عمود: نوع المستخدم -->
+            <th class="px-4 py-3 text-right font-semibold">نوع المستخدم</th>
+            <th class="px-4 py-3 text-center font-semibold">إجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of pagedUsers"
+              class="border-b border-white/10 hover:bg-white/10 transition-all duration-200">
+            <td class="px-4 py-3 text-right">{{ user.userName }}</td>
+            <td class="px-4 py-3 text-right">{{ user.displayName }}</td>
+            <td class="px-4 py-3 text-right">
+              {{ mapUserType(user.userType) }}
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex items-center justify-center gap-2">
+
+               <button
+          (click)="openUserRoles(user)"
+          class="px-4 py-1.5 rounded-lg 
+                bg-[var(--btn-blue-bg)]
+                border border-[var(--btn-blue-border)]
+                text-[var(--btn-text)]
+                hover:bg-[var(--btn-blue-hover)]
+                transition-all duration-300 text-xs font-semibold shadow-lg shadow-black/20">
+          تعديل الأدوار
+        </button>
+
+        <button
+          (click)="openUserEdit(user)"
+          class="px-4 py-1.5 rounded-lg 
+                bg-[var(--btn-green-bg)]
+                border border-[var(--btn-green-border)]
+                text-[var(--btn-text)]
+                hover:bg-[var(--btn-green-hover)]
+                transition-all duration-300 text-xs font-semibold shadow-lg shadow-black/20">
+          تعديل البيانات
+        </button>
+
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+  <div class="mt-4 flex items-center justify-center gap-3 text-sm">
+
+  <button
+    (click)="goToPage(currentPage - 1)"
+    [disabled]="currentPage === 1"
+    class="px-4 py-1.5 rounded-lg 
+           bg-[var(--pagination-bg)] 
+           border border-[var(--pagination-border)]
+           text-[var(--pagination-text)]
+           disabled:opacity-40 
+           hover:bg-[var(--pagination-hover)]
+           transition">
+    السابق
+  </button>
+
+  <span class="px-4 py-1.5 rounded-lg 
+               bg-[var(--pagination-bg)] 
+               border border-[var(--pagination-border)]
+               text-[var(--pagination-text)]">
+    صفحة {{ currentPage }} من {{ totalPages }}
+  </span>
+
+  <button
+    (click)="goToPage(currentPage + 1)"
+    [disabled]="currentPage === totalPages"
+    class="px-4 py-1.5 rounded-lg 
+           bg-[var(--pagination-bg)] 
+           border border-[var(--pagination-border)]
+           text-[var(--pagination-text)]
+           disabled:opacity-40 
+           hover:bg-[var(--pagination-hover)]
+           transition">
+    التالي
+  </button>
+
+</div>
+
+
+  </div>
+
+  <!-- بانل تعديل الأدوار -->
+<div *ngIf="selectedUser"
+     class="mt-8 bg-[var(--panel-bg)] backdrop-blur-xl border border-[var(--panel-border)] 
+            rounded-2xl shadow-xl p-6 animate-[slideDown_0.4s_ease]">
+
+    <div class="flex items-center justify-between mb-4 text-[var(--text)]">
+      <div>
+        <div class="text-sm text-blue-500">تعديل أدوار المستخدم</div>
+        <div class="text-lg font-bold ">
+          {{ selectedUser.displayName }} ({{ selectedUser.userName }})
+        </div>
+      </div>
+
+      <button
+        (click)="closePanel()"
+        class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-all duration-300 
+               text-xs font-semibold  shadow-md">
+        إغلاق
+      </button>
+    </div>
+
+    <div *ngIf="isLoadingRoles" class="text-sm text-blue-200">
+      جارٍ تحميل أدوار المستخدم...
+    </div>
+
+    <div *ngIf="!isLoadingRoles"
+         class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-2 text-[var(--text)]">
+
+      <div *ngFor="let role of roles"
+           class="flex items-center justify-between bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] 
+                  px-4 py-3 rounded-xl shadow-sm hover:bg-white/20 transition-all duration-200">
+
+        <div class="text-sm font-medium ">
+          {{ roleLabels[role.name] || role.name }}
+        </div>
+
+        <input
+          type="checkbox"
+          [checked]="isRoleChecked(role.name)"
+          (change)="toggleRole(role.name, $event)"
+          class="w-5 h-5 rounded-md accent-[var(--checkbox-color)]">
+      </div>
+
+    </div>
+
+    <div class="mt-6 flex items-center justify-between">
+      <button
+        (click)="saveUserRoles()"
+        [disabled]="isSaving"
+        class="px-6 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 
+               transition-all duration-300 text-sm font-semibold text-white shadow-lg">
+        {{ isSaving ? 'جارٍ الحفظ...' : 'حفظ أدوار المستخدم' }}
+      </button>
+
+      <div class="text-sm"
+           [ngClass]="{
+             'text-emerald-300': saveMessage.startsWith('تم'),
+             'text-rose-300': saveMessage.startsWith('حدث')
+           }">
+        {{ saveMessage }}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- بانل تعديل بيانات المستخدم -->
+<div *ngIf="editUser"
+     class="mt-8 bg-[var(--panel-bg)] backdrop-blur-xl border border-[var(--panel-border)] 
+            rounded-2xl shadow-xl p-6 animate-[slideDown_0.4s_ease]">
+
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <div class="text-sm text-blue-400 ">تعديل بيانات المستخدم</div>
+        <div class="text-lg font-bold ">
+          {{ editUser.displayName }} ({{ editUser.userName }})
+        </div>
+      </div>
+
+      <button
+        (click)="closeEditPanel()"
+        class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 transition-all duration-300 
+               text-xs font-semibold  shadow-md">
+        إغلاق
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="text-sm text-[var(--label-text)]">الاسم الظاهر</label>
+        <input
+          [(ngModel)]="editModel.displayName"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)]"
+
+          type="text">
+      </div>
+
+      <div>
+        <label class="text-sm text-[var(--label-text)]">البريد الإلكتروني</label>
+        <input
+          [(ngModel)]="editModel.email"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none"
+          type="email">
+      </div>
+
+      <!-- 🔥 حقل اسم الدخول -->
+      <div>
+      <label class="text-sm text-[var(--label-text)]">اسم الدخول</label>
+        <input
+          [(ngModel)]="editModel.userName"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none"
+          type="text">
+      </div>
+
+      <div>
+        <label class="text-sm text-[var(--label-text)]">حالة المستخدم</label>
+        <select
+          [(ngModel)]="editModel.isActive"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none">
+          <option [ngValue]="true">نشط</option>
+          <option [ngValue]="false">غير نشط</option>
+        </select>
+      </div>
+
+      <!-- 🔥 كومبو نوع المستخدم -->
+      <div>
+       <label class="text-sm text-[var(--label-text)]">نوع المستخدم</label>
+        <select
+          [(ngModel)]="editModel.userType"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none">
+          <option [ngValue]="1">مستخدم فرع</option>
+          <option [ngValue]="2">مدير مدينة</option>
+          <option [ngValue]="3">مستخدم مركزي</option>
+          <option [ngValue]="0">غير محدد</option>
+        </select>
+      </div>
+
+      <!-- 🔥 اختيار الفرع لو مستخدم فرع -->
+      <div *ngIf="editModel.userType == 1">
+        <label class="text-sm text-[var(--label-text)]">الفرع</label>
+        <select
+          [(ngModel)]="editModel.branchId"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none">
+          <option *ngFor="let b of branches" [ngValue]="b.id">
+            {{ b.branchName }}
+          </option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- تغيير كلمة المرور (اختياري) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+      <div>
+        <label class="text-sm text-[var(--label-text)]">كلمة المرور الجديدة (اختياري)</label>
+        <input
+          [(ngModel)]="editModel.newPassword"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none"
+          type="password">
+      </div>
+
+      <div>
+        <label class="text-sm text-[var(--label-text)]">تأكيد كلمة المرور الجديدة</label>
+        <input
+          [(ngModel)]="editModel.confirmNewPassword"
+          class="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-text)] focus:outline-none"
+          type="password">
+      </div>
+    </div>
+
+    <div class="mt-6 flex items-center justify-between">
+      <button
+        (click)="saveUserData()"
+        [disabled]="isSavingUser"
+        class="px-6 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 
+               transition-all duration-300 text-sm font-semibold text-white shadow-lg">
+        {{ isSavingUser ? 'جارٍ الحفظ...' : 'حفظ البيانات' }}
+      </button>
+
+      <div class="text-sm"
+           [ngClass]="{
+             'text-emerald-300': editMessage.startsWith('تم'),
+             'text-rose-300': editMessage.startsWith('حدث')
+           }">
+        {{ editMessage }}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</div>
+

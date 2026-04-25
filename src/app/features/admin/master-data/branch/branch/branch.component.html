@@ -1,0 +1,262 @@
+<div class="p-6 space-y-6">
+
+  <!-- العنوان + زر الإضافة -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-white-800">إدارة الفروع</h1>
+
+    <button
+      class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm shadow-md transition"
+      (click)="startAdd()">
+      + إضافة فرع جديد
+    </button>
+  </div>
+
+  <!-- مربع البحث -->
+  <div class="flex justify-end">
+    <input
+      type="text"
+      placeholder="ابحث عن فرع..."
+      [(ngModel)]="searchTerm"
+      (input)="applySearch()"
+      class="w-64 border border-blue-300 rounded-xl px-4 py-2 text-sm text-blue-800 outline-none focus:ring-2 focus:ring-blue-500 transition"
+    />
+  </div>
+
+  <!-- فورم الإضافة / التعديل -->
+  <div *ngIf="showForm"
+       class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-4 animate-[fadeIn_0.3s_ease-out]">
+
+    <h2 class="text-lg font-semibold text-blue-700">
+      {{ editMode ? 'تعديل فرع' : 'إضافة فرع جديد' }}
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- اسم الفرع -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">اسم الفرع</label>
+        <input type="text"
+               formControlName="branchName"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition text-blue-800">
+
+        <div *ngIf="f['branchName'].touched && f['branchName'].invalid"
+             class="text-red-600 text-xs mt-1">
+          اسم الفرع مطلوب.
+        </div>
+      </div>
+
+      <!-- رقم الفرع -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">رقم الفرع</label>
+        <input type="number"
+               formControlName="branchNumber"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition text-blue-800">
+
+        <div *ngIf="f['branchNumber'].touched && f['branchNumber'].invalid"
+             class="text-red-600 text-xs mt-1">
+          رقم الفرع مطلوب ويجب أن يكون أكبر من صفر.
+        </div>
+      </div>
+
+      <!-- نوع الفرع -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">نوع الفرع</label>
+        <select formControlName="branchType"
+                class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none text-blue-800">
+       <option [ngValue]="1">محل</option>
+       <option [ngValue]="2">كشك</option>
+        </select>
+      </div>
+
+      <!-- المدينة -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">المدينة</label>
+        <select formControlName="cityId"
+                class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none text-blue-800">
+          <option [value]="0">اختر المدينة</option>
+          <option *ngFor="let c of cities" [value]="c.id">
+            {{ c.name || c.cityName }}
+          </option>
+        </select>
+
+        <div *ngIf="f['cityId'].touched && f['cityId'].invalid"
+             class="text-red-600 text-xs mt-1">
+          يجب اختيار مدينة.
+        </div>
+      </div>
+
+      <!-- نوع النشاط -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">نوع النشاط</label>
+        <select formControlName="activityTypeId"
+                class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none text-blue-800">
+          <option [value]="0">اختر نوع النشاط</option>
+          <option *ngFor="let a of activityTypes" [value]="a.id">
+            {{ a.name || a.activityName }}
+          </option>
+        </select>
+
+        <div *ngIf="f['activityTypeId'].touched && f['activityTypeId'].invalid"
+             class="text-red-600 text-xs mt-1">
+          يجب اختيار نوع النشاط.
+        </div>
+      </div>
+
+      <!-- المشرف -->
+      <div>
+        <label class="block text-xs text-blue-700 mb-1">مشرف الفرع</label>
+        <select formControlName="supervisorId"
+                class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none text-blue-800">
+          <option [ngValue]="null">بدون مشرف</option>
+          <option *ngFor="let s of supervisors" [value]="s.id">
+            {{ s.fullName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- أزرار -->
+      <div class="col-span-3 flex gap-2 justify-end items-end">
+        <button type="button"
+                class="px-4 py-2 text-sm rounded-lg border border-blue-300 text-blue-700 hover:bg-blue-50 transition"
+                (click)="cancel()">
+          إلغاء
+        </button>
+
+        <button type="submit"
+                class="px-5 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-md transition">
+          حفظ
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- جدول الفروع -->
+  <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+    
+   <div class="overflow-x-auto">
+     <div *ngIf="pagedBranches.length === 0" class="p-10 text-center text-blue-600 text-sm">
+      لا توجد نتائج مطابقة.
+    </div>
+
+    <table *ngIf="pagedBranches.length > 0" class="w-full text-right text-sm min-w-[1000px]" dir="rtl" >
+      <thead class="bg-blue-100 text-blue-800 text-center ">
+        <tr>
+          <th class="p-3">الاسم</th>
+          <th class="p-3">الرقم</th>
+          <th class="p-3">النوع</th>
+          <th class="p-3">المدينة</th>
+          <th class="p-3">نوع النشاط</th>
+          <th class="p-3">المشرف</th>
+          <th class="p-3 text-right">إجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of pagedBranches"
+            class="border-b hover:bg-blue-50 transition">
+
+          <td class="p-3 font-semibold text-blue-700">{{ item.branchName }}</td>
+          <td class="p-3 text-blue-800">{{ item.branchNumber }}</td>
+          <td class="p-3 text-blue-800">{{ item.branchType === 1 ? 'محل' : 'كشك' }}</td>
+          <td class="p-3 text-blue-800">{{ item.cityName }}</td>
+          <td class="p-3 text-blue-800">{{ item.activityTypeName }}</td>
+          <td class="p-3 text-blue-800">{{ item.supervisorName || 'بدون' }}</td>
+
+          <td class="p-3 flex gap-3 justify-end">
+
+            <button
+              class="px-3 py-1.5 rounded-lg bg-slate-100 text-blue-700 hover:bg-slate-200 transition shadow-sm"
+              (click)="showDetails(item)">
+              تفاصيل
+            </button>
+
+            <button
+              class="px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm"
+              (click)="edit(item)">
+              تعديل
+            </button>
+
+            <button
+              class="px-3 py-1.5 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm"
+              (click)="remove(item)">
+              حذف
+            </button>
+
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+</div>
+    <!-- الباجينيشن -->
+    <div *ngIf="pagedBranches.length > 0"
+         class="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50">
+
+      <div class="text-xs text-slate-500">
+        صفحة {{ currentPage }} من {{ totalPages }}
+      </div>
+
+      <div class="flex items-center gap-2">
+
+        <button
+          class="px-3 py-1 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          (click)="prevPage()"
+          [disabled]="currentPage === 1">
+          السابق
+        </button>
+
+        <ng-container *ngFor="let p of pages">
+          <button
+            class="px-3 py-1 text-xs rounded-lg border"
+            [ngClass]="currentPage === p
+              ? 'bg-blue-600 text-white border-blue-600'
+              : 'border-slate-300 text-slate-700 hover:bg-slate-100'"
+            (click)="goToPage(p)">
+            {{ p }}
+          </button>
+        </ng-container>
+
+        <button
+          class="px-3 py-1 text-xs rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages">
+          التالى
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- نافذة التفاصيل -->
+<div *ngIf="showDetailsPopup"
+     class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+
+  <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-5 space-y-4">
+
+    <h2 class="text-lg font-bold text-slate-800">تفاصيل الفرع</h2>
+
+    <div class="space-y-2 text-sm text-slate-700">
+      <p><strong>اسم الفرع:</strong> {{ selectedBranch?.branchName }}</p>
+      <p><strong>رقم الفرع:</strong> {{ selectedBranch?.branchNumber }}</p>
+      <p><strong>نوع الفرع:</strong> {{ selectedBranch?.branchType }}</p>
+      <p><strong>المدينة:</strong> {{ selectedBranch?.cityName }}</p>
+      <p><strong>نوع النشاط:</strong> {{ selectedBranch?.activityTypeName }}</p>
+      <p><strong>المشرف:</strong> {{ selectedBranch?.supervisorName || '—' }}</p>
+    </div>
+
+    <div class="flex justify-end">
+      <button (click)="closeDetails()"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        إغلاق
+      </button>
+    </div>
+
+  </div>
+
+</div>

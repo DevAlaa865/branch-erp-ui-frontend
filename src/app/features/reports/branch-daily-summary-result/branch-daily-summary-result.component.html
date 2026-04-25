@@ -1,0 +1,146 @@
+   <div id="view-pendaftar" class="content-area max-w-[1600px] mx-auto">
+       <div class="card-panel  flex flex-col shadow-sm" style="min-height: 600px;">
+  <!-- Export Buttons -->
+  <div class="flex justify-end mb-4 gap-2">
+<button
+  type="button"
+  (click)="exportToExcel()"
+  class="px-4 py-2 rounded-lg bg-green-600 text-white flex items-center gap-2
+         hover:bg-green-700 active:scale-95 transition-all duration-200
+         shadow-sm hover:shadow-md">
+  <iconify-icon icon="solar:document-bold-duotone" width="18"></iconify-icon>
+  <span>تصدير Excel</span>
+</button>
+
+   <button
+  type="button"
+  (click)="exportToPdf()"
+  class="px-4 py-2 rounded-lg bg-red-600 text-white flex items-center gap-2
+         hover:bg-red-700 active:scale-95 transition-all duration-200
+         shadow-sm hover:shadow-md">
+  <iconify-icon icon="solar:document-add-bold-duotone" width="18"></iconify-icon>
+  <span>تصدير PDF</span>
+</button>
+  </div>
+
+  <!-- Empty State -->
+  <p class="text-xs text-[var(--text-tertiary)]" *ngIf="!rows || rows.length === 0">
+    سيتم عرض جدول التقرير هنا بعد تنفيذ البحث...
+  </p>
+
+  <!-- Report Table -->
+  <div *ngIf="rows && rows.length > 0" class="card-panel overflow-hidden">
+
+    <!-- Header -->
+    <div class="p-5 border-b border-[var(--border-light)] bg-[var(--surface)] flex justify-between items-center">
+      <h4 class="m-0 text-[1.125rem]">نتائج تقرير يوميات الفروع</h4>
+    </div>
+
+    <!-- Responsive Scroll -->
+    <div class="flex-1 overflow-x-auto " dir="rtl">
+      <table class="table-custom  min-w-[1000px]">
+
+        <thead>
+          <tr>
+            <th>الفرع</th>
+            <th>نقدية</th>
+            <th>شبكة</th>
+            <th>آجل</th>
+            <th>إجمالي البيع</th>
+            <th>الإجمالي الكلي</th>
+            <th>قيمة العجز</th>
+
+            <th *ngFor="let st of shortageTypes">{{ st?.name }}</th>
+
+            <th>الفرق</th>
+            <th class="text-right">تفاصيل</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of pagedRows; trackBy: trackByBranch">
+
+            <td class="font-bold text-[var(--text-main)]">{{ row.branchName }}</td>
+
+            <td>{{ row.cashAmount | number:'1.2-2' }}</td>
+            <td>{{ row.networkAmount | number:'1.2-2' }}</td>
+            <td>{{ row.creditAmount | number:'1.2-2' }}</td>
+            <td>{{ row.totalSales | number:'1.2-2' }}</td>
+            <td>{{ row.grandTotal | number:'1.2-2' }}</td>
+
+            <td>{{ row.totalShortageAmount | number:'1.2-2' }}</td>
+
+            <td *ngFor="let st of shortageTypes">
+              {{
+                (row.shortages | shortByType:(st?.id ?? 0))?.amount || 0
+                | number:'1.2-2'
+              }}
+            </td>
+
+            <td
+              [ngClass]="{
+                'text-[var(--danger)]': row.difference < 0,
+                'text-[var(--success)]': row.difference > 0,
+                'text-[var(--text-tertiary)]': row.difference === 0
+              }"
+              class="font-semibold"
+            >
+              {{ row.difference | number:'1.2-2' }}
+            </td>
+
+            <td class="text-right">
+              <button
+                class="btn-icon border border-[var(--border)] hover:border-[var(--primary)]"
+                (click)="openDailyDetails(row)"
+                title="عرض التفاصيل">
+                <iconify-icon icon="solar:eye-bold-duotone" width="18"></iconify-icon>
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+  </div>
+  </div>
+  <!-- Pagination -->
+  <div *ngIf="rows && rows.length > 0"
+       class="flex justify-between items-center mt-6">
+
+    <span class="text-sm text-[var(--text-tertiary)]">
+      صفحة {{ currentPage }} من {{ totalPages }} — (إجمالي {{ rows.length }} صف)
+    </span>
+
+    <div class="flex gap-2">
+
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 rounded-md bg-[var(--border)] text-[var(--text-main)] disabled:opacity-40">
+        السابق
+      </button>
+
+      <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
+        <button
+          type="button"
+          (click)="goToPage(i + 1)"
+          class="px-3 py-1 rounded-lg border text-[var(--text-main)] bg-[var(--surface)] hover:bg-[var(--primary-light)]"
+          [ngClass]="{
+            'bg-[var(--primary)] text-white border-[var(--primary)]': currentPage === (i + 1)
+          }">
+          {{ i + 1 }}
+        </button>
+      </ng-container>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 rounded-md bg-[var(--border)] text-[var(--text-main)] disabled:opacity-40">
+        التالي
+      </button>
+
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,32 @@
+<div class="space-y-1" style="overflow: visible !important;">
+    <label class="block text-sm md:text-base text-slate-700 mb-1">
+    {{ label }}
+  </label>
+
+  <div
+    class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white/20 px-0 py-1 h-[46px] shadow-sm">
+
+
+
+
+    <ng-select
+      class="w-full ng-select-custom text-sm md:text-base"
+      [items]="items"
+      [bindLabel]="bindLabel"
+      [bindValue]="bindValue"
+      [placeholder]="placeholder"
+      [formControl]="control"
+      [searchable]="searchable"
+      [clearable]="clearable"
+      [dropdownPosition]="dropdownPosition"
+      [multiple]="multiple"
+     [closeOnSelect]="closeOnSelect">
+    </ng-select>
+
+  </div>
+
+  <p *ngIf="control.touched && control.invalid"
+     class="text-red-600 text-xs mt-1 font-medium">
+    {{ errorMessage }}
+  </p>
+</div>

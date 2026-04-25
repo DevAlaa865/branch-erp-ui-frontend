@@ -1,0 +1,142 @@
+<div class="p-4 space-y-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl text-white">
+
+  <h1 class="text-xl md:text-2xl font-bold text-[var(--text)]">
+    إدارة المرتجعات والخصومات
+  </h1>
+
+  <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+<div>
+  <label class="text-[var(--text)]">من تاريخ</label>
+  <input
+    type="date"
+    formControlName="fromDate"
+    class="w-full p-2 rounded bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
+  />
+</div>
+
+
+    <div>
+      <label class="text-[var(--text)]">إلى تاريخ</label>
+      <input type="date" formControlName="toDate" class="w-full p-2 rounded text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500" />
+    </div>
+
+    <div class="space-y-1">
+      <label class="text-[var(--text)]">المدينة</label>
+    <select
+        formControlName="cityId"
+         class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+         <option [ngValue]="null" disabled selected>اختر المنطقه</option>
+
+        <option *ngFor="let c of cities" [value]="c.id">
+            {{ c.cityName }}
+        </option>
+        
+        </select>
+        
+    </div>
+
+
+    
+
+    <div>
+      <label class="text-[var(--text)]">الفرع</label>
+      <select formControlName="branchId" 
+            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+         <option [ngValue]="null" disabled selected>اختر الفرع</option>
+        <option *ngFor="let b of branches" [value]="b.id">{{ b.branchName }}</option>
+      </select>
+    </div>
+
+  </form>
+
+  <button
+    (click)="search()"
+    class="bg-emerald-600 hover:bg-emerald-700 text-[var(--text)] px-4 py-2 rounded">
+    بحث
+  </button>
+
+  <div *ngIf="errorMessage" class="text-red-400 font-semibold">
+    {{ errorMessage }}
+  </div>
+<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
+
+<div *ngIf="pagedRows.length > 0" class="overflow-x-auto text-center">
+
+  <table class="w-full text-right text-sm">
+
+    <thead class="bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100">
+      <tr>
+        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">الفرع</th>
+        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">التاريخ</th>
+        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">المرتجعات</th>
+        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">الخصومات</th>
+        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">تفاصيل</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+<tr *ngFor="let row of pagedRows"
+ class="border-b hover:bg-blue-50 transition">
+
+  <td class="p-3 text-center text-black">{{ row.branchName }}</td>
+  <td class="p-3 text-center text-black">{{ row.journalDate }}</td>
+  <td class="p-3 text-center text-black">{{ row.returnsAmount }}</td>
+  <td class="p-3 text-center text-black">{{ row.discountsAmount }}</td>
+
+  <td class="p-3 text-center">
+    <button
+      (click)="openDailyDetails(row)"
+      class="text-blue-600 dark:text-blue-400 hover:underline">
+      عرض
+    </button>
+  </td>
+
+</tr>
+
+    </tbody>
+
+  </table>
+ <div *ngIf="totalPages > 1"
+     class="flex flex-wrap items-center justify-center gap-3 mt-6 
+            text-slate-900 dark:text-slate-100">
+
+  <!-- السابق -->
+  <button
+    (click)="prevPage()"
+    [disabled]="currentPage === 1"
+    class="px-4 py-2 rounded-lg border 
+           bg-white dark:bg-slate-700 
+           text-slate-900 dark:text-slate-100
+           disabled:opacity-40 disabled:cursor-not-allowed
+           hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+    السابق
+  </button>
+
+  <!-- رقم الصفحة -->
+  <span class="font-semibold text-lg">
+    صفحة {{ currentPage }} من {{ totalPages }}
+  </span>
+
+  <!-- التالي -->
+  <button
+    (click)="nextPage()"
+    [disabled]="currentPage === totalPages"
+    class="px-4 py-2 rounded-lg border 
+           bg-white dark:bg-slate-700 
+           text-slate-900 dark:text-slate-100
+           disabled:opacity-40 disabled:cursor-not-allowed
+           hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+    التالي
+  </button>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+</div>

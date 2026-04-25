@@ -1,0 +1,73 @@
+
+
+
+
+<link rel="preload" as="image" href="assets/logo/logoBack.jpeg" />
+<div class="bg-cover bg-center"
+  style="background-image: url('assets/backgroundImage/logoBack.jpeg')">
+  <div class="flex h-screen items-center justify-center">
+    <div class="flex flex-col items-center space-y-8">
+      <div>
+   
+      <div class="w-80  rounded-[20px] bg-white p-8" style="box-shadow:#00000057 1px 3px 4px">
+        <h1 class="mb-4 text-center text-3xl font-bold text-black" style="text-shadow:#00000063 0px 3px 5px">
+          مرحبا بكم فى سيزون !
+        </h1>
+          <form [formGroup]="form" (ngSubmit)="login()" class="space-y-5">
+           <div class="space-y-4">
+                <input
+                  type="text"
+                  formControlName="userName"
+                  placeholder="ادخل اسم المستخدم"
+                  class="w-full text-black rounded-md bg-[#E9EFF6] p-2.5 placeholder:text-[#000000] text-[var(--text)]"
+                  style="box-shadow:rgb(0 0 0 / 21%) 0px 7px 5px 0px" />
+                
+                  
+              <div class="relative">
+          <input
+            formControlName="password"
+            [type]="isPasswordVisible ? 'text' : 'password'"
+            placeholder="ادخل الباسورد"
+            class="w-full text-black rounded-md bg-[#E9EFF6] p-2.5 pr-10 placeholder:text-[#000000]"
+            style="box-shadow:rgb(0 0 0 / 21%) 0px 7px 5px 0px" />
+
+          <!-- زرار العين -->
+                <button
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="absolute inset-y-0 right-2 flex items-center text-gray-600 text-sm">
+                  {{ isPasswordVisible ? '🙈' : '👁️' }}
+                </button>
+              </div>
+                    </div>
+                <!--     <div class="mb-4 pt-2">
+                      <span
+                        class="ml-2 cursor-pointer text-[10px] text-[#228CE0] hover:underline"
+                        >Forget Password?</span>
+                    </div> -->
+                    <div class="mb-4 flex justify-center">
+                      <button
+                      type="submit"
+                          [disabled]="isLoading"
+                        class="h-10 w-full cursor-pointer rounded-md bg-gradient-to-br from-[#7336FF] to-[#3269FF] text-white shadow-md shadow-blue-950">
+                        دخول
+                        
+                      </button>
+                      
+                    </div>
+                    <div *ngIf="errorMessage" class="mt-2 text-center text-sm text-red-500">
+                            اسم المستخدم أو كلمة المرور غير صحيحة
+                      </div>
+                  <!--  <div class="text-center text-[#969696]">
+              Don&#x27;t have an account?
+              <span class="cursor-pointer text-[#7337FF] hover:underline"
+                >Sign up</span>
+            </div>
+ -->
+
+          </form>
+       
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,123 @@
+<div class="page-container space-y-6">
+
+  <!-- هيدر الشاشة -->
+  <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
+      <i class="fa fa-chart-column text-lg"></i>
+    </div>
+    <div>
+      <h2 class="text-lg font-bold text-slate-900">تقرير يوميات الفروع المجمع</h2>
+      <p class="text-xs text-slate-500">اختر الفترة والفلاتر لعرض تقرير مجمع لكل الفروع.</p>
+    </div>
+  </div>
+
+  <!-- فورم الفلاتر -->
+  <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+
+    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- من تاريخ -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-slate-700">من تاريخ</label>
+        <input type="date"
+               formControlName="fromDate"
+               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      </div>
+
+      <!-- إلى تاريخ -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-slate-700">إلى تاريخ</label>
+        <input type="date"
+               formControlName="toDate"
+               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+      </div>
+
+      <!-- نوع الفرع -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-slate-700">نوع الفرع</label>
+        <select formControlName="branchType"
+                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+          <option value="All">الكل</option>
+          <option value="Shop">محل</option>
+          <option value="Kiosk">كشك</option>
+        </select>
+      </div>
+
+      <!-- المدينة -->
+  <!--     <div class="space-y-1">
+        <label class="text-sm font-medium text-slate-700">المدينة</label>
+        <select formControlName="cityId"
+                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+          <option [ngValue]="null">الكل</option>
+          <option *ngFor="let c of cities " [ngValue]="c?.id">
+            {{ c?.cityName }}
+          </option>
+        </select>
+      </div> -->
+<div class="space-y-1">
+ 
+
+
+  <app-custom-select
+    label="المدينة"
+    [items]="cities"
+    bindLabel="cityName"
+    bindValue="id"
+    placeholder="الكل"
+    [control]="cityIdsControl"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [searchable]="true"
+    [clearable]="true"
+    [dropdownPosition]="'bottom'">
+  </app-custom-select>
+
+
+</div>
+
+      <!-- نوع النشاط -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-slate-700">نوع النشاط</label>
+        <select formControlName="activityTypeId"
+                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+          <option [ngValue]="null">الكل</option>
+          <option *ngFor="let a of activityTypes " [ngValue]="a?.id">
+            {{ a?.activityName }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Checkbox -->
+      <div class="flex items-center gap-2 mt-6">
+        <input type="checkbox"
+               formControlName="onlyWithShortage"
+               class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+        <label class="text-sm text-slate-700">عرض اليوميات التي بها عجز فقط</label>
+      </div>
+
+      <!-- زر عرض التقرير -->
+      <div class="flex items-center justify-end w-full mt-6 md:col-span-3">
+        <button
+          type="button"
+            (click)="goToResult()"
+         
+          class="px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition flex items-center gap-2">
+          <i class="fa fa-magnifying-glass-chart"></i>
+          <span>عرض التقرير</span>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- حالة التحميل / الخطأ -->
+<!--     <div class="mt-3">
+      <p *ngIf="isLoading" class="text-xs text-slate-500">جارٍ جلب بيانات التقرير...</p>
+      <p *ngIf="errorMessage" class="text-xs text-red-600 font-medium">{{ errorMessage }}</p>
+    </div> -->
+
+  </div>
+
+  <!-- مكان عرض التقرير -->
+
+
+</div>

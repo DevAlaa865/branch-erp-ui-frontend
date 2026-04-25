@@ -1,0 +1,20 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed; /* أهم خطوة */
+}
+
+th, td {
+  text-align: center;
+  padding: 12px;
+  white-space: nowrap;
+}
+td.actions-cell {
+  width: 180px; /* عرض ثابت يمنع التزحلق */
+}
+
+.actions-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}

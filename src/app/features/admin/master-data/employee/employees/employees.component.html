@@ -1,0 +1,241 @@
+<div class="p-6 space-y-6 bg-blue-300">
+
+  <!-- العنوان + زر الإضافة -->
+  <div class="flex items-center justify-between ">
+    <h1 class="text-2xl font-bold text-[var(--text)] ">إدارة الموظفين</h1>
+
+    <button
+      class="bg-red-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm shadow-md transition"
+      (click)="startAdd()">
+      + إضافة موظف جديد
+    </button>
+  </div>
+
+  <!-- مربع البحث -->
+  <div class="flex justify-end">
+    <input
+      type="text"
+      placeholder="ابحث عن موظف..."
+      [(ngModel)]="searchTerm"
+      (input)="applySearch()"
+      class="w-64 border border-blue-300 rounded-xl px-4 py-2 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition"
+    />
+  </div>
+
+  <!-- فورم الإضافة / التعديل -->
+  <div *ngIf="showForm"
+       class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-4 animate-[fadeIn_0.3s_ease-out]">
+
+    <h2 class="text-lg font-semibold text-black">
+      {{ editMode ? 'تعديل موظف' : 'إضافة موظف جديد' }}
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="save()"
+          class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <!-- كود الموظف -->
+      <div>
+        <label class="block text-xs text-black mb-1">كود الموظف</label>
+        <input type="text"
+               formControlName="employeeCode"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition">
+      </div>
+
+      <!-- الاسم -->
+      <div>
+        <label class="block text-xs text-black mb-1">اسم الموظف</label>
+        <input type="text"
+               formControlName="fullName"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition">
+
+        <div *ngIf="form.controls['fullName'].invalid && form.controls['fullName'].touched"
+             class="text-red-600 text-xs mt-1">
+          الاسم مطلوب ويجب أن يحتوي على حروف فقط.
+        </div>
+      </div>
+
+      <!-- الهاتف -->
+      <div>
+        <label class="block text-xs text-black mb-1">رقم الهاتف</label>
+        <input type="text"
+               formControlName="phone"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition">
+
+        <div *ngIf="form.controls['phone'].invalid && form.controls['phone'].touched"
+             class="text-red-600 text-xs mt-1">
+          رقم الهاتف يجب أن يكون أرقام فقط (8–15 رقم).
+        </div>
+      </div>
+
+      <!-- النوع -->
+      <div>
+        <label class="block text-xs text-black mb-1">النوع</label>
+        <select formControlName="gender"
+                class="w-full border border-blue-300 rounded-lg px-3 py-2.5 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <option value="Male">ذكر</option>
+          <option value="Female">أنثى</option>
+        </select>
+      </div>
+
+      <!-- الوظيفة -->
+      <div>
+        <label class="block text-xs text-black mb-1">الوظيفة</label>
+        <input type="text"
+               formControlName="position"
+               class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm text-black outline-none focus:ring-2 focus:ring-blue-500 transition">
+      </div>
+
+      <!-- مشرف؟ -->
+      <div class="flex items-center gap-2 pt-6">
+        <input type="checkbox" formControlName="isSupervisor">
+        <label class="text-black text-sm">مشرف؟</label>
+      </div>
+
+      <!-- نشط؟ -->
+      <div class="flex items-center gap-2 pt-6">
+        <input type="checkbox" formControlName="isActive">
+        <label class="text-black text-sm">نشط؟</label>
+      </div>
+
+      <!-- أزرار -->
+      <div class="col-span-3 flex gap-2 justify-end pt-4">
+        <button type="button"
+                class="px-4 py-2 text-sm rounded-lg border border-blue-300 text-black hover:bg-blue-50 transition"
+                (click)="cancel()">
+          إلغاء
+        </button>
+
+        <button type="submit"
+                class="px-5 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-md transition">
+          حفظ
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+  
+<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
+
+  <div *ngIf="pagedEmployees.length === 0" class="p-10 text-center text-black text-sm">
+    لا توجد نتائج مطابقة.
+  </div>
+
+  <table *ngIf="pagedEmployees.length > 0" class="w-full text-right text-sm">
+    <thead class="bg-blue-100 text-black">
+      <tr>
+        <th class="px-4 py-3 text-right">الكود</th>
+        <th class="px-4 py-3 text-right">الاسم</th>
+        <th class="px-4 py-3 text-right">الهاتف</th>
+        <th class="px-4 py-3 text-right">النوع</th>
+        <th class="px-4 py-3 text-right">الوظيفة</th>
+        <th class="px-4 py-3 text-right">مشرف؟</th>
+        <th class="px-4 py-3 text-right">نشط؟</th>
+        <th class="px-4 py-3 text-right">إجراءات</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of pagedEmployees"
+          class="border-b hover:bg-blue-50 transition">
+
+        <td class="px-4 py-3 font-semibold text-black">{{ item.employeeCode }}</td>
+        <td class="px-4 py-3 font-medium text-black">{{ item.fullName }}</td>
+        <td class="px-4 py-3 text-black">{{ item.phone }}</td>
+        <td class="px-4 py-3 text-black">{{ item.gender === 'Male' ? 'ذكر' : 'أنثى' }}</td>
+        <td class="px-4 py-3 text-black">{{ item.position }}</td>
+        <td class="px-4 py-3 text-black">{{ item.isSupervisor ? 'نعم' : 'لا' }}</td>
+        <td class="px-4 py-3 text-black">{{ item.isActive ? 'نعم' : 'لا' }}</td>
+
+        <td class="px-4 py-3 flex gap-3 justify-end">
+          <button
+            class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition shadow-sm"
+            (click)="showDetails(item)">
+            تفاصيل
+          </button>
+
+          <button
+            class="px-3 py-1.5 rounded-lg bg-slate-100 text-black hover:bg-slate-200 transition shadow-sm"
+            (click)="edit(item)">
+            تعديل
+          </button>
+
+          <button
+            class="px-3 py-1.5 rounded-lg bg-rose-600 text-white hover:bg-rose-700 transition shadow-sm"
+            (click)="remove(item)">
+            حذف
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+<!-- Pagination -->
+<div class="flex items-center justify-between p-4 text-sm select-none">
+
+  <!-- زر السابق -->
+  <button
+    class="px-3 py-1.5 rounded-lg bg-slate-100 text-black hover:bg-slate-200 transition disabled:opacity-40"
+    [disabled]="currentPage === 1"
+    (click)="currentPage = currentPage - 1">
+    السابق
+  </button>
+
+  <!-- أرقام الصفحات -->
+  <div class="flex gap-2 flex-wrap justify-center">
+    <button
+      *ngFor="let p of pages"
+      class="px-3 py-1.5 rounded-lg border transition"
+      [class.bg-blue-600]="currentPage === p"
+      [class.text-white]="currentPage === p"
+      [class.border-blue-600]="currentPage === p"
+      [class.bg-white]="currentPage !== p"
+      [class.text-black]="currentPage !== p"
+      (click)="currentPage = p">
+      {{ p }}
+    </button>
+  </div>
+
+  <!-- زر التالي -->
+  <button
+    class="px-3 py-1.5 rounded-lg bg-slate-100 text-black hover:bg-slate-200 transition disabled:opacity-40"
+    [disabled]="currentPage === totalPages"
+    (click)="currentPage = currentPage + 1">
+    التالي
+  </button>
+
+</div>
+
+</div>
+
+</div>
+<!-- نافذة التفاصيل -->
+<div *ngIf="showDetailsPopup"
+     class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+
+  <div class="bg-white w-96 rounded-2xl shadow-xl p-6 space-y-4 animate-[fadeIn_0.3s_ease-out]">
+
+    <h2 class="text-xl font-bold text-black text-center">تفاصيل الموظف</h2>
+
+    <div class="space-y-2 text-black text-sm">
+      <p><strong>الكود:</strong> {{ selectedEmployee?.employeeCode }}</p>
+      <p><strong>الاسم:</strong> {{ selectedEmployee?.fullName }}</p>
+      <p><strong>الهاتف:</strong> {{ selectedEmployee?.phone }}</p>
+      <p><strong>النوع:</strong> {{ selectedEmployee?.gender === 'Male' ? 'ذكر' : 'أنثى' }}</p>
+      <p><strong>الوظيفة:</strong> {{ selectedEmployee?.position }}</p>
+      <p><strong>مشرف؟</strong> {{ selectedEmployee?.isSupervisor ? 'نعم' : 'لا' }}</p>
+      <p><strong>نشط؟</strong> {{ selectedEmployee?.isActive ? 'نعم' : 'لا' }}</p>
+    </div>
+
+    <div class="flex justify-center pt-4">
+      <button
+        class="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+        (click)="closeDetails()">
+        إغلاق
+      </button>
+    </div>
+
+  </div>
+  
+</div>
