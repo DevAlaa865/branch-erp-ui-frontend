@@ -1,30 +1,46 @@
-<div class="space-y-1" style="overflow: visible !important;">
-    <label class="block text-sm md:text-base text-slate-700 mb-1">
+<div class="space-y-1 relative">
+  <label class="block text-sm md:text-base text-slate-700 mb-1">
     {{ label }}
   </label>
 
+  <!-- Selected Box -->
   <div
-    class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white/20 px-0 py-1 h-[46px] shadow-sm">
+    class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 h-[46px] shadow-sm cursor-pointer"
+    (click)="toggleDropdown()">
 
+    <span class="text-gray-700 text-sm">
+      {{ selectedLabel }}
+    </span>
 
-
-
-    <ng-select
-      class="w-full ng-select-custom text-sm md:text-base"
-      [items]="items"
-      [bindLabel]="bindLabel"
-      [bindValue]="bindValue"
-      [placeholder]="placeholder"
-      [formControl]="control"
-      [searchable]="searchable"
-      [clearable]="clearable"
-      [dropdownPosition]="dropdownPosition"
-      [multiple]="multiple"
-     [closeOnSelect]="closeOnSelect">
-    </ng-select>
-
+    <i class="fa fa-chevron-down ml-auto text-gray-500"></i>
   </div>
 
+  <!-- Dropdown -->
+  <div
+    *ngIf="isOpen"
+    class="absolute z-50 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-60 overflow-auto">
+
+    <!-- Search -->
+    <input
+      *ngIf="searchable"
+      type="text"
+      [(ngModel)]="searchTerm"
+      class="w-full border-b px-3 py-2 text-sm outline-none"
+      placeholder="بحث...">
+
+    <!-- Items -->
+    <div
+      *ngFor="let item of filteredItems"
+      (click)="selectItem(item)"
+      class="px-3 py-2 text-sm cursor-pointer hover:bg-blue-100 flex justify-between">
+
+      <span>{{ item[bindLabel] }}</span>
+
+      <i *ngIf="isSelected(item)" class="fa fa-check text-blue-600"></i>
+    </div>
+  </div>
+
+  <!-- Error -->
   <p *ngIf="control.touched && control.invalid"
      class="text-red-600 text-xs mt-1 font-medium">
     {{ errorMessage }}

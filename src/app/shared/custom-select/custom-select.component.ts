@@ -5,7 +5,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-custom-select',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,FormsModule ],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './custom-select.component.html',
   styleUrls: ['./custom-select.component.scss']
 })
@@ -27,6 +27,21 @@ export class CustomSelectComponent {
 
   isOpen = false;
   searchTerm = '';
+
+  // ✅ الحل هنا
+  get selectedLabel(): string {
+    if (!this.control?.value) return this.placeholder;
+
+    if (this.multiple) {
+      const selectedItems = this.items.filter(item =>
+        (this.control.value || []).includes(item[this.bindValue])
+      );
+      return selectedItems.map(i => i[this.bindLabel]).join(', ') || this.placeholder;
+    }
+
+    const found = this.items.find(i => i[this.bindValue] === this.control.value);
+    return found ? found[this.bindLabel] : this.placeholder;
+  }
 
   get filteredItems() {
     if (!this.searchable || !this.searchTerm.trim()) return this.items;
