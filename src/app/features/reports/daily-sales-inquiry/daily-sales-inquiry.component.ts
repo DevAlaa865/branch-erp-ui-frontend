@@ -7,8 +7,8 @@ import { jsPDF } from 'jspdf';
 import { MasterDataService } from '../../../services/master-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
+import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 
-import { NgSelectModule } from '@ng-select/ng-select';
 interface ShortageDetail {
   id: number;
   shortageTypeId: number;
@@ -46,7 +46,7 @@ interface BranchDailySalesReport {
 @Component({
   selector: 'app-daily-sales-inquiry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HasPermissionDirective,  NgSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HasPermissionDirective,CustomSelectComponent],
   templateUrl: './daily-sales-inquiry.component.html',
   styleUrls: ['./daily-sales-inquiry.component.css']
 })
