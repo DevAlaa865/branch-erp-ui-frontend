@@ -65,10 +65,10 @@ export class DailySalesComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.loadLookups();
-    this.setTodayDate();
+
     this.setupTotalsCalculation();
     this.initHeaderFromUser();
-      this.checkTodayExists();
+     
       
   }
 preventEnter(event: Event) {
@@ -78,7 +78,7 @@ preventEnter(event: Event) {
     this.form = this.fb.group({
       branchId: [null, Validators.required],
       supervisorId: [null, Validators.required],
-      salesDate: ['', Validators.required],
+    salesDate: [new Date().toISOString().substring(0, 10), Validators.required],
 
       noSalesToday: [false],
       isBalanced: [false],
@@ -110,10 +110,6 @@ preventEnter(event: Event) {
     this.form.get('branchId')?.setValue(user.branchId);
     this.branchNameDisplay = decodeURIComponent(escape(String(user.branchName || '')));
 
-    const todayIso = new Date().toISOString().substring(0, 10);
-    this.form.get('salesDate')?.setValue(todayIso);
-    this.form.get('salesDate')?.disable({ emitEvent: false });
-    this.salesDateDisplay = todayIso;
 
     this.master.getBranchById(user.branchId).subscribe(res => {
       const branch = res?.data;
@@ -126,33 +122,7 @@ preventEnter(event: Event) {
       this.form.get('supervisorId')?.disable({ emitEvent: false });
     });
   }
-checkTodayExists() {
-  if (!this.userInfo || !this.userInfo.branchId) return;
 
-  const branchId = this.userInfo.branchId;
-  const todayIso = new Date().toISOString().substring(0, 10);
-
-  this.dailyService.exists(branchId, todayIso).subscribe({
-    next: exists => {
-      if (exists) {
-      Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'info',
-          title: 'لقد قمت بإدخال يومية مبيعات لهذا الفرع في هذا التاريخ من قبل.',
-          showConfirmButton: false,
-          timer: 4000,
-          timerProgressBar: true
-        });
-        this.router.navigate(['/dashboard']);
-      }
-    },
-    error: err => {
-      console.error(err);
-      // ممكن تسيبها ساكتة أو تحط Alert عام
-    }
-  });
-}
   get shortageDetails(): FormArray {
     return this.form.get('shortageDetails') as FormArray;
   }
@@ -400,6 +370,11 @@ recalculateShortageEffect() {
 
 
 save() {
+    const creditControl = this.form.get('creditAmount');
+  if ( (creditControl?.value === null || creditControl?.value === '' || creditControl?.value === undefined)) {
+
+  creditControl?.setValue(0);
+    }
   const noSales = this.form.get('noSalesToday')?.value;
 
   // 🔹 نفس الفاليديشن لكن بـ Toast بدل alert
@@ -461,6 +436,8 @@ save() {
       });
       return;
     }
+  
+
   }
 
   const diff = Number(this.form.get('difference')?.value || 0);
@@ -479,6 +456,34 @@ if (!noSales && diff < 0 && Math.abs(diff) >= 50) {
     return;
   }
 }
+const branchid = this.form.get('branchId')?.value;
+const salesDates = this.form.get('salesDate')?.value;
+  this.dailyService.exists(branchid, salesDates).subscribe({
+    next: exists => {
+      if (exists) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'info',
+          title: 'لقد قمت بإدخال يومية مبيعات لهذا الفرع في هذا التاريخ من قبل.',
+          showConfirmButton: false,
+          timer: 4000,
+          timerProgressBar: true
+        });
+        console.log(this.form.get('salesDate')?.value);
+        return; // ❌ وقف الحفظ
+      }
+
+      // ✔ لو مفيش تكرار → نكمل الحفظ
+   
+      this.doSave();
+    },
+    error: err => {
+      console.error(err);
+      // لو حصل Error في exists، نكمل الحفظ عادي
+      this.doSave();
+    }
+  });
   // 🔥 هنا بنعمل Check قبل الحفظ
   const branchId = this.form.get('branchId')?.value;
   const salesDate = this.form.get('salesDate')?.value;
@@ -497,30 +502,8 @@ if (!noSales && diff < 0 && Math.abs(diff) >= 50) {
   }
 
   // 🔥 اسأل الباك إند: هل اليومية موجودة؟
-  this.dailyService.exists(branchId, salesDate).subscribe({
-    next: exists => {
-      if (exists) {
-        Swal.fire({
-          toast: true,
-          position: 'top-end',
-          icon: 'info',
-          title: 'لقد قمت بإدخال يومية مبيعات لهذا الفرع في هذا التاريخ من قبل.',
-          showConfirmButton: false,
-          timer: 4000,
-          timerProgressBar: true
-        });
-        return; // ❌ وقف الحفظ
-      }
 
-      // ✔ لو مفيش تكرار → نكمل الحفظ
-      this.doSave();
-    },
-    error: err => {
-      console.error(err);
-      // لو حصل Error في exists، نكمل الحفظ عادي
-      this.doSave();
-    }
-  });
+
 }
 
 

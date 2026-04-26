@@ -95,3 +95,8 @@
   display: none !important;
 }
 
+@media (max-width: 640px) {
+  .back-btn-wrapper {
+    margin-top: 38px; /* زوّد الرقم براحتك */
+  }
+}

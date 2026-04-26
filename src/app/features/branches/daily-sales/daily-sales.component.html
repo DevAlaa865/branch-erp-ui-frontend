@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="relative z-30 space-y-6" (keydown.enter)="preventEnter($event)">
+<form [formGroup]="form" class="relative z-30 space-y-6 mt-9" (keydown.enter)="preventEnter($event)">
 
   <!-- هيدر اليومية -->
 <!-- هيدر اليومية -->
@@ -44,7 +44,7 @@
       <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
         <i class="fa fa-calendar text-blue-500 text-base"></i>
         <input type="date"
-               [value]="salesDateDisplay"
+              formControlName="salesDate"
                class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
                >
       </div>

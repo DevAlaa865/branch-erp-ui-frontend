@@ -1,5 +1,12 @@
-<div class="flex   h-screen ">
 
+<div class="relative min-h-screen overflow-hidden">
+<img 
+  src="assets/backgroundImage/logo4.jpg"
+  class="absolute inset-0 w-full h-full object-cover object-[center_top]"
+/>
+  <!-- Overlay -->
+<div class="absolute inset-0 bg-black/10"></div>
+<div class="flex h-screen relative z-10">
   <!-- Sidebar -->
   <aside id="sidebar"
          class="w-[220px] bg-surface border-r border-custom flex flex-col h-full absolute z-30 md:relative transform -translate-x-full md:translate-x-0 shadow-lg md:shadow-none transition-transform duration-300"
@@ -34,7 +41,7 @@
          class="nav-item"
          (click)="closeSidebar()">
         <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
-        <span>لوحة التحكم</span>
+        <span>ادارة الفروع</span>
       </a>
 
       <!-- <a routerLink="/branches/daily-sales"
@@ -45,7 +52,9 @@
         <span>يوميات الفروع</span>
       </a> -->
 
-      <a routerLink="/reports/returns-discounts-management"
+      <a
+      *hasPermission="'Permissions.Manage'"
+       routerLink="/reports/returns-discounts-management"
          routerLinkActive="active"
          class="nav-item"
          (click)="closeSidebar()">
@@ -53,7 +62,9 @@
         <span>إدارة المرتجعات والخصومات</span>
       </a>
 
-      <a routerLink="/reports/branch-daily-summary"
+      <a 
+      *hasPermission="'Permissions.Manage'"
+      routerLink="/reports/branch-daily-summary"
          routerLinkActive="active"
          class="nav-item"
          (click)="closeSidebar()">
@@ -111,23 +122,39 @@
   <div class="flex items-center gap-6 pr-6 lg:mr-40">
 
     <!-- العنوان -->
-<div class="flex-1 flex justify-center">
-    <div class="flex items-center gap-3 text-2xl font-bold text-[var(--text-main)]">
+<div class="flex-1 flex justify-center ">
+  <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 
+              text-lg sm:text-2xl font-bold text-[var(--text-main)] 
+              text-center sm:text-right">
 
-    
+    <!-- العنوان -->
+    <div class="flex items-center gap-2">
+  
+      <span class="leading-tight header-title">
+        لإدارة الأقسام الداخلية
+      </span>
+    </div>
 
-    <!-- لوجو سيزون داخل الجملة -->
-    <img 
-      src="assets/logo/season-logo.png" 
-      alt="Season Logo" 
-      class="w-20 h-20 object-contain "
-    />
+    <!-- الترحيب على الشمال -->
+    <div class="flex items-center gap-2 text-base sm:text-xl">
 
-    <span>لإدارة الأقسام الداخلية</span>
+      مرحباً،
+
+      <ng-container *ngIf="auth.getRoles().includes('BranchManagement'); else showUserName">
+        {{ decodeArabic(auth.getBranchName()!) }}
+      </ng-container>
+
+      <ng-template #showUserName>
+        {{ auth.getUserName() }}
+      </ng-template>
+
+      <iconify-icon icon="solar:hand-stars-bold-duotone" class="text-[#FFC107]"></iconify-icon>
+
+    </div>
 
   </div>
-
 </div>
+
 
     <!-- زرار اللايت/دارك -->
     <button id="theme-toggle"

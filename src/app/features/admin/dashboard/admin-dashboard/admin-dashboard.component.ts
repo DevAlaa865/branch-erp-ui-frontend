@@ -9,6 +9,7 @@ import { HasPermissionDirective } from '../../../../core/directives/has-permissi
   standalone: true,
   imports: [CommonModule, HasPermissionDirective,RouterModule],
   templateUrl: './admin-dashboard.component.html',
+   styleUrl: './admin-dashboard.component.css',
    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminDashboardComponent implements OnInit {

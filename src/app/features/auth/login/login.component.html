@@ -2,14 +2,20 @@
 
 
 
-<link rel="preload" as="image" href="assets/logo/logoBack.jpeg" />
-<div class="bg-cover bg-center"
-  style="background-image: url('assets/backgroundImage/logoBack.jpeg')">
-  <div class="flex h-screen items-center justify-center">
+<link rel="preload" as="image" href="assets/logo/season-logo.png" />
+<div class="relative min-h-screen overflow-hidden">
+<img 
+  src="assets/backgroundImage/logo4.jpg"
+  class="absolute inset-0 w-full h-full object-cover object-[center_top]"
+/>
+  <!-- Overlay -->
+<div class="absolute inset-0 bg-black/30"></div>
+
+  <div class="relative flex h-screen items-center justify-center">
     <div class="flex flex-col items-center space-y-8">
-      <div>
-   
-      <div class="w-80  rounded-[20px] bg-white p-8" style="box-shadow:#00000057 1px 3px 4px">
+
+      <div class="w-80 rounded-[20px] bg-white p-8" style="box-shadow:#00000057 1px 3px 4px">
+
         <h1 class="mb-4 text-center text-3xl font-bold text-black" style="text-shadow:#00000063 0px 3px 5px">
           مرحبا بكم فى سيزون !
         </h1>
@@ -19,7 +25,7 @@
                   type="text"
                   formControlName="userName"
                   placeholder="ادخل اسم المستخدم"
-                  class="w-full text-black rounded-md bg-[#E9EFF6] p-2.5 placeholder:text-[#000000] text-[var(--text)]"
+                  class="w-full text-black rounded-md bg-[#E9EFF6] p-2.5 placeholder:text-[#000000] "
                   style="box-shadow:rgb(0 0 0 / 21%) 0px 7px 5px 0px" />
                 
                   

@@ -1,222 +1,201 @@
-<div class="content-area max-w-[1800px] mx-auto">
+
+<div class=" content-area max-w-[1800px] mx-auto">
 
   <!-- Welcome Section -->
-<div class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-  <div>
-    <h1 class="m-0 flex items-center gap-2 text-[var(--text-main)] font-bold text-3xl">
 
-      مرحباً،
-
-      <!-- لو المستخدم دوره BranchManagement يظهر اسم الفرع -->
-      <ng-container  *ngIf="auth.getRoles().includes('BranchManagement'); else showUserName">
-        {{ decodeArabic(auth.getBranchName()!) }}
-      </ng-container>
-
-      <!-- لو مش مستخدم فرع يظهر اسم المستخدم -->
-      <ng-template #showUserName>
-        {{ auth.getUserName() }}
-      </ng-template>
-
-      <iconify-icon icon="solar:hand-stars-bold-duotone" class="text-[#FFC107]"></iconify-icon>
-    </h1>
-
-    <p class="text-body mt-1 font-medium text-[var(--text-tertiary)]">
-      اختصار سريع لأهم وظائف الإدارة داخل المنصة.
-    </p>
-  </div>
-</div>
 
 
   <!-- Stat Cards Grid -->
-  <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 mb-8">
+   <div class="cards-wrapper">
+      <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 mt-14 ">
 
-    <!-- إدارة المستخدمين -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openUsers()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--primary);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة المستخدمين</span>
-        <div class="icon-box bg-[var(--primary-light)] text-[var(--primary)]">
-          <iconify-icon icon="solar:users-group-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة المستخدمين -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openUsers()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--primary);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة المستخدمين</span>
+            <div class="icon-box bg-[var(--primary-light)] text-[var(--primary)]">
+              <iconify-icon icon="solar:users-group-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل المستخدمين</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل المستخدمين</div>
-    </div>
 
-    <!-- إدارة الصلاحيات -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openRoles()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--warning-dark);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة الصلاحيات</span>
-        <div class="icon-box bg-[var(--warning-light)] text-[var(--warning-dark)]">
-          <iconify-icon icon="solar:key-minimalistic-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة الصلاحيات -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openRoles()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--warning-dark);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة الصلاحيات</span>
+            <div class="icon-box bg-[var(--warning-light)] text-[var(--warning-dark)]">
+              <iconify-icon icon="solar:key-minimalistic-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">التحكم في صلاحيات المستخدمين</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">التحكم في صلاحيات المستخدمين</div>
-    </div>
 
-    <!-- يومية المبيعات -->
-    <div *hasPermission="'dashbord.dailysails'"
-         (click)="opendailySales()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--info);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">يومية المبيعات</span>
-        <div class="icon-box bg-[var(--info-light)] text-[var(--info)]">
-          <iconify-icon icon="solar:receipt-bold-duotone" width="18"></iconify-icon>
+        <!-- يومية المبيعات -->
+        <div *hasPermission="'dashbord.dailysails'"
+            (click)="opendailySales()"
+            class="stat-card cursor-pointer hover:shadow-md transition text-2xl"
+            style="border-left-color: var(--info);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">يومية المبيعات</span>
+            <div class="icon-box bg-[var(--info-light)] text-[var(--info)]">
+              <iconify-icon icon="solar:receipt-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xl text-[var(--text-tertiary)]">ادخل اليوميه من هنا </div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">عرض يوميات الفروع</div>
-    </div>
 
-    <!-- إدارة المرتجعات والخصومات -->
-    <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
-         (click)="openReports()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--danger);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">المرتجعات والخصومات</span>
-        <div class="icon-box bg-[var(--danger-light)] text-[var(--danger)]">
-          <iconify-icon icon="solar:receipt-text-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة المرتجعات والخصومات -->
+        <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
+            (click)="openReports()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--danger);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">المرتجعات والخصومات</span>
+            <div class="icon-box bg-[var(--danger-light)] text-[var(--danger)]">
+              <iconify-icon icon="solar:receipt-text-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إدارة المرتجعات والخصومات</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">إدارة المرتجعات والخصومات</div>
-    </div>
 
-    <!-- استعلام -->
-    <div *ngIf="auth.hasPermission('dashbord.dailysails') || auth.hasPermission('Finance.View')"
-         (click)="queries()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--purple);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">استعلام</span>
-        <div class="icon-box bg-[var(--purple-light)] text-[var(--purple)]">
-          <iconify-icon icon="solar:magnifier-bold-duotone" width="18"></iconify-icon>
+        <!-- استعلام -->
+        <div *ngIf="auth.hasPermission('dashbord.dailysails') || auth.hasPermission('Finance.View')"
+            (click)="queries()"
+            class="stat-card cursor-pointer hover:shadow-md transition text-2xl bg-blue-200 "
+            style="border-left-color: var(--purple);">
+          <div class="flex justify-center items-center mb-3 bg ">
+            <span class="text-caption ">استعلام</span>
+            <div class="icon-box bg-[var(--purple-light)] text-[var(--purple)]">
+              <iconify-icon icon="solar:magnifier-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xl text-[var(--text-tertiary)] text-center">استعلم عن اليوميه</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">تنفيذ استعلامات وتقارير</div>
-    </div>
 
-    <!-- إدارة الفروع -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openBranches()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--success);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة الفروع</span>
-        <div class="icon-box bg-[var(--success-light)] text-[var(--success)]">
-          <iconify-icon icon="solar:shop-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة الفروع -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openBranches()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--success);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة الفروع</span>
+            <div class="icon-box bg-[var(--success-light)] text-[var(--success)]">
+              <iconify-icon icon="solar:shop-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div>
-    </div>
 
-    <!-- إدارة المدن -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openAreas()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--primary-dark);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة المدن</span>
-        <div class="icon-box bg-[var(--primary-light)] text-[var(--primary-dark)]">
-          <iconify-icon icon="solar:map-point-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة المدن -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openAreas()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--primary-dark);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة المدن</span>
+            <div class="icon-box bg-[var(--primary-light)] text-[var(--primary-dark)]">
+              <iconify-icon icon="solar:map-point-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">تعريف المدن وربطها بالمناطق</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">تعريف المدن وربطها بالمناطق</div>
-    </div>
 
-    <!-- إدارة المناطق -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openCities()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--warning);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة المناطق</span>
-        <div class="icon-box bg-[var(--warning-light)] text-[var(--warning)]">
-          <iconify-icon icon="solar:city-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة المناطق -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openCities()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--warning);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة المناطق</span>
+            <div class="icon-box bg-[var(--warning-light)] text-[var(--warning)]">
+              <iconify-icon icon="solar:city-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إضافة وربط المناطق</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">إضافة وربط المناطق</div>
-    </div>
 
-    <!-- أنواع النشاط -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openActivities()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--info);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">أنواع النشاط</span>
-        <div class="icon-box bg-[var(--info-light)] text-[var(--info)]">
-          <iconify-icon icon="solar:tag-bold-duotone" width="18"></iconify-icon>
+        <!-- أنواع النشاط -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openActivities()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--info);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">أنواع النشاط</span>
+            <div class="icon-box bg-[var(--info-light)] text-[var(--info)]">
+              <iconify-icon icon="solar:tag-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع النشاط</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع النشاط</div>
-    </div>
 
-    <!-- أنواع العجز -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openShortage()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--danger);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">أنواع العجز</span>
-        <div class="icon-box bg-[var(--danger-light)] text-[var(--danger)]">
-          <iconify-icon icon="solar:danger-triangle-bold-duotone" width="18"></iconify-icon>
+        <!-- أنواع العجز -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openShortage()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--danger);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">أنواع العجز</span>
+            <div class="icon-box bg-[var(--danger-light)] text-[var(--danger)]">
+              <iconify-icon icon="solar:danger-triangle-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع العجز</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع العجز</div>
-    </div>
-    <!-- التقارير -->
-    <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View')"
-        (click)="openReports()"
-        class="stat-card cursor-pointer hover:shadow-md transition"
-        style="border-left-color: var(--primary-dark);">
+        <!-- التقارير -->
+        <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View')"
+            (click)="openReports()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--primary-dark);">
 
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">التقارير</span>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">التقارير</span>
 
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--primary-light)] text-[var(--primary-dark)]">
-          <iconify-icon icon="solar:document-bold-duotone" width="18"></iconify-icon>
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-[var(--primary-light)] text-[var(--primary-dark)]">
+              <iconify-icon icon="solar:document-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+
+          <div class="text-xs text-[var(--text-tertiary)]">
+            تنفيذ التقارير الخاصة بيومية مبيعات الفروع
+          </div>
         </div>
-      </div>
-
-      <div class="text-xs text-[var(--text-tertiary)]">
-        تنفيذ التقارير الخاصة بيومية مبيعات الفروع
-      </div>
-    </div>
 
 
-    <!-- الموظفين -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openEmployee()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--purple);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">الموظفين</span>
-        <div class="icon-box bg-[var(--purple-light)] text-[var(--purple)]">
-          <iconify-icon icon="solar:user-bold-duotone" width="18"></iconify-icon>
+        <!-- الموظفين -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openEmployee()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--purple);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">الموظفين</span>
+            <div class="icon-box bg-[var(--purple-light)] text-[var(--purple)]">
+              <iconify-icon icon="solar:user-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">تعريف وربط الموظفين</div>
         </div>
-      </div>
-      <div class="text-xs text-[var(--text-tertiary)]">تعريف وربط الموظفين</div>
-    </div>
 
-    <!-- إدارة البلاد -->
-    <div *hasPermission="'Permissions.Manage'"
-         (click)="openCountries()"
-         class="stat-card cursor-pointer hover:shadow-md transition"
-         style="border-left-color: var(--primary);">
-      <div class="flex justify-between items-start mb-3">
-        <span class="text-caption">إدارة البلاد</span>
-        <div class="icon-box bg-[var(--primary-light)] text-[var(--primary)]">
-          <iconify-icon icon="solar:flag-bold-duotone" width="18"></iconify-icon>
+        <!-- إدارة البلاد -->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openCountries()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--primary);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">إدارة البلاد</span>
+            <div class="icon-box bg-[var(--primary-light)] text-[var(--primary)]">
+              <iconify-icon icon="solar:flag-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل البلاد</div>
         </div>
+
       </div>
-      <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل البلاد</div>
-    </div>
-
-  </div>
-
+</div>
 </div>

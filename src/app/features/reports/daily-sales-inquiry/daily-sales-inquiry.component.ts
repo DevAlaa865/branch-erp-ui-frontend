@@ -8,7 +8,7 @@ import { MasterDataService } from '../../../services/master-data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
-
+import { IMAGE_BASE_URL } from '../../../api.config';
 interface ShortageDetail {
   id: number;
   shortageTypeId: number;
@@ -51,7 +51,7 @@ interface BranchDailySalesReport {
   styleUrls: ['./daily-sales-inquiry.component.css']
 })
 export class DailySalesInquiryComponent implements OnInit {
-
+imageBaseUrl = IMAGE_BASE_URL;
   userInfo: any;
   isBranchUser = false;
   branches: any[] = [];
@@ -76,8 +76,8 @@ selectedBranch: any = null;
 // إعدادات الدروب داون
 
 
-  fileBaseUrl = 'https://localhost:7025/';
-  apiBaseUrl = 'https://localhost:7025';
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -90,7 +90,7 @@ selectedBranch: any = null;
 
   getImageUrl(path: string | null | undefined): string {
     if (!path) return '';
-    return `${this.apiBaseUrl}/${path}`;
+    return `${this.imageBaseUrl}/${path}`;
   }
 
   ngOnInit(): void {
@@ -267,7 +267,7 @@ this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p))
   openImageAsPdf(path: string | null | undefined) {
     if (!path) return;
 
-    const imageUrl = this.fileBaseUrl + path;
+const imageUrl = this.getImageUrl(path);
 
     fetch(imageUrl)
       .then(res => res.blob())

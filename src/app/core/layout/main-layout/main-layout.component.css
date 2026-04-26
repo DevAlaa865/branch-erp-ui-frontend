@@ -1,0 +1,9 @@
+/* في الوضع العادي (Light) — خليه زي ما هو */
+.header-title {
+  color: var(--text);
+}
+
+/* في وضع الدارك — خلي النص أسود فقط في هذا الديف */
+.dark .header-title {
+  color: #000 !important;
+}

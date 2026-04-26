@@ -1,0 +1,11 @@
+/* الوضع الطبيعي على الديسكتوب */
+.cards-wrapper {
+  margin-top: 20px;
+}
+
+/* على الموبايل: نزّل الكروت لتحت */
+@media (max-width: 768px) {
+  .cards-wrapper {
+    margin-top: 60px; /* زوّد الرقم لو عايزها تنزل أكتر */
+  }
+}

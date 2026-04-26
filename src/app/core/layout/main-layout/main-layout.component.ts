@@ -47,7 +47,7 @@ logout(){
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
 import { AuthService } from '../../../services/auth.service';
@@ -60,8 +60,16 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './main-layout.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements AfterViewInit {
 
+
+  ngAfterViewInit() {
+  const saved = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved === 'dark' || (!saved && prefersDark);
+if (isDark) document.documentElement.classList.add('dark');
+  this.updateThemeIcon(isDark);
+ }
   userName: string | null = null;
   branchName: string | null = null;
   roles: string[] = [];
@@ -69,7 +77,7 @@ export class MainLayoutComponent {
 
   isSidebarOpen = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(public auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.userName = this.auth.getUserName();
@@ -77,13 +85,6 @@ export class MainLayoutComponent {
     this.branchName = rawBranch ? decodeURIComponent(escape(rawBranch)) : null;
     this.roles = this.auth.getRoles();
 
-    // Apply saved theme
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = saved === 'dark' || (!saved && prefersDark);
-
-    if (isDark) document.documentElement.classList.add('dark');
-    this.updateThemeIcon(isDark);
   }
 
   // Sidebar
@@ -114,6 +115,10 @@ export class MainLayoutComponent {
       ? '<iconify-icon icon="solar:sun-bold-duotone" width="22" class="text-[#FFC107]"></iconify-icon>'
       : '<iconify-icon icon="solar:moon-bold-duotone" width="22" class="text-[var(--text-main)]"></iconify-icon>';
   }
+
+  decodeArabic(text: string) {
+  return decodeURIComponent(escape(text));
+}
 
   // Navigation
   navigate(path: string) {
