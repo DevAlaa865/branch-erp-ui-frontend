@@ -41,7 +41,7 @@
   </div>
 
   <!-- Error -->
-  <p *ngIf="control.touched && control.invalid"
+  <p *ngIf="control?.touched && control?.invalid"
      class="text-red-600 text-xs mt-1 font-medium">
     {{ errorMessage }}
   </p>

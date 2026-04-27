@@ -1,0 +1,31 @@
+.table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  /* مهم جدًا */
+  display: block;
+  direction: ltr;
+}
+
+/* الجدول نفسه */
+.report-table {
+  min-width: 1200px;     /* لازم أكبر من الشاشة */
+  width: max-content;
+  white-space: nowrap;
+  border-collapse: collapse;
+
+  direction: rtl;
+}
+
+/* تحسين السكرول */
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}

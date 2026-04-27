@@ -45,9 +45,11 @@
 <!-- الفرع -->
 <div class="space-y-1 text-center">
 <label class="block text-sm md:text-base text-[var(--label-strong)] mb-1">الفرع</label>
-  <div *ngIf="isBranchUser; else centralBranch"
-       class="flex items-center gap-2 rounded-lg border border-[var(--input-border)] bg-[var(--input-bg)] px-3 py-2 h-[46px]">
-
+ 
+<div *ngIf="isBranchUser; else centralBranch"
+    class="flex items-center gap-2 rounded-lg border px-3 py-2 h-[46px]
+            bg-white/20 dark:bg-rose-500/80
+            text-slate-800 dark:text-black font-bold">
     <i class="fa fa-store text-blue-500 text-base"></i>
     <input type="text"
            [value]="branchName"
@@ -67,7 +69,7 @@
         bindLabel="branchName"
         bindValue="id"
         placeholder="الرجاء اختيار الفرع"
-        formControlName="branchId"
+      [control]="form.get('branchId')"
         [searchable]="true"
         [clearable]="false"
         [dropdownPosition]="'bottom'">
@@ -93,7 +95,7 @@
           [disabled]="isLoading"
           class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm md:text-base font-semibold hover:bg-blue-700 disabled:opacity-60 transition flex items-center justify-center gap-2">
           <i class="fa fa-magnifying-glass"></i>
-          <span>استعلام يومية المبيعات</span>
+          <span class="truncate">استعلام يومية المبيعات</span>
         </button>
       </div>
 
@@ -123,8 +125,7 @@
   >
 
     <!-- 🔥 4 أعمدة في صف واحد -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-start font-bold text-center">
-
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-start font-bold text-center">
       <div>
         <p class="text-xs ">التاريخ</p>
         <p class="text-lg font-semibold text-slate-800">{{ report.salesDate }}</p>
@@ -144,9 +145,9 @@
       <div class="flex items-center justify-end">
         <ng-container *ngIf="report!.attachmentPath; else noHeaderFile">
           <a (click)="openImageAsPdf(report!.attachmentPath)"
-             class="inline-flex items-center gap-1 text-xs  hover:underline cursor-pointer">
-            <i class="fa fa-file-arrow-down"></i>
-            <span class="text-sm md:text-base">عرض / تحميل الموازنه والشبكه</span>
+            class="flex flex-wrap items-center gap-1 text-xs hover:underline cursor-pointer break-words">
+               <i class="fa fa-file-arrow-down"></i>
+            <span class="text-sm md:text-base break-words">عرض / تحميل الموازنه والشبكه</span>
           </a>
         </ng-container>
 
@@ -166,7 +167,7 @@
     <div class="flex flex-col items-center gap-1">
     <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">نقدية</p>
 
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.cashAmount | number:'1.0-2' }}
         </p>
@@ -176,7 +177,7 @@
     <!-- شبكة -->
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">شبكة</p>
-      <div class="bg-white border border-sky-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-sky-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.networkAmount | number:'1.0-2' }}
         </p>
@@ -186,7 +187,7 @@
     <!-- آجل -->
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">آجل / Credit</p>
-      <div class="bg-white border border-amber-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-amber-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.creditAmount | number:'1.0-2' }}
         </p>
@@ -196,7 +197,7 @@
     <!-- إجمالي المبيعات -->
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">إجمالي البيع</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.totalSales | number:'1.0-2' }}
         </p>
@@ -210,7 +211,7 @@
 
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">الإجمالي الكلي</p>
-      <div class="bg-white border border-purple-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-purple-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.grandTotal | number:'1.0-2' }}
         </p>
@@ -219,16 +220,16 @@
 
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">إجمالي عدد الفواتير</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full ">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.totalInvoicesCount | number }}
+          {{ report.totalInvoicesCount | number   }}
         </p>
       </div>
     </div>
 
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">عدد القطع</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit">
+      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
         <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
           {{ report.totalQuantities | number }}
         </p>
@@ -237,7 +238,7 @@
 
     <div class="flex flex-col items-center gap-1">
       <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">الفرق</p>
-      <div class="bg-white border rounded-lg shadow px-4 py-2 flex items-center justify-center w-fit"
+      <div class="bg-white border rounded-lg shadow px-4 py-2 flex items-center justify-center w-full"
            [ngClass]="{
              'border-emerald-300': report.difference === 0,
              'border-rose-300': report.difference !== 0
@@ -266,15 +267,15 @@
     </h3>
   </div>
 
-  <div class="overflow-x-auto">
+  <div class="overflow-x-auto shortage-table-mobile">
     <table class="min-w-full text-xs md:text-sm text-right" style="width:100%">
       <thead class="text-center">
         <tr style="background:#111; color:#fff">
           <th class="px-4 py-3 text-lg text-right">نوع العجز</th>
-          <th class="px-4 py-3 text-lg text-right">قيمة العجز</th>
+          <th class="px-4 py-3 text-lg text-right">مبلغ </th>
           <th *ngIf="showEmployeeColumn" class="px-4 py-3 text-lg text-right">الموظف</th>
           <th class="px-4 py-3 text-lg text-right">مرفقات</th>
-          <th class="px-4 py-3 text-lg text-right">الاعتماد</th>
+          <th class="px-4 py-3 text-lg text-right">اعتماد</th>
         </tr>
       </thead>
 
@@ -301,7 +302,7 @@
                  class="inline-flex items-center gap-1 cursor-pointer"
                  style="color:#d0dce9">
                 <i class="fa fa-file-arrow-down"></i>
-                <span class="text-lg">عرض / تحميل تفاصيل العجز</span>
+                <span class="text-lg">تحميل مرفقات</span>
               </a>
             </ng-container>
 
@@ -329,7 +330,7 @@
          [(ngModel)]="s['isReturnApproved']"
          [disabled]="!auth.hasPermission('Return.Edit')">
          
-  <span class="ml-1">اعتماد مرتجعات</span>
+  <span class="ml-1">اعتماد </span>
 
 </ng-container>
 
@@ -341,7 +342,7 @@
               <input type="checkbox" 
                      [(ngModel)]="s['isDiscountApproved']"
                      [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد خصومات على فاتورة</span>
+              <span class="ml-1">اعتماد</span>
             </ng-container>
 
                    <!-- لو نوع العجز استبدال -->
@@ -351,7 +352,7 @@
               <input type="checkbox" 
                      [(ngModel)]="s['isDiscountApproved']"
                      [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد استبدال</span>
+              <span class="ml-1">اعتماد</span>
             </ng-container>
                    <!-- لو نوع العجز خصم على موظف --> 
 
@@ -361,7 +362,7 @@
               <input type="checkbox" 
                      [(ngModel)]="s['isDiscountApproved']"
                      [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد خصم على موظف</span>
+              <span class="ml-1">اعتماد  </span>
             </ng-container>
              <!-- لو نوع العجز مكافاه  لموظف -->  
             <ng-container 
@@ -370,7 +371,7 @@
               <input type="checkbox" 
                      [(ngModel)]="s['isDiscountApproved']"
                      [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد مكافاه لموظف</span>
+              <span class="ml-1">اعتماد</span>
             </ng-container>
           </td>
 

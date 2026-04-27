@@ -1,0 +1,17 @@
+@media (max-width: 640px) {
+
+  .flex-1 > div {
+    overflow: visible;
+  }
+
+
+  .inline-flex {
+    padding: 8px 14px !important;
+    font-size: 12px !important;
+    letter-spacing: 0.3px; /* ده اللي “يفرّد” الكلمة بصريًا */
+    gap: 6px;
+      width: fit-content;
+  }
+
+
+}

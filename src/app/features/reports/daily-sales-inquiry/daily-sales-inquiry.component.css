@@ -1,4 +1,9 @@
 /* أنيميشن دخول ناعم للتقرير */
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -99,4 +104,144 @@
   .back-btn-wrapper {
     margin-top: 38px; /* زوّد الرقم براحتك */
   }
+}
+@media (max-width: 640px) {
+
+  /* تصغير الخط داخل الجدول */
+  .shortage-table-mobile table {
+    font-size: 11px !important;
+  }
+
+  /* تصغير حجم الأعمدة */
+ .shortage-table-mobile th,
+.shortage-table-mobile td {
+  white-space: normal !important;
+}
+
+  /* تصغير حجم النص داخل الروابط */
+  .shortage-table-mobile a span {
+    font-size: 11px !important;
+  }
+
+  /* تصغير كلمة "لا يوجد مرفق" */
+  .shortage-table-mobile .text-sm {
+    font-size: 10px !important;
+  }
+
+  /* تصغير حجم Checkbox labels */
+  .shortage-table-mobile td span {
+    font-size: 11px !important;
+  }
+}
+/* يمنع أي عنصر يكسر عرض الموبايل */
+@media (max-width: 640px) {
+
+  /* يمنع التزحلق يمين */
+  body, html {
+    overflow-x: hidden !important;
+  }
+
+  /* يمنع أي عنصر من تجاوز عرض الشاشة */
+.page-container, 
+.content, 
+.space-y-6, 
+.shortage-table-mobile {
+  max-width: 100% !important;
+}
+
+  /* تصغير كل text-lg في الموبايل */
+  .text-lg {
+    font-size: 14px !important;
+  }
+
+  /* تصغير padding اللي بيكسر الشاشة */
+  .px-4 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* تصغير الروابط الطويلة */
+  .shortage-table-mobile a span {
+    white-space: nowrap;
+    font-size: 11px !important;
+  }
+}
+/* يمنع أي عنصر يكسر العرض */
+* {
+  box-sizing: border-box;
+}
+
+/* يمنع السكرول يمين */
+body {
+  overflow-x: hidden;
+}
+
+/* إصلاح الجدول */
+.shortage-table-mobile {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* خلي النص يكسر بدل ما يطلع بره */
+.shortage-table-mobile table {
+  white-space: normal !important;
+  word-break: break-word;
+}
+
+/* اللينكات الطويلة */
+.shortage-table-mobile a {
+  word-break: break-word;
+}
+
+/* الموبايل */
+@media (max-width: 640px) {
+
+  /* أي حاجة w-fit تبقى full */
+  .w-fit {
+    width: 100% !important;
+  }
+
+  /* تصغير padding */
+  .px-4 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* تصغير الخط */
+  .text-lg {
+    font-size: 13px !important;
+  }
+
+  /* الزرار مايكسرش */
+  button span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* الجداول تبقى scroll بدل ما تكسر */
+  table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+}
+/* يمنع أي عنصر يخرج بره */
+* {
+  max-width: 100%;
+}
+
+.flex > * {
+  min-width: 0;
+}
+
+:host ::ng-deep .ng-select.ng-select-custom .ng-select-container {
+  color: var(--input-text) !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .ng-select.ng-select-custom .ng-value,
+:host ::ng-deep .ng-select.ng-select-custom .ng-placeholder {
+  color: var(--input-text) !important;
 }

@@ -14,7 +14,8 @@ import { CustomSelectComponent } from '../../../shared/custom-select/custom-sele
   selector: 'app-daily-sales',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule,CustomSelectComponent],
-  templateUrl: './daily-sales.component.html'
+  templateUrl: './daily-sales.component.html',
+    styleUrls: ['./daily-sales.component.css']
 })
 export class DailySalesComponent implements OnInit {
 

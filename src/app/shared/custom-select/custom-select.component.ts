@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-custom-select',
@@ -16,7 +16,7 @@ export class CustomSelectComponent {
   @Input() bindLabel: string = 'label';
   @Input() bindValue: string = 'value';
   @Input() placeholder: string = 'الرجاء الاختيار';
-  @Input() control!: FormControl<any>;
+  @Input() control!: AbstractControl  | null ;
   @Input() iconClass: string = 'fa fa-store text-blue-500 text-base';
   @Input() errorMessage: string = 'هذا الحقل مطلوب';
   @Input() searchable: boolean = true;
@@ -34,12 +34,12 @@ export class CustomSelectComponent {
 
     if (this.multiple) {
       const selectedItems = this.items.filter(item =>
-        (this.control.value || []).includes(item[this.bindValue])
+        (this.control?.value || []).includes(item[this.bindValue])
       );
       return selectedItems.map(i => i[this.bindLabel]).join(', ') || this.placeholder;
     }
 
-    const found = this.items.find(i => i[this.bindValue] === this.control.value);
+    const found = this.items.find(i => i[this.bindValue] === this.control?.value);
     return found ? found[this.bindLabel] : this.placeholder;
   }
 
@@ -56,24 +56,24 @@ export class CustomSelectComponent {
 
   selectItem(item: any) {
     if (this.multiple) {
-      const current = this.control.value || [];
+      const current = this.control?.value || [];
       const exists = current.includes(item[this.bindValue]);
 
       if (exists) {
-        this.control.setValue(current.filter((v: any) => v !== item[this.bindValue]));
+        this.control?.setValue(current.filter((v: any) => v !== item[this.bindValue]));
       } else {
-        this.control.setValue([...current, item[this.bindValue]]);
+        this.control?.setValue([...current, item[this.bindValue]]);
       }
     } else {
-      this.control.setValue(item[this.bindValue]);
+      this.control?.setValue(item[this.bindValue]);
       if (this.closeOnSelect) this.isOpen = false;
     }
   }
 
   isSelected(item: any) {
     if (this.multiple) {
-      return (this.control.value || []).includes(item[this.bindValue]);
+      return (this.control?.value || []).includes(item[this.bindValue]);
     }
-    return this.control.value === item[this.bindValue];
+    return this.control?.value === item[this.bindValue];
   }
 }

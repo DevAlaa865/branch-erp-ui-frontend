@@ -16,8 +16,8 @@ export class BranchDailySummaryReportComponent implements OnInit {
 
   form!: FormGroup;
 
-  cities: any[] = [null];
-  activityTypes: any[] = [null];
+  cities: any[] = [];
+  activityTypes: any[] = [];
 
   errorMessage = '';
 

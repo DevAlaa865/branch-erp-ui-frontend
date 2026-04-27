@@ -29,55 +29,55 @@
   </p>
 
   <!-- Report Table -->
-  <div *ngIf="rows && rows.length > 0" class="card-panel overflow-hidden">
+  <div *ngIf="rows && rows.length > 0" class="card-panel ">
 
     <!-- Header -->
-    <div class="p-5 border-b border-[var(--border-light)] bg-[var(--surface)] flex justify-between items-center">
-      <h4 class="m-0 text-[1.125rem]">نتائج تقرير يوميات الفروع</h4>
+    <div class="p-4 border-b border-[var(--border-light)] bg-[var(--surface)] flex justify-between items-center mb-3">
+      <h4 class="m-0 text-[1.125rem] ">نتائج تقرير يوميات الفروع</h4>
     </div>
 
     <!-- Responsive Scroll -->
-    <div class="flex-1 overflow-x-auto " dir="rtl">
-      <table class="table-custom  min-w-[1000px]">
+   <div class="table-wrapper" dir="rtl">
+  <table class="report-table">
 
-        <thead>
-          <tr>
-            <th>الفرع</th>
-            <th>نقدية</th>
-            <th>شبكة</th>
-            <th>آجل</th>
-            <th>إجمالي البيع</th>
-            <th>الإجمالي الكلي</th>
-            <th>قيمة العجز</th>
+        <thead >
+          <tr class="bg-blue-100 text-black">
+            <th class="px-4 py-3 text-right">الفرع</th>
+            <th class="px-4 py-3 text-right">نقدية</th>
+            <th class="px-4 py-3 text-right">شبكة</th>
+            <th class="px-4 py-3 text-right">آجل</th>
+            <th class="px-4 py-3 text-right">إجمالي البيع</th>
+            <th class="px-4 py-3 text-right">الإجمالي الكلي</th>
+            <th class="px-4 py-3 text-right">قيمة العجز</th>
 
-            <th *ngFor="let st of shortageTypes">{{ st?.name }}</th>
+       <th  class="px-4 py-3 text-right" *ngFor="let st of shortageTypes">{{ st?.name }}</th> 
 
-            <th>الفرق</th>
+            <th class="px-4 py-3 text-right">الفرق</th>
             <th class="text-right">تفاصيل</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr *ngFor="let row of pagedRows; trackBy: trackByBranch">
+          <tr *ngFor="let row of pagedRows; trackBy: trackByBranch"  class="border-b hover:bg-blue-50 transition">
 
-            <td class="font-bold text-[var(--text-main)]">{{ row.branchName }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.branchName }}</td>
 
-            <td>{{ row.cashAmount | number:'1.2-2' }}</td>
-            <td>{{ row.networkAmount | number:'1.2-2' }}</td>
-            <td>{{ row.creditAmount | number:'1.2-2' }}</td>
-            <td>{{ row.totalSales | number:'1.2-2' }}</td>
-            <td>{{ row.grandTotal | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.cashAmount | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.networkAmount | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.creditAmount | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.totalSales | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.grandTotal | number:'1.2-2' }}</td>
 
-            <td>{{ row.totalShortageAmount | number:'1.2-2' }}</td>
+            <td class="px-4 py-3 font-semibold text-black">{{ row.totalShortageAmount | number:'1.2-2' }}</td>
 
-            <td *ngFor="let st of shortageTypes">
+           <td *ngFor="let st of shortageTypes" class="px-4 py-3 font-semibold text-black">
               {{
                 (row.shortages | shortByType:(st?.id ?? 0))?.amount || 0
                 | number:'1.2-2'
-              }}
+              }} 
             </td>
 
-            <td
+            <td class="px-4 py-3 font-semibold text-black"
               [ngClass]="{
                 'text-[var(--danger)]': row.difference < 0,
                 'text-[var(--success)]': row.difference > 0,
@@ -88,9 +88,9 @@
               {{ row.difference | number:'1.2-2' }}
             </td>
 
-            <td class="text-right">
+            <td class="px-4 py-3 font-semibold text-black">
               <button
-                class="btn-icon border border-[var(--border)] hover:border-[var(--primary)]"
+                
                 (click)="openDailyDetails(row)"
                 title="عرض التفاصيل">
                 <iconify-icon icon="solar:eye-bold-duotone" width="18"></iconify-icon>

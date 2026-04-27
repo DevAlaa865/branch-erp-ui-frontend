@@ -1038,3 +1038,13 @@ select.filter-select {
   --label-strong: #0a0a0a; 
     --table-text: #0f172a;
 }
+
+
+/* ///// */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
