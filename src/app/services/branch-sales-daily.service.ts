@@ -8,6 +8,7 @@ import { API_BASE_URL } from '../api.config';
 export class BranchSalesDailyService {
 
 private baseUrl = `${API_BASE_URL}/BranchSalesDaily`; // عدّل الـ URL حسب السيرفر
+private reportsUrl = `${API_BASE_URL}/reports/city-branch-sales`;
 
   constructor(private http: HttpClient) {}
   // 🔹 استعلام: هل اليومية موجودة لهذا الفرع وهذا التاريخ؟
@@ -51,4 +52,18 @@ getReturnsDiscountsManagement(filter: any) {
   return this.http.post(`${this.baseUrl}/update-shortages-approvals`, items);
 }
 
+getCityBranchSalesSummary(filter: any) {
+  return this.http.post<any>(
+    `${this.reportsUrl}/summary`,
+    filter
+  );
+}
+
+exportCityBranchSalesSummaryExcel(filter: any) {
+  return this.http.post(
+    `${this.reportsUrl}/summary/excel`,
+    filter,
+    { responseType: 'blob' }
+  )
+}
 }

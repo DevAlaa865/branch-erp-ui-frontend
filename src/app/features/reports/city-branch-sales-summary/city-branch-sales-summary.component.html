@@ -1,80 +1,69 @@
-<div class="page-container">
+<div class="p-6 mt-10">
 
-  <!-- عنوان الصفحة -->
-  <div class="page-header">
-    <h2 class="page-title">تقرير مبيعات المدن والفروع</h2>
-  </div>
+  <div
+    class="bg-white/10 dark:bg-slate-800/40 backdrop-blur-xl border border-white/20 dark:border-slate-700 rounded-2xl shadow-xl p-6 space-y-6">
 
-  <!-- بطاقة الفلترة -->
-  <div class="card filter-card">
+    <!-- العنوان -->
+    <h1 class="text-xl md:text-2xl font-bold text-[var(--text)]">
+      تقرير مبيعات المدن والفروع
+    </h1>
 
-    <!-- التاريخ من / إلى -->
-    <div class="filter-row">
-      <div class="filter-item">
-        <label>من تاريخ</label>
-        <input type="date" class="input" formControlName="fromDate">
+    <!-- الفورم -->
+    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- من تاريخ -->
+      <div class="space-y-1">
+        <label class="text-[var(--text)] font-semibold">من تاريخ</label>
+        <input
+          type="date"
+          formControlName="fromDate"
+          class="w-full p-2 rounded-lg bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
+        />
       </div>
 
-      <div class="filter-item">
-        <label>إلى تاريخ</label>
-        <input type="date" class="input" formControlName="toDate">
+      <!-- إلى تاريخ -->
+      <div class="space-y-1">
+        <label class="text-[var(--text)] font-semibold">إلى تاريخ</label>
+        <input
+          type="date"
+          formControlName="toDate"
+          class="w-full p-2 rounded-lg bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
+        />
       </div>
-    </div>
 
-    <!-- المدن -->
-    <div class="filter-row">
-      <div class="filter-item full">
-        <label>المدن</label>
+      <!-- المدن -->
+      <div class="space-y-1 md:col-span-1">
+        <label class="text-[var(--text)] font-semibold">المنطقه</label>
 
         <app-custom-select
           class="w-full"
           [items]="cities"
-          bindLabel="name"
+          bindLabel="cityName"
           bindValue="id"
-          placeholder="اختر المدن"
+          placeholder="اختر المنطقه"
           [multiple]="true"
           [searchable]="true"
-          [control]="form.get('cityIds')"
-          (change)="onCitiesChange()">
+          [control]="form.get('cityIds')">
         </app-custom-select>
       </div>
-    </div>
 
-    <!-- الفروع -->
-    <div class="filter-row">
-      <div class="filter-item full">
-        <label>الفروع</label>
-
-        <app-custom-select
-          class="w-full"
-          [items]="branches"
-          bindLabel="name"
-          bindValue="id"
-          placeholder="اختر الفروع"
-          [multiple]="true"
-          [searchable]="true"
-          [control]="form.get('branchIds')">
-        </app-custom-select>
-      </div>
-    </div>
-
-    <!-- النشاط + نوع الفرع -->
-    <div class="filter-row">
-      <div class="filter-item">
-        <label>نوع النشاط</label>
+      <!-- نوع النشاط -->
+      <div class="space-y-1">
+        <label class="text-[var(--text)] font-semibold">نوع النشاط</label>
 
         <app-custom-select
           class="w-full"
           [items]="activityTypes"
-          bindLabel="name"
+          bindLabel="activityName"
           bindValue="id"
           placeholder="اختر النشاط"
           [control]="form.get('activityTypeId')">
         </app-custom-select>
       </div>
 
-      <div class="filter-item">
-        <label>نوع الفرع</label>
+      <!-- نوع الفرع -->
+      <div class="space-y-1">
+        <label class="text-[var(--text)] font-semibold">نوع الفرع</label>
 
         <app-custom-select
           class="w-full"
@@ -85,11 +74,14 @@
           [control]="form.get('branchType')">
         </app-custom-select>
       </div>
-    </div>
+
+    </form>
 
     <!-- زر عرض التقرير -->
-    <div class="filter-actions">
-      <button class="btn-primary" (click)="showResult()">
+    <div class="pt-4">
+      <button
+        (click)="showResult()"
+        class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-semibold shadow-md transition">
         عرض التقرير
       </button>
     </div>

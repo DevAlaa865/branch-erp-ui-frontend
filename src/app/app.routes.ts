@@ -36,18 +36,31 @@ export const routes: Routes = [
           .then(m => m.BranchDailySummaryReportComponent)
       },
        {
-    path: 'reports/branch-daily-summary/result',
-      loadComponent: () =>
-        import('./features/reports/branch-daily-summary-result/branch-daily-summary-result.component')
-          .then(m => m.BranchDailySummaryResultComponent)
-  },
-         
+        path: 'reports/branch-daily-summary/result',
+          loadComponent: () =>
+            import('./features/reports/branch-daily-summary-result/branch-daily-summary-result.component')
+              .then(m => m.BranchDailySummaryResultComponent)
+      },
+            
       {
         path: 'reports/returns-discounts-management',
         loadComponent: () =>
           import('./features/reports/returns-discounts-management/returns-discounts-management.component')
             .then(m => m.ReturnsDiscountsManagementComponent)
       },
+      ////
+      {
+        path: 'reports/city-branch-sales-summary',
+          loadComponent: () =>
+            import('./features/reports/city-branch-sales-summary/city-branch-sales-summary.component')
+              .then(m => m.CityBranchSalesSummaryComponent)
+      },
+        {
+          path: 'reports/city-branch-sales-summary/result',
+          loadComponent: () =>
+            import('./features/reports/city-branch-sales-summary-result/city-branch-sales-summary-result.component')
+              .then(m => m.CityBranchSalesSummaryResultComponent)
+        },
 
       {
         path: 'dashboard',

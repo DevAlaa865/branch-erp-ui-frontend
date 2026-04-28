@@ -23,7 +23,6 @@ export class CityBranchSalesSummaryComponent implements OnInit {
   form!: FormGroup;
 
   cities: any[] = [];
-  branches: any[] = [];
   activityTypes: any[] = [];
 
   branchTypes = [
@@ -48,7 +47,6 @@ export class CityBranchSalesSummaryComponent implements OnInit {
       fromDate: [null, Validators.required],
       toDate: [null, Validators.required],
       cityIds: [[]],
-      branchIds: [[]],
       activityTypeId: [null],
       branchType: ['All']
     });
@@ -65,29 +63,6 @@ export class CityBranchSalesSummaryComponent implements OnInit {
     this.master.getActivityTypes().subscribe(res => this.activityTypes = res.data || []);
   }
 
-onCitiesChange(): void {
-  const ids = this.form.value.cityIds;
-
-  // لو مفيش مدن → فضي الفروع
-  if (!ids || !ids.length) {
-    this.branches = [];
-    this.form.patchValue({ branchIds: [] });
-    return;
-  }
-
-  // نجيب الفروع بناءً على أول مدينة فقط
-  const firstCityId = ids[0];
-
-  this.master.getBranchesByCity(firstCityId).subscribe({
-    next: (res: any) => {
-      const data = res?.data ?? res ?? [];
-      this.branches = data;
-      this.form.patchValue({ branchIds: [] });
-    }
-  });
-}
-
-
   showResult(): void {
     if (this.form.invalid) return;
 
@@ -100,7 +75,6 @@ onCitiesChange(): void {
           fromDate: f.fromDate,
           toDate: f.toDate,
           cityIds: f.cityIds?.length ? f.cityIds : null,
-          branchIds: f.branchIds?.length ? f.branchIds : null,
           activityTypeId: f.activityTypeId,
           branchType: f.branchType
         }

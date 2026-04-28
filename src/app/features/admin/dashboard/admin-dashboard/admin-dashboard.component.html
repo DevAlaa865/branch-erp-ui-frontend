@@ -93,6 +93,21 @@
           <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div>
         </div>
 
+        
+        <!--تقرير خاص بالمبيعات-->
+        <div *hasPermission="'Permissions.Manage'"
+            (click)="openReportOfSales()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--success);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">تقرير خاص بالمبيعات</span>
+            <div class="icon-box bg-[var(--success-light)] text-[var(--success)]">
+              <iconify-icon icon="solar:shop-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+       <!--    <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div> -->
+        </div>
+
         <!-- إدارة المدن -->
         <div *hasPermission="'Permissions.Manage'"
             (click)="openAreas()"
