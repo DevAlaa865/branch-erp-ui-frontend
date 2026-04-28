@@ -61,6 +61,12 @@ export const routes: Routes = [
             import('./features/reports/city-branch-sales-summary-result/city-branch-sales-summary-result.component')
               .then(m => m.CityBranchSalesSummaryResultComponent)
         },
+        {
+        path: 'reports/city-branch-sales-summary-chart',
+        loadComponent: () =>
+          import('./features/reports/city-branch-sales-summary-chart/city-branch-sales-summary-chart.component')
+            .then(m => m.CityBranchSalesSummaryChartComponent)
+      },
 
       {
         path: 'dashboard',

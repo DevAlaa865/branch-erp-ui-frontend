@@ -208,5 +208,10 @@ exportExcel(): void {
     saveAs(new Blob([buffer]), 'CityBranchSalesSummary.xlsx');
   });
 }
-
+openChart(): void {
+  this.router.navigate(
+    ['/reports/city-branch-sales-summary-chart'],
+    { queryParams: this.filter }
+  );
+}
 }
