@@ -59,11 +59,6 @@ getCityBranchSalesSummary(filter: any) {
   );
 }
 
-exportCityBranchSalesSummaryExcel(filter: any) {
-  return this.http.post(
-    `${this.reportsUrl}/summary/excel`,
-    filter,
-    { responseType: 'blob' }
-  )
-}
+
+
 }

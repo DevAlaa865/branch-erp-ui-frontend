@@ -1,5 +1,5 @@
 
-<div class="p-6" dir="rtl">
+<div class="p-6 mt-10" dir="rtl">
 
   <div
     class="bg-white/10 dark:bg-slate-800/40 backdrop-blur-xl border border-white/20 dark:border-slate-700 rounded-2xl shadow-xl p-6 space-y-6">
@@ -28,99 +28,129 @@
       {{ errorMessage }}
     </div>
 
-    <!-- الجدول -->
-    <div *ngIf="!isLoading && !errorMessage && pagedRows.length > 0"
-         class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+<!-- الجدول -->
+<div *ngIf="!isLoading && !errorMessage && pagedRows.length > 0"
+     class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
 
-      <div class="overflow-x-auto text-center">
+  <div class="overflow-x-auto">
 
-        <table class="w-full text-sm">
+    <table class="w-full text-sm table-auto min-w-max">
 
-          <thead class="bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100">
-            <tr>
-              <th class="p-3 border-b">المدينة</th>
-              <th class="p-3 border-b">الفرع</th>
-              <th class="p-3 border-b">إجمالي البيع</th>
-              <th class="p-3 border-b">الآجل</th>
-              <th class="p-3 border-b">عدد الفواتير</th>
-              <th class="p-3 border-b">عدد القطع</th>
-              <th class="p-3 border-b">المشرف</th>
-            </tr>
-          </thead>
+      <!-- الهيدر -->
+      <thead class="bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100">
+        <tr class="text-nowrap">
+          <th class="px-4 py-3 border-b text-center">المدينة</th>
+          <th class="px-4 py-3 border-b text-center">الفرع</th>
+          <th class="px-4 py-3 border-b text-center">إجمالي البيع</th>
+          <th class="px-4 py-3 border-b text-center">الآجل</th>
+          <th class="px-4 py-3 border-b text-center">عدد الفواتير</th>
+          <th class="px-4 py-3 border-b text-center">عدد القطع</th>
+          <th class="px-4 py-3 border-b text-center">المشرف</th>
+        </tr>
+      </thead>
 
-          <tbody>
+      <!-- الصفوف -->
+      <tbody>
+        <tr *ngFor="let row of pagedRows"
+            class="border-b hover:bg-blue-50 transition text-nowrap">
 
-            <tr *ngFor="let row of pagedRows"
-                class="border-b hover:bg-blue-50 transition">
+          <td class="px-4 py-3 text-center text-black">{{ row.cityName }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.branchName }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.totalSales | number:'1.2-2' }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.creditAmount | number:'1.2-2' }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.invoicesCount }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.quantitiesCount }}</td>
+          <td class="px-4 py-3 text-center text-black">{{ row.supervisorName }}</td>
 
-              <td class="p-3 text-center text-black">{{ row.cityName }}</td>
-              <td class="p-3 text-center text-black">{{ row.branchName }}</td>
-              <td class="p-3 text-center text-black">{{ row.totalSales | number:'1.2-2' }}</td>
-              <td class="p-3 text-center text-black">{{ row.creditAmount | number:'1.2-2' }}</td>
-              <td class="p-3 text-center text-black">{{ row.invoicesCount }}</td>
-              <td class="p-3 text-center text-black">{{ row.quantitiesCount }}</td>
-              <td class="p-3 text-center text-black">{{ row.supervisorName }}</td>
+        </tr>
+      </tbody>
 
-            </tr>
+      <!-- الإجماليات -->
+      <tfoot>
+        <tr class="bg-slate-100 text-nowrap">
+          <td class="px-4 py-3 font-bold text-center text-blue-600" colspan="2">الإجمالي</td>
 
-          </tbody>
+          <td class="px-4 py-3 font-bold text-center text-black">
+            {{ totals.totalSales | number:'1.2-2' }}
+          </td>
 
-          <!-- سطر الإجماليات -->
-          <tfoot>
-            <tr class="bg-slate-100">
-              <td class="p-3 font-bold text-center" colspan="2">الإجمالي</td>
-              <td class="p-3 font-bold text-center text-black">
-                {{ totals.totalSales | number:'1.2-2' }}
-              </td>
-              <td class="p-3 font-bold text-center text-black">
-                {{ totals.creditAmount | number:'1.2-2' }}
-              </td>
-              <td class="p-3 font-bold text-center text-black">
-                {{ totals.invoicesCount }}
-              </td>
-              <td class="p-3 font-bold text-center text-black">
-                {{ totals.quantitiesCount }}
-              </td>
-              <td></td>
-            </tr>
-          </tfoot>
+          <td class="px-4 py-3 font-bold text-center text-black">
+            {{ totals.creditAmount | number:'1.2-2' }}
+          </td>
 
-        </table>
+          <td class="px-4 py-3 font-bold text-center text-black">
+            {{ totals.invoicesCount }}
+          </td>
 
-        <!-- الباجينيشن -->
-        <div *ngIf="totalPages > 1"
-             class="flex flex-wrap items-center justify-center gap-3 mt-6 
-                    text-slate-900 dark:text-slate-100">
+          <td class="px-4 py-3 font-bold text-center text-black">
+            {{ totals.quantitiesCount }}
+          </td>
 
-          <button
-            (click)="prevPage()"
-            [disabled]="currentPage === 1"
-            class="px-4 py-2 rounded-lg border 
-                   bg-white dark:bg-slate-700 
-                   disabled:opacity-40 disabled:cursor-not-allowed
-                   hover:bg-slate-100 dark:hover:bg-slate-600 transition">
-            السابق
-          </button>
+          <td></td>
+        </tr>
+      </tfoot>
 
-          <span class="font-semibold text-lg">
-            صفحة {{ currentPage }} من {{ totalPages }}
-          </span>
+    </table>
 
-          <button
-            (click)="nextPage()"
-            [disabled]="currentPage === totalPages"
-            class="px-4 py-2 rounded-lg border 
-                   bg-white dark:bg-slate-700 
-                   disabled:opacity-40 disabled:cursor-not-allowed
-                   hover:bg-slate-100 dark:hover:bg-slate-600 transition">
-            التالي
-          </button>
+
+
+
+
+  </div>
+<!-- الباجينيشن الاحترافي -->
+        <div *ngIf="totalPages >= 1"
+            class="flex flex-wrap items-center justify-center gap-2 mt-6 text-slate-900 dark:text-slate-100">
+
+        <!-- أول صفحة -->
+        <button (click)="goToFirst()"
+                [disabled]="currentPage === 1"
+                class="px-3 py-2 rounded-lg border bg-white dark:bg-slate-700 
+                        disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            « الأول
+        </button>
+
+        <!-- السابق -->
+        <button (click)="prevPage()"
+                [disabled]="currentPage === 1"
+                class="px-3 py-2 rounded-lg border bg-white dark:bg-slate-700 
+                        disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            ‹ السابق
+        </button>
+
+        <!-- الأرقام -->
+        <ng-container *ngFor="let p of pages">
+            <button (click)="goToPage(p)"
+                    [ngClass]="{
+                    'bg-blue-600 text-white font-bold': currentPage === p,
+                    'bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600': currentPage !== p
+                    }"
+                    class="px-3 py-2 rounded-lg border transition">
+            {{ p }}
+            </button>
+        </ng-container>
+
+        <!-- التالي -->
+        <button (click)="nextPage()"
+                [disabled]="currentPage === totalPages"
+                class="px-3 py-2 rounded-lg border bg-white dark:bg-slate-700 
+                        disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            التالي ›
+        </button>
+
+        <!-- آخر صفحة -->
+        <button (click)="goToLast()"
+                [disabled]="currentPage === totalPages"
+                class="px-3 py-2 rounded-lg border bg-white dark:bg-slate-700 
+                        disabled:opacity-40 disabled:cursor-not-allowed
+                        hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            الأخير »
+        </button>
 
         </div>
-
-      </div>
-
-    </div>
+</div>
 
   </div>
 
