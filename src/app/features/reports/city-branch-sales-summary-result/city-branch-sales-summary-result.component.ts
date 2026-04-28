@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BranchSalesDailyService } from '../../../services/branch-sales-daily.service';
 
 @Component({
@@ -32,21 +32,41 @@ export class CityBranchSalesSummaryResultComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private reportService: BranchSalesDailyService
+    private reportService: BranchSalesDailyService,
+      private router: Router,
+
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.filter = {
-        fromDate: params['fromDate'],
-        toDate: params['toDate'],
-        cityIds: params['cityIds'] ? params['cityIds'].split(',').map(Number) : null,
-        activityTypeId: params['activityTypeId'] ? Number(params['activityTypeId']) : null,
-        branchType: params['branchType'] || 'All'
-      };
+ this.route.queryParams.subscribe(params => {
+  const fromDate = params['fromDate'];
+  const toDate = params['toDate'];
 
-      this.loadData();
-    });
+  if (!fromDate || !toDate) {
+    this.router.navigate(['/reports/city-branch-sales-summary']);
+    return;
+  }
+
+  let cityIds: number[] | null = null;
+  if (params['cityIds']) {
+    const raw = Array.isArray(params['cityIds']) ? params['cityIds'] : [params['cityIds']];
+    cityIds = raw.map((x: any) => Number(x)).filter(x => !isNaN(x));
+  }
+
+  const activityTypeId = params['activityTypeId'] ? Number(params['activityTypeId']) : null;
+  const branchType = params['branchType'] || 'All';
+
+  this.filter = {
+    fromDate,
+    toDate,
+    cityIds: cityIds && cityIds.length ? cityIds : null,
+    activityTypeId,
+    branchType
+  };
+
+  this.loadData();
+});
+
   }
 
   loadData(): void {
