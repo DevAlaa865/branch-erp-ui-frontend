@@ -6,9 +6,13 @@ import { API_BASE_URL } from '../api.config';
 })
 export class AuthorizationAdminService {
 
-private baseUrl = `${API_BASE_URL}/AuthorizationAdmin`;
+/* private baseUrl = `${API_BASE_URL}/AuthorizationAdmin`;
 private authBaseUrl = 'https://localhost:7025/api/Auth';
-private authBaseUrl2 = `${API_BASE_URL}`;
+private authBaseUrl2 = `${API_BASE_URL}`; */
+
+private baseUrl = `${API_BASE_URL}/AuthorizationAdmin`;
+private authBaseUrl = `${API_BASE_URL}/Auth`;
+private apiUrl = `${API_BASE_URL}`;
   constructor(private http: HttpClient) {}
 
   updateUserData(dto: any) {
@@ -48,6 +52,6 @@ updateRolePermissions(dto: any) {
   }
 
   getBranches() {
-  return this.http.get<any>(`${this.authBaseUrl2}/Branch`);
+  return this.http.get<any>(`${this.apiUrl}/Branch`);
 }
 }

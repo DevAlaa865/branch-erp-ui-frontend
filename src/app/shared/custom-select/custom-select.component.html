@@ -34,7 +34,7 @@
       (click)="selectItem(item)"
       class="px-3 py-2 text-sm cursor-pointer hover:bg-blue-100 flex justify-between">
 
-      <span>{{ item[bindLabel] }}</span>
+      <span class="text-black">{{ item[bindLabel] }}</span>
 
       <i *ngIf="isSelected(item)" class="fa fa-check text-blue-600"></i>
     </div>

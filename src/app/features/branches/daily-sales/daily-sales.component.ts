@@ -233,6 +233,16 @@ preventEnter(event: Event) {
     row.get('discountNotes')?.clearValidators();
     row.get('discountNotes')?.setValue('');
   }
+  // 4) مرفق العجز → اختياري لو النوع فيه "مسموح"
+const attachmentControl = row.get('attachmentPath');
+if (attachmentControl) {
+  if (name.includes('مسموح')) {
+    attachmentControl.clearValidators(); // اختياري
+  } else {
+    attachmentControl.setValidators([Validators.required]); // إلزامي
+  }
+  attachmentControl.updateValueAndValidity();
+}
 
   row.get('employeeId')?.updateValueAndValidity();
   row.get('returnNotes')?.updateValueAndValidity();
@@ -317,7 +327,8 @@ onShortageFileSelected(event: Event, index: number) {
      this.network = Number(this.form.get('networkAmount')?.value || 0);
     this.credit = Number(this.form.get('creditAmount')?.value || 0);
 
-    const diff = this.grandTotal - (this.cash+this.network + this.credit);
+    const diffRaw = this.grandTotal - (this.cash + this.network + this.credit);
+    const diff = Number(diffRaw.toFixed(2));
     this.form.get('difference')?.setValue(diff, { emitEvent: false });
 
     this.updateDifferenceStatus(diff);
@@ -354,17 +365,18 @@ recalculateShortageEffect() {
    this.grandTotal = Number(this.form.get('grandTotal')?.value || 0);
 
   // الفرق الأساسي قبل العجز
-  let diff =(this.cash +this.network+ this.credit)- this.grandTotal ;
-
+/*   let diff =(this.cash +this.network+ this.credit)- this.grandTotal ;
+ */ let diffRaw = (this.cash + this.network + this.credit) - this.grandTotal;
   // طرح مجموع العجز
+
   let totalShortage = 0;
   this.shortageDetails.controls.forEach(row => {
     const amount = Number(row.get('amount')?.value || 0);
     totalShortage -= amount;
   });
-
-  diff -= totalShortage;
-
+  diffRaw -= totalShortage;
+/*   diff -= totalShortage; */
+   const diff = Number(diffRaw.toFixed(2));
   this.form.get('difference')?.setValue(diff, { emitEvent: false });
   this.updateDifferenceStatus(diff);
 }
