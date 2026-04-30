@@ -76,7 +76,7 @@ private baseUrl = API_BASE_URL;
   }
 
   loadRoles() {
-    this.http.get<any>(`${this.baseUrl}/api/AuthorizationAdmin/roles`)
+    this.http.get<any>(`${this.baseUrl}/AuthorizationAdmin/roles`)
       .subscribe({
         next: res => {
           this.roles = res.data || [];
@@ -151,7 +151,7 @@ private baseUrl = API_BASE_URL;
     this.isSaving = true;
     this.message = '';
 
-    this.http.post<any>(`${this.baseUrl}/api/Auth/register`, this.model)
+    this.http.post<any>(`${this.baseUrl}/Auth/register`, this.model)
       .subscribe({
         next: res => {
           this.isSaving = false;
