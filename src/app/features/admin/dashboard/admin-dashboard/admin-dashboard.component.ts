@@ -48,7 +48,10 @@ export class AdminDashboardComponent implements OnInit {
   openBranches() {
     this.router.navigate(['/admin/branch']);
   }
-
+    openSalesOfTarget()
+    {
+            this.router.navigate(['/branches/daily-target']);
+    }
 queries() {
   
   this.router.navigate(['/reports/daily-sales-inquiry']);

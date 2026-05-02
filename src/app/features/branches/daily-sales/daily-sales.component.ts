@@ -417,6 +417,69 @@ save() {
     });
     return;
   }
+  
+////
+const attachmentPath = this.form.get('attachmentPath')?.value;
+
+if (
+  !attachmentPath ||
+  typeof attachmentPath !== 'string' ||
+  attachmentPath.trim() === '' ||
+  attachmentPath.toLowerCase().includes('blank')
+) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'warning',
+    title: 'مسار مرفق اليومية غير صالح، برجاء إعادة رفع المرفق.',
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true
+  });
+  return;
+}
+
+// =======================================
+// ✅ التحقق من مرفقات العجز داخل shortageDetails
+// =======================================
+for (let i = 0; i < this.shortageDetails.length; i++) {
+  const row = this.shortageDetails.at(i);
+  const typeId = row.get('shortageTypeId')?.value;
+
+  // نجيب النوع من اللستة
+  const type = this.shortageTypes.find(t => t.id === typeId);
+  const name = type?.name || type?.shortageName || '';
+
+  // لو النوع فيه كلمة "مسموح" → المرفق اختياري
+  const isAllowed = name.includes('مسموح');
+
+  // لو مش مسموح → لازم مرفق
+  if (!isAllowed) {
+    const path = row.get('attachmentPath')?.value;
+
+    if (
+      !path ||
+      typeof path !== 'string' ||
+      path.trim() === '' ||
+      path.toLowerCase().includes('blank')
+    ) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'warning',
+        title: `الصف رقم ${i + 1}: مرفق العجز غير صالح أو غير موجود.`,
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+      });
+      return;
+    }
+  }
+}
+
+/////
+
+
 
   // 🔥 شرط جديد: لو اليوم ليس No Sales → لازم واحدة من الثلاثة > 0
   if (!noSales) {

@@ -67,7 +67,7 @@ export const routes: Routes = [
           import('./features/reports/city-branch-sales-summary-chart/city-branch-sales-summary-chart.component')
             .then(m => m.CityBranchSalesSummaryChartComponent)
       },
-
+ 
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -88,6 +88,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/branches/daily-sales/daily-sales.component')
             .then(m => m.DailySalesComponent)
+      },
+      {
+        path: 'branches/daily-target',
+        loadComponent: () =>
+          import('./features/branches/daily-target/daily-target.component')
+            .then(m => m.DailyTargetComponent)
       },
       {
         path: 'branches/daily-sales/:branchId/:date',
