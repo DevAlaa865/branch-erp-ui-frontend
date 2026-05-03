@@ -49,6 +49,18 @@ export class BranchDailyTargetService {
   private baseUrl = `${API_BASE_URL}/BranchDailyTarget`;
 
   constructor(private http: HttpClient) {}
+  // رفع ملف الإكسل
+importExcel(file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+  return this.http.post<any>(`${this.baseUrl}/import-excel`, formData);
+}
+
+// جلب تارجت اليوم للفرع
+getTodayTarget(branchId: number): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}/today-target/${branchId}`);
+}
+
 
   getById(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${id}`);

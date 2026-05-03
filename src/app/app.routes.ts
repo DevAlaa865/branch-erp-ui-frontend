@@ -109,6 +109,13 @@ export const routes: Routes = [
           import('./features/reports/daily-sales-inquiry/daily-sales-inquiry.component')
             .then(m => m.DailySalesInquiryComponent)
         },
+        {
+        path: 'branches/daily-target-upload',
+        loadComponent: () =>
+          import('./core/features/branches/daily-target/daily-target-upload/daily-target-upload.component')
+            .then(m => m.DailyTargetUploadComponent)
+      },
+
 
       // ============================
       // Admin (Protected by AdminGuard)

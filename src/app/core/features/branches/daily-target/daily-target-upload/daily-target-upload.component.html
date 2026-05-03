@@ -1,0 +1,20 @@
+<div class="card" style="padding: 20px; max-width: 450px;">
+  <h2>رفع ملف التارجت اليومي من Excel</h2>
+
+  <div style="margin-top: 15px;">
+    <input type="file" (change)="onFileSelected($event)" />
+  </div>
+
+<button
+  (click)="upload()"
+  [disabled]="!selectedFile"
+  class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+>
+  رفع الملف
+</button>
+
+
+  <p *ngIf="message" style="margin-top: 10px;">
+    {{ message }}
+  </p>
+</div>
