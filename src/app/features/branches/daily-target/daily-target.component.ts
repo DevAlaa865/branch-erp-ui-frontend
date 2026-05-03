@@ -46,11 +46,24 @@ export class DailyTargetComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.buildForm();
-    this.loadLookups();
-    this.initHeaderFromUser();
-  }
+ngOnInit(): void {
+  this.buildForm();
+  this.loadLookups();
+  this.initHeaderFromUser();
+
+  // 🔥 تحميل التارجت عند تغيير الفرع
+  this.form.get('branchId')?.valueChanges.subscribe(branchId => {
+    if (branchId) {
+      this.loadTodayTarget();
+    }
+  });
+
+  // 🔥 تحميل التارجت عند تغيير التاريخ
+  this.form.get('targetDate')?.valueChanges.subscribe(() => {
+    this.loadTodayTarget();
+  });
+}
+
 
   buildForm() {
     this.form = this.fb.group({
@@ -97,55 +110,44 @@ export class DailyTargetComponent implements OnInit {
     this.form.get('branchId')?.disable({ emitEvent: false });
   }
 loadTodayTarget() {
-  // لو لسه معرفناش الفرع من اليوزر، نخرج
-  if (!this.userInfo || !this.userInfo.branchId) {
-    return;
-  }
+  const branchId = this.form.get('branchId')?.value;
+  const today = this.form.get('targetDate')?.value;
 
-  const branchId = this.userInfo.branchId;
-  const today = this.form.get('targetDate')?.value; // نفس التاريخ اللي في الفورم
+  if (!branchId || !today) return;
 
-  // هنا عندك اختيارين:
-  // 1) تستخدم today-target/{branchId}
-  // 2) أو تستخدم by-branch-date مع التاريخ
-  // هنمشي على today-target الأول
-
-  this.targetService.getTodayTarget(branchId).subscribe({
+  this.targetService.getByBranchAndDate(branchId, today).subscribe({
     next: (res) => {
-      if (!res) {
+      if (!res || !res.data || res.data.length === 0) {
+        this.currentTargetId = null;
+        this.details.clear();
+        this.form.patchValue({
+          totalBranchTarget: 0,
+          totalAchieved: 0
+        });
         return;
       }
 
-      // لو الـ API بيرجع نفس شكل BranchDailyTargetHeaderDto
-      this.currentTargetId = res.id;
+      const target = res.data[0];
+      this.currentTargetId = target.id;
 
       this.form.patchValue({
-        targetDate: res.targetDate?.substring(0, 10),
-        totalBranchTarget: res.totalBranchTarget ?? 0,
-        totalAchieved: res.totalAchieved ?? 0
+        totalBranchTarget: target.totalBranchTarget,
+        totalAchieved: target.totalAchieved
       });
 
-      // نفرّغ التفاصيل القديمة
       this.details.clear();
-
-      if (res.details && Array.isArray(res.details)) {
-        res.details.forEach((d: any) => {
-          const row = this.fb.group({
-            employeeId: [d.employeeId, Validators.required],
-            shift: [d.shift, Validators.required],
-            employeeTarget: [d.employeeTarget ?? 0, [Validators.required, Validators.min(0)]],
-            employeeAchieved: [d.employeeAchieved ?? 0, [Validators.required, Validators.min(0)]]
-          });
-
-          this.details.push(row);
-        });
-      }
-    },
-    error: (err) => {
-      console.error('Error loading today target', err);
+      target.details.forEach((d: any) => {
+        this.details.push(this.fb.group({
+          employeeId: [d.employeeId, Validators.required],
+          shift: [d.shift, Validators.required],
+          employeeTarget: [d.employeeTarget, Validators.required],
+          employeeAchieved: [d.employeeAchieved, Validators.required]
+        }));
+      });
     }
   });
 }
+
 
   addDetail() {
     const row = this.fb.group({
