@@ -115,6 +115,12 @@ export const routes: Routes = [
           import('./core/features/branches/daily-target/daily-target-upload/daily-target-upload.component')
             .then(m => m.DailyTargetUploadComponent)
       },
+      {
+      path: 'branch-targets',
+      loadComponent: () =>
+        import('./features/branches/daily-target/branch-target-list/branch-target-list.component')
+          .then(m => m.BranchTargetListComponent)
+    },
 
 
       // ============================

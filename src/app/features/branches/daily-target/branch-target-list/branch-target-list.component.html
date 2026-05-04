@@ -1,0 +1,126 @@
+<form [formGroup]="filterForm" class="space-y-4 bg-white p-4 rounded-xl shadow">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    <!-- المدينة -->
+    <app-custom-select
+      label="المدينة"
+      [items]="cityOptions"
+      bindLabel="name"
+      bindValue="id"
+      [control]="filterForm.get('cityId')">
+    </app-custom-select>
+
+    <!-- الفرع -->
+    <app-custom-select
+      label="الفرع"
+      [items]="branchOptions"
+      bindLabel="name"
+      bindValue="id"
+      [control]="filterForm.get('branchId')">
+    </app-custom-select>
+
+    <!-- التاريخ -->
+    <div>
+      <label class="block mb-1">التاريخ</label>
+      <input type="date"
+             formControlName="date"
+             class="border p-2 rounded-lg w-full" />
+    </div>
+
+  </div>
+
+  <button type="button"
+          (click)="loadTargets()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+    بحث
+  </button>
+
+</form>
+
+
+<!-- ============================= -->
+<!--       جدول عرض التارجت       -->
+<!-- ============================= -->
+
+<div class="mt-6 bg-white p-4 rounded-xl shadow">
+
+  <table class="w-full border">
+    <thead>
+      <tr class="bg-blue-100 text-right">
+        <th class="p-2 border">الفرع</th>
+        <th class="p-2 border">التاريخ</th>
+        <th class="p-2 border">التارجت</th>
+        <th class="p-2 border">المنجز</th>
+        <th class="p-2 border">تفاصيل</th>
+        <th class="p-2 border">تعديل</th>
+        <th class="p-2 border">حذف</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let t of targets" class="text-right">
+        <td class="p-2 border">{{ t.branchName }}</td>
+        <td class="p-2 border">{{ t.targetDate }}</td>
+        <td class="p-2 border">{{ t.totalBranchTarget }}</td>
+        <td class="p-2 border">{{ t.totalAchieved }}</td>
+
+        <td class="p-2 border">
+          <button (click)="viewDetails(t.id)"
+                  class="px-3 py-1 bg-gray-600 text-white rounded">
+            تفاصيل
+          </button>
+        </td>
+
+        <td class="p-2 border">
+          <button (click)="edit(t.id)"
+                  class="px-3 py-1 bg-green-600 text-white rounded">
+            تعديل
+          </button>
+        </td>
+
+        <td class="p-2 border">
+          <button (click)="delete(t.id)"
+                  class="px-3 py-1 bg-red-600 text-white rounded">
+            حذف
+          </button>
+        </td>
+      </tr>
+
+      <!-- لو مفيش بيانات -->
+      <tr *ngIf="targets.length === 0">
+        <td colspan="7" class="text-center p-4 text-gray-500">
+          لا توجد بيانات للعرض
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <!-- ============================= -->
+  <!--           الباجينيشن         -->
+  <!-- ============================= -->
+
+  <div class="flex justify-between items-center mt-4">
+
+    <button
+      class="px-3 py-1 bg-gray-300 rounded"
+      [disabled]="page === 1"
+      (click)="page = page - 1; loadTargets()">
+      السابق
+    </button>
+
+    <span class="text-gray-700">
+      صفحة {{ page }}
+    </span>
+
+    <button
+      class="px-3 py-1 bg-gray-300 rounded"
+      [disabled]="targets.length < pageSize"
+      (click)="page = page + 1; loadTargets()">
+      التالي
+    </button>
+
+  </div>
+
+</div>

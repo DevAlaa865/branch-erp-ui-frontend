@@ -61,6 +61,15 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>إدارة المرتجعات والخصومات</span>
       </a>
+
+     <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/branch-targets"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>عرض تارجت الفروع</span>
+      </a>
      <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/branches/daily-target-upload"
