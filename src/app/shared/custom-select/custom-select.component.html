@@ -6,7 +6,10 @@
   <!-- Selected Box -->
   <div
     class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 h-[46px] shadow-sm cursor-pointer"
-    (click)="toggleDropdown()">
+     [class.cursor-pointer]="!disabled"
+  [class.opacity-50]="disabled"
+  [class.bg-gray-100]="disabled"
+  (click)="toggleDropdown()">
 
     <span class="text-gray-700 text-sm">
       {{ selectedLabel }}

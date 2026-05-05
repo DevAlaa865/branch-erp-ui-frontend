@@ -45,7 +45,9 @@
             errorMessage="الرجاء اختيار الفرع"
             [searchable]="true"
             [clearable]="false"
+             [disabled]="isEditMode || isViewMode"
             [dropdownPosition]="'bottom'">
+            
             </app-custom-select>
 
 
@@ -116,6 +118,7 @@
             placeholder="اختر الموظف"
             [control]="row.get('employeeId')"
             iconClass="fa fa-user text-blue-500"
+              [disabled]="isEditMode || isViewMode"
             errorMessage="الرجاء اختيار الموظف">
           </app-custom-select>
 
@@ -128,6 +131,7 @@
             placeholder="اختر الشيفت"
             [control]="row.get('shift')"
             iconClass="fa fa-clock text-purple-500"
+              [disabled]="isEditMode || isViewMode"
             errorMessage="الرجاء اختيار الشيفت">
           </app-custom-select>
 

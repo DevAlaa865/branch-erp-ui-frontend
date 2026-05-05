@@ -24,6 +24,7 @@ export class CustomSelectComponent {
   @Input() dropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
   @Input() multiple: boolean = false;
   @Input() closeOnSelect: boolean = true;
+  @Input() disabled: boolean = false;
 
   isOpen = false;
   searchTerm = '';
@@ -50,9 +51,11 @@ export class CustomSelectComponent {
     );
   }
 
-  toggleDropdown() {
-    this.isOpen = !this.isOpen;
-  }
+toggleDropdown() {
+  if (this.disabled) return;   // 👈 يمنع الفتح
+  this.isOpen = !this.isOpen;
+}
+
 
   selectItem(item: any) {
     if (this.multiple) {
