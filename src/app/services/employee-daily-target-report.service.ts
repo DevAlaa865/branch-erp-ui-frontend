@@ -1,12 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { API_BASE_URL } from '../api.config';
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeDailyTargetReportService {
-
-  private baseUrl = '/api/BranchDailyTarget';
+private baseUrl = `${API_BASE_URL}/BranchDailyTarget`;
 
   constructor(private http: HttpClient) {}
 

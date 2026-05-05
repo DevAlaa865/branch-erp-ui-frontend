@@ -164,4 +164,29 @@ export class EmployeeTargetListComponent implements OnInit {
       }
     });
   }
+
+    editEmployee(e: any): void {
+    // هنا استخدم نفس روت التعديل اللي بتستخدمه في تقرير الفروع
+    // مثال (عدّله حسب مشروعك):
+    this.router.navigate(['/branches/daily-target/edit', e.headerId]);
+  }
+
+  viewDetails(e: any): void {
+    // نفس روت التفاصيل اللي عندك للهيدر
+    // مثال:
+    this.router.navigate(['/branches/daily-target/details', e.headerId]);
+  }
+
+  deleteEmployee(e: any): void {
+    if (!confirm(`هل تريد حذف تارجت الموظف ${e.employeeName}؟`)) {
+      return;
+    }
+
+    // هنا عندك خيارين:
+    // 1) تعمل API مخصوص لحذف detail
+    // 2) أو تفتح شاشة التعديل وتعدل من هناك
+    // مؤقتًا هنخليها Alert لحد ما نضيف API للحذف
+    alert('هنا هنربط API لحذف تفاصيل الموظف من التارجت');
+  }
+
 }

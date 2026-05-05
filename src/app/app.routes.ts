@@ -133,7 +133,12 @@ export const routes: Routes = [
         import('./features/branches/employee-target-list/employee-target-list.component')
           .then(m => m.EmployeeTargetListComponent)
     },
-
+    {
+      path: 'employees/target-chart',
+      loadComponent: () =>
+        import('./features/branches/employee-target-chart/employee-target-chart.component')
+          .then(m => m.EmployeeTargetChartComponent)
+    },
 
 
       // ============================

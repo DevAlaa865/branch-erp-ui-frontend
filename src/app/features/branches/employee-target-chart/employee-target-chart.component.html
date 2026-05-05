@@ -1,0 +1,49 @@
+<div class="bg-white p-6 rounded-2xl shadow-md border border-gray-200 space-y-8">
+
+  <h2 class="text-2xl font-bold text-slate-800 mb-4">
+    شارت تارجت الموظفين
+  </h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <div class="bg-slate-50 p-4 rounded-xl border">
+      <h3 class="font-semibold mb-2 text-slate-700">تارجت مقابل منجز لكل موظف</h3>
+      <canvas id="employeeBarChart"></canvas>
+    </div>
+
+    <div class="bg-slate-50 p-4 rounded-xl border">
+      <h3 class="font-semibold mb-2 text-slate-700">إجمالي التارجت مقابل إجمالي المنجز</h3>
+      <canvas id="employeePieChart"></canvas>
+    </div>
+
+  </div>
+
+  <div class="mt-6">
+    <h3 class="font-semibold mb-3 text-slate-700">ملخص الموظفين</h3>
+
+    <div class="max-h-64 overflow-y-auto border rounded-xl">
+      <table class="w-full border-collapse text-sm">
+        <thead>
+          <tr class="bg-blue-50 text-right border-b">
+            <th class="p-2 font-semibold text-slate-700">الموظف</th>
+            <th class="p-2 font-semibold text-slate-700">الفرع</th>
+            <th class="p-2 font-semibold text-slate-700">التارجت</th>
+            <th class="p-2 font-semibold text-slate-700">المنجز</th>
+            <th class="p-2 font-semibold text-slate-700">النسبة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of employees" class="border-b hover:bg-blue-50">
+            <td class="p-2">{{ e.employeeName }}</td>
+            <td class="p-2">{{ e.branchName }}</td>
+            <td class="p-2">{{ e.employeeTarget }}</td>
+            <td class="p-2">{{ e.employeeAchieved }}</td>
+            <td class="p-2">{{ e.achievementPercentage }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
