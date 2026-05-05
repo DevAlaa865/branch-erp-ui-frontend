@@ -121,6 +121,13 @@ export const routes: Routes = [
         import('./features/branches/daily-target/branch-target-list/branch-target-list.component')
           .then(m => m.BranchTargetListComponent)
     },
+    {
+        path: 'branches/target-chart',
+        loadComponent: () =>
+          import('./features/branches/target-chart/target-chart.component')
+            .then(m => m.TargetChartComponent)
+      },
+
 
 
       // ============================
