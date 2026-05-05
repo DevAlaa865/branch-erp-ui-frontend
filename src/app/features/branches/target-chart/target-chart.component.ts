@@ -19,6 +19,20 @@ export class TargetChartComponent implements OnInit {
   chart: any;
   percentageChartInstance: any;
 
+  // نفس الألوان المستخدمة في شارت الدائرة
+  colors: string[] = [
+    'rgba(34, 197, 94, 0.7)',
+    'rgba(59, 130, 246, 0.7)',
+    'rgba(249, 115, 22, 0.7)',
+    'rgba(236, 72, 153, 0.7)',
+    'rgba(168, 85, 247, 0.7)',
+    'rgba(14, 165, 233, 0.7)',
+    'rgba(250, 204, 21, 0.7)',
+    'rgba(163, 230, 53, 0.7)',
+    'rgba(244, 63, 94, 0.7)',
+    'rgba(125, 211, 252, 0.7)'
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router
@@ -42,6 +56,9 @@ export class TargetChartComponent implements OnInit {
     });
   }
 
+  // ============================
+  //   الشارت الأول (Bar Chart)
+  // ============================
   buildChart(): void {
     if (!this.chartCanvas) return;
 
@@ -83,28 +100,23 @@ export class TargetChartComponent implements OnInit {
     });
   }
 
+  // ============================
+  //   الشارت الثاني (Doughnut)
+  // ============================
   buildPercentageChart(): void {
     if (!this.percentageChart) return;
 
-    const labels = this.targets.map(t => t.branchName);
     const percentages = this.targets.map(t => t.achievementPercentage);
 
     this.percentageChartInstance = new Chart(this.percentageChart.nativeElement, {
       type: 'doughnut',
       data: {
-        labels,
+        labels: this.targets.map(t => t.branchName),
         datasets: [
           {
             label: 'نسبة الإنجاز',
             data: percentages,
-            backgroundColor: [
-              'rgba(34, 197, 94, 0.7)',
-              'rgba(59, 130, 246, 0.7)',
-              'rgba(249, 115, 22, 0.7)',
-              'rgba(236, 72, 153, 0.7)',
-              'rgba(168, 85, 247, 0.7)',
-              'rgba(14, 165, 233, 0.7)'
-            ],
+            backgroundColor: this.colors,
             borderColor: 'white',
             borderWidth: 2
           }
@@ -114,7 +126,7 @@ export class TargetChartComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom' }
+          legend: { display: false } // هنستخدم ليجند يدوي
         }
       }
     });

@@ -26,9 +26,52 @@
   <!-- ============================= -->
   <!--   الشارت الثاني (Doughnut)    -->
   <!-- ============================= -->
-  <div *ngIf="targets.length > 0" class="h-[400px] mt-10">
-    <h3 class="text-lg font-bold text-slate-800 mb-3">نسبة الإنجاز لكل فرع</h3>
-    <canvas #percentageChart></canvas>
+  <div *ngIf="targets.length > 0" class="h-[400px] mt-10 flex">
+
+    <!-- الشارت -->
+    <div class="flex-1">
+      <canvas #percentageChart></canvas>
+    </div>
+
+    <!-- الليجند اليدوي مع الألوان + النسب + التارجت + المنجز -->
+    <div class="w-64 max-h-[380px] overflow-y-auto ms-4 border rounded-lg p-3 bg-gray-50 shadow-sm">
+      <h4 class="font-semibold text-slate-700 mb-3">الفروع</h4>
+
+      <ul>
+        <li *ngFor="let t of targets; let i = index"
+            class="flex flex-col mb-3 p-2 rounded-lg bg-white shadow-sm border">
+
+          <div class="flex items-center gap-2 mb-1">
+            <!-- مربع اللون -->
+            <span class="w-4 h-4 rounded-sm inline-block"
+                  [style.background]="colors[i % colors.length]">
+            </span>
+
+            <!-- اسم الفرع -->
+            <span class="font-semibold text-slate-800 text-sm">
+              {{ t.branchName }}
+            </span>
+          </div>
+
+          <!-- التفاصيل -->
+          <div class="text-xs text-slate-600 ms-6 leading-5">
+            <div>التارجت: <span class="font-bold">{{ t.totalBranchTarget }}</span></div>
+            <div>المنجز: <span class="font-bold">{{ t.totalAchieved }}</span></div>
+            <div>نسبة الإنجاز:
+              <span class="font-bold"
+                    [ngClass]="{
+                      'text-green-600': t.achievementPercentage >= 80,
+                      'text-red-600': t.achievementPercentage < 80
+                    }">
+                {{ t.achievementPercentage }}%
+              </span>
+            </div>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
   </div>
 
 </div>

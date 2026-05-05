@@ -1,13 +1,8 @@
-<!-- ============================= -->
-<!--        فلتر البحث            -->
-<!-- ============================= -->
-
 <form [formGroup]="filterForm"
       class="space-y-6 bg-white p-6 rounded-2xl shadow-md border border-gray-200">
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-    <!-- المدينة -->
     <app-custom-select
       label="المدينة"
       [items]="cityOptions"
@@ -16,7 +11,6 @@
       [control]="filterForm.get('cityId')">
     </app-custom-select>
 
-    <!-- الفرع -->
     <app-custom-select
       label="الفرع"
       [items]="branchOptions"
@@ -25,7 +19,6 @@
       [control]="filterForm.get('branchId')">
     </app-custom-select>
 
-    <!-- التاريخ -->
     <div class="flex flex-col">
       <label class="text-slate-700 font-medium mb-1">التاريخ</label>
       <input type="date"
@@ -37,40 +30,32 @@
 
   <div class="flex justify-end">
     <button type="button"
-            (click)="loadTargets()"
-            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition">
-      بحث
+            (click)="loadEmployees()"
+            class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow transition"
+            [disabled]="loading">
+      {{ loading ? 'جارى التحميل...' : 'بحث' }}
     </button>
   </div>
 
 </form>
 
-
-<!-- ============================= -->
-<!--       جدول عرض التارجت       -->
-<!-- ============================= -->
-
 <div class="mt-8 bg-white p-6 rounded-2xl shadow-md border border-gray-200">
 
   <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold text-slate-800">نتائج البحث</h2>
+    <h2 class="text-xl font-bold text-slate-800">نتائج البحث - الموظفين</h2>
 
-    <div class="flex gap-3" *ngIf="targets.length > 0">
-
-      <!-- زر الشارت العام -->
+    <div class="flex gap-3" *ngIf="employees.length > 0">
       <button
         (click)="openChartForAll()"
         class="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow transition">
         عرض الشارت
       </button>
 
-      <!-- زر تحميل Excel -->
       <button
         (click)="exportToExcel()"
         class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition">
         تحميل Excel
       </button>
-
     </div>
   </div>
 
@@ -78,70 +63,53 @@
     <table class="w-full border-collapse">
       <thead>
         <tr class="bg-blue-50 text-right border-b">
+          <th class="p-3 font-semibold text-slate-700">المدينة</th>
           <th class="p-3 font-semibold text-slate-700">الفرع</th>
+          <th class="p-3 font-semibold text-slate-700">الموظف</th>
           <th class="p-3 font-semibold text-slate-700">التاريخ</th>
           <th class="p-3 font-semibold text-slate-700">التارجت</th>
           <th class="p-3 font-semibold text-slate-700">المنجز</th>
           <th class="p-3 font-semibold text-slate-700">نسبة الإنجاز</th>
-          <th class="p-3 font-semibold text-slate-700 text-center">الإجراءات</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let t of targetsToShow" class="border-b hover:bg-blue-50 transition">
+        <tr *ngFor="let e of employeesToShow" class="border-b hover:bg-blue-50 transition">
+          <td class="p-3">{{ e.cityName }}</td>
+          <td class="p-3">{{ e.branchName }}</td>
+          <td class="p-3">{{ e.employeeName }}</td>
+          <td class="p-3">{{ e.targetDate | date:'yyyy-MM-dd' }}</td>
+          <td class="p-3">{{ e.employeeTarget }}</td>
+          <td class="p-3">{{ e.employeeAchieved }}</td>
 
-          <td class="p-3">{{ t.branchName }}</td>
-
-          <!-- التاريخ بدون وقت -->
-          <td class="p-3">{{ t.targetDate | date:'yyyy-MM-dd' }}</td>
-
-          <td class="p-3">{{ t.totalBranchTarget }}</td>
-          <td class="p-3">{{ t.totalAchieved }}</td>
-
-          <!-- نسبة الإنجاز -->
           <td class="p-3">
             <span
               class="px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1"
               [ngClass]="{
-                'bg-green-100 text-green-700': t.achievementPercentage >= 80,
-                'bg-red-100 text-red-700': t.achievementPercentage < 80
+                'bg-green-100 text-green-700': e.achievementPercentage >= 80,
+                'bg-red-100 text-red-700': e.achievementPercentage < 80
               }">
 
               <i class="fa"
                  [ngClass]="{
-                   'fa-arrow-up': t.achievementPercentage >= 80,
-                   'fa-arrow-down': t.achievementPercentage < 80
+                   'fa-arrow-up': e.achievementPercentage >= 80,
+                   'fa-arrow-down': e.achievementPercentage < 80
                  }"></i>
 
-              {{ t.achievementPercentage }}%
+              {{ e.achievementPercentage }}%
             </span>
           </td>
-
-          <!-- الإجراءات -->
-          <td class="p-3 text-center space-x-2">
-
-            <button (click)="viewDetails(t.id)"
-                    class="px-3 py-1 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition">
-              تفاصيل
-            </button>
-
-            <button (click)="edit(t.id)"
-                    class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg transition">
-              تعديل
-            </button>
-
-            <button (click)="delete(t.id)"
-                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition">
-              حذف
-            </button>
-
-          </td>
-
         </tr>
 
-        <tr *ngIf="targetsToShow.length === 0">
-          <td colspan="6" class="text-center p-6 text-gray-500">
+        <tr *ngIf="employeesToShow.length === 0 && !loading">
+          <td colspan="7" class="text-center p-6 text-gray-500">
             لا توجد بيانات للعرض
+          </td>
+        </tr>
+
+        <tr *ngIf="loading">
+          <td colspan="7" class="text-center p-6 text-gray-500">
+            جارى تحميل البيانات...
           </td>
         </tr>
 
@@ -149,13 +117,7 @@
     </table>
   </div>
 
-
-  <!-- ============================= -->
-  <!--           الباجينيشن         -->
-  <!-- ============================= -->
-
-  <div class="flex justify-between items-center mt-6">
-
+  <div class="flex justify-between items-center mt-6" *ngIf="totalCount > 0">
     <button
       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition disabled:opacity-50"
       [disabled]="page === 1"
@@ -164,7 +126,7 @@
     </button>
 
     <span class="text-gray-700 font-medium">
-      صفحة {{ page }} من {{ totalPages }}
+      صفحة {{ page }} من {{ totalPages }} — إجمالي {{ totalCount }} موظف
     </span>
 
     <button
@@ -173,7 +135,6 @@
       (click)="page = page + 1; paginate()">
       التالي
     </button>
-
   </div>
 
 </div>

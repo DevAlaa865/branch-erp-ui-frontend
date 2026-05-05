@@ -24,10 +24,12 @@ export class BranchTargetListComponent implements OnInit {
   branches: any[] = [];
   branchOptions: any[] = [];
 
-  targets: any[] = [];
+  targets: any[] = [];          // كل النتائج
+  targetsToShow: any[] = [];    // نتائج الصفحة الحالية فقط
+
   page = 1;
   pageSize = 10;
-  totalCount = 0;
+  totalPages = 1;
 
   constructor(
     private fb: FormBuilder,
@@ -83,7 +85,7 @@ export class BranchTargetListComponent implements OnInit {
     });
   }
 
-  // 🔥 دالة لحساب نسبة الإنجاز
+  // 🔥 حساب نسبة الإنجاز
   private mapWithPercentage(data: any[]): any[] {
     return data.map((t: any) => ({
       ...t,
@@ -92,6 +94,16 @@ export class BranchTargetListComponent implements OnInit {
           ? Math.round((t.totalAchieved / t.totalBranchTarget) * 100)
           : 0
     }));
+  }
+
+  // 🔥 دالة الباجينيشن
+  paginate(): void {
+    const start = (this.page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.totalPages = Math.ceil(this.targets.length / this.pageSize);
+
+    this.targetsToShow = this.targets.slice(start, end);
   }
 
   loadTargets(): void {
@@ -107,19 +119,23 @@ export class BranchTargetListComponent implements OnInit {
     }
 
     this.targets = [];
+    this.page = 1; // إعادة ضبط الصفحة
 
-    // 🔥 1) لو اختار فرع → نجيب تارجت الفرع فقط
+    // 🔥 1) لو اختار فرع
     if (branchId) {
       this.targetService.getByBranchAndDate(branchId, date).subscribe({
         next: (res: any) => {
           this.targets = this.mapWithPercentage(res.data || []);
+          this.paginate();
         }
       });
       return;
     }
 
-    // 🔥 2) لو اختار مدينة فقط → نجيب كل فروع المدينة
+    // 🔥 2) لو اختار مدينة فقط
     if (cityId) {
+      let pending = this.branches.length;
+
       this.branches.forEach((b: any) => {
         this.targetService.getByBranchAndDate(b.id, date).subscribe({
           next: (res: any) => {
@@ -127,16 +143,21 @@ export class BranchTargetListComponent implements OnInit {
               const mapped = this.mapWithPercentage(res.data);
               this.targets.push(...mapped);
             }
+
+            pending--;
+            if (pending === 0) this.paginate();
           }
         });
       });
+
       return;
     }
 
-    // 🔥 3) لو اختار تاريخ فقط → نجيب كل الفروع في كل المدن
+    // 🔥 3) لو اختار تاريخ فقط
     this.master.getBranches().subscribe({
       next: (res: any) => {
         const allBranches = res.data || [];
+        let pending = allBranches.length;
 
         allBranches.forEach((b: any) => {
           this.targetService.getByBranchAndDate(b.id, date).subscribe({
@@ -145,6 +166,9 @@ export class BranchTargetListComponent implements OnInit {
                 const mapped = this.mapWithPercentage(res2.data);
                 this.targets.push(...mapped);
               }
+
+              pending--;
+              if (pending === 0) this.paginate();
             }
           });
         });
