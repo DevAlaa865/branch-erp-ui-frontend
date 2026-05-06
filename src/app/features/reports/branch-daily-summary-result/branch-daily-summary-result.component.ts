@@ -56,7 +56,7 @@ export class BranchDailySummaryResultComponent implements OnInit {
   errorMessage = '';
 
   pagedRows: BranchDailySummaryRow[] = [];
-  pageSize = 20;
+  pageSize = 12;
   currentPage = 1;
   totalPages = 1;
 

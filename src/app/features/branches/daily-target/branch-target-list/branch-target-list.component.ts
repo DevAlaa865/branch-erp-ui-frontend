@@ -207,12 +207,12 @@ export class BranchTargetListComponent implements OnInit {
     XLSX.writeFile(workbook, "BranchTargets.xlsx");
   }
 
-  edit(id: number): void {
-    this.router.navigate(['/branches/daily-target'], {
-      queryParams: { id }
-    });
-  }
 
+edit(e: any): void {
+  this.router.navigate(['/branches/daily-target'], {
+    queryParams: { id: e.headerId }
+  });
+}
   viewDetails(id: number): void {
     this.router.navigate(['/branches/daily-target'], {
       queryParams: { id, view: true }

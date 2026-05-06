@@ -2,44 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
+import { BranchDailyTargetHeaderCreateUpdateDto, BranchTargetPeriodReport } from '../shared/models/branch-target-period-report.model';
 
-export interface BranchDailyTargetDetailDto {
-  id?: number;
-  employeeId: number;
-  employeeName?: string;
-  shift: number;
-  employeeTarget?: number | null;
-  employeeAchieved?: number | null;
-  employeeAchievementPercentage?: number | null;
-  employeeCommission?: number | null;
-}
-
-export interface BranchDailyTargetHeaderDto {
-  id: number;
-  branchId: number;
-  branchName?: string;
-  targetDate: string;
-  totalBranchTarget?: number | null;
-  totalAchieved?: number | null;
-  achievementPercentage?: number | null;
-  branchCommission?: number | null;
-  details: BranchDailyTargetDetailDto[];
-}
-
-export interface BranchDailyTargetDetailCreateUpdateDto {
-  employeeId: number;
-  shift: number;
-  employeeTarget?: number | null;
-  employeeAchieved?: number | null;
-}
-
-export interface BranchDailyTargetHeaderCreateUpdateDto {
-  branchId: number;
-  targetDate: string;
-  totalBranchTarget?: number | null;
-  totalAchieved?: number | null;
-  details: BranchDailyTargetDetailCreateUpdateDto[];
-}
 
 @Injectable({
   providedIn: 'root'
@@ -86,4 +50,14 @@ getTodayTarget(branchId: number): Observable<any> {
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
+
+  getBranchPeriodReport(branchId: number, fromDate: string, toDate: string) {
+  return this.http.get<BranchTargetPeriodReport>(
+    `${this.baseUrl}/BranchDailyTarget/branch-period-report`,
+    {
+      params: { branchId, fromDate, toDate }
+    }
+  );
+}
+
 }

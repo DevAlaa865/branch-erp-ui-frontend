@@ -78,6 +78,14 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>عرض تارجت الموظفين</span>
       </a>
+       <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/reports/branch-period-report"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير تارجت فرع خلال فترة</span>
+      </a>
      <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/branches/daily-target-upload"

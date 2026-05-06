@@ -111,11 +111,13 @@ export class EmployeeTargetListComponent implements OnInit {
         this.employees = data.map((e: any) => ({
           ...e,
           achievementPercentage: e.achievementPercentage ?? 0
+        
         }));
-
+ /*  console.log("EMPLOYEE ROWS:", this.employees); */
         this.totalCount = this.employees.length;
         this.paginate();
         this.loading = false;
+     
       },
       error: () => {
         this.loading = false;
@@ -165,16 +167,20 @@ export class EmployeeTargetListComponent implements OnInit {
     });
   }
 
-    editEmployee(e: any): void {
+/*     editEmployee(e: any): void {
     // هنا استخدم نفس روت التعديل اللي بتستخدمه في تقرير الفروع
     // مثال (عدّله حسب مشروعك):
     this.router.navigate(['/branches/daily-target/edit', e.headerId]);
-  }
-
-  viewDetails(e: any): void {
-    // نفس روت التفاصيل اللي عندك للهيدر
-    // مثال:
-    this.router.navigate(['/branches/daily-target/details', e.headerId]);
+  } */
+    editEmployee(e: any): void {
+      this.router.navigate(['/branches/daily-target'], {
+        queryParams: { id: e.headerId }
+      });
+    }
+  viewDetails(id: number): void {
+    this.router.navigate(['/branches/daily-target'], {
+      queryParams: { id, view: true }
+    });
   }
 
   deleteEmployee(e: any): void {

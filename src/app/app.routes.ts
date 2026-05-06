@@ -139,8 +139,12 @@ export const routes: Routes = [
         import('./features/branches/employee-target-chart/employee-target-chart.component')
           .then(m => m.EmployeeTargetChartComponent)
     },
-
-
+    {
+        path: 'reports/branch-period-report',
+        loadComponent: () =>
+          import('./features/reports/branch-period-report/branch-period-report.component')
+            .then(m => m.BranchPeriodReportComponent)
+      },
       // ============================
       // Admin (Protected by AdminGuard)
       // ============================
