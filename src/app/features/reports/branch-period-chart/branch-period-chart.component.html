@@ -1,0 +1,83 @@
+<div class="p-6 bg-white rounded-2xl shadow-md border border-gray-200 mt-6">
+
+  <div class="flex justify-between items-center mb-4">
+      <div>
+    <h2 class="text-xl font-bold text-slate-800">
+      شارت أداء الفرع خلال الفترة
+    </h2>
+
+      <p class="text-slate-700 leading-relaxed text-sm">
+        <strong>المدينة:</strong> {{ cityName }}  
+        — <strong>الفرع:</strong> {{ branchName }}  
+        — <strong>المشرف:</strong> {{ supervisorName }}  
+        — <strong>من:</strong> {{ fromDate }}  
+        — <strong>إلى:</strong> {{ toDate }}
+      </p>
+</div>
+    <button (click)="back()"
+            class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition">
+      رجوع للتقرير
+    </button>
+  </div>
+
+  <!-- لا توجد بيانات -->
+  <div *ngIf="rows.length === 0" class="text-center text-gray-500 py-10">
+    لا توجد بيانات لعرض الشارت
+  </div>
+
+  <!-- ============================= -->
+  <!--        الشارت الأول (Bar)     -->
+  <!-- ============================= -->
+  <div *ngIf="rows.length > 0" class="h-[500px]">
+    <canvas #barChartCanvas></canvas>
+  </div>
+
+  <!-- ============================= -->
+  <!--   الشارت الثاني (Doughnut)    -->
+  <!-- ============================= -->
+  <div *ngIf="rows.length > 0" class="h-[400px] mt-10 flex">
+
+    <!-- الشارت -->
+    <div class="flex-1">
+      <canvas #percentageChartCanvas></canvas>
+    </div>
+
+    <!-- الليجند اليدوي -->
+    <div class="w-64 max-h-[380px] overflow-y-auto ms-4 border rounded-lg p-3 bg-gray-50 shadow-sm">
+      <h4 class="font-semibold text-slate-700 mb-3">الأيام</h4>
+
+      <ul>
+        <li *ngFor="let r of rows; let i = index"
+            class="flex flex-col mb-3 p-2 rounded-lg bg-white shadow-sm border">
+
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-4 h-4 rounded-sm inline-block"
+                  [style.background]="colors[i % colors.length]">
+            </span>
+
+            <span class="font-semibold text-slate-800 text-sm">
+              {{ r.targetDate }}
+            </span>
+          </div>
+
+          <div class="text-xs text-slate-600 ms-6 leading-5">
+            <div>التارجت: <span class="font-bold">{{ r.totalTarget }}</span></div>
+            <div>المنجز: <span class="font-bold">{{ r.totalAchieved }}</span></div>
+            <div>نسبة الإنجاز:
+              <span class="font-bold"
+                    [ngClass]="{
+                      'text-green-600': r.achievementPercentage >= 80,
+                      'text-red-600': r.achievementPercentage < 80
+                    }">
+                {{ r.achievementPercentage }}%
+              </span>
+            </div>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>

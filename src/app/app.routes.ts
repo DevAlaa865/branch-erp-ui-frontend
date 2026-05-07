@@ -145,6 +145,25 @@ export const routes: Routes = [
           import('./features/reports/branch-period-report/branch-period-report.component')
             .then(m => m.BranchPeriodReportComponent)
       },
+      {
+        path: 'reports/branch-period-chart',
+        loadComponent: () =>
+          import('./features/reports/branch-period-chart/branch-period-chart.component')
+            .then(m => m.BranchPeriodChartComponent)
+      },
+      {
+      path: 'branches/daily-performance-target-upload',
+      loadComponent: () =>
+        import('./features/branches/daily-performance-target-upload/daily-performance-target-upload.component')
+          .then(m => m.DailyPerformanceTargetUploadComponent)
+      },
+      {
+        path: 'branches/daily-performance',
+        loadComponent: () =>
+          import('./features/branches/daily-performance/daily-performance.component')
+            .then(m => m.DailyPerformanceComponent)
+      },
+
       // ============================
       // Admin (Protected by AdminGuard)
       // ============================

@@ -1,0 +1,13 @@
+.upload-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.upload-card .card-header {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.upload-card .card-body {
+  font-size: 0.95rem;
+}

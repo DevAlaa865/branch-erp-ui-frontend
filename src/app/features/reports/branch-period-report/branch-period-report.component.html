@@ -76,54 +76,81 @@
 
 
 <!-- ============================= -->
-<!--       جدول النتائج           -->
+<!--       جدول النتائج + أزرار   -->
 <!-- ============================= -->
 
 <div *ngIf="(reportData?.rows?.length ?? 0) > 0"
      class="mt-6 bg-white p-6 rounded-xl shadow-md">
 
-  <table class="w-full text-right text-sm table-fixed">
+  <!-- الأزرار فوق الجدول -->
+  <div class="flex gap-4 mb-6 justify-start">
+  <button class="px-5 py-2 bg-green-600 text-white rounded-lg shadow"
+        (click)="exportExcel()">
+  تحميل Excel
+</button>
 
-    <thead class="bg-blue-100 text-black">
-      <tr>
-        <th class="px-4 py-3">التاريخ</th>
-        <th class="px-4 py-3">التارجت</th>
-        <th class="px-4 py-3">المنجز</th>
-        <th class="px-4 py-3">نسبة الإنجاز</th>
-      </tr>
-    </thead>
 
-    <tbody>
-      <tr *ngFor="let r of reportData?.rows"
-          class="border-b hover:bg-blue-50 transition">
+    <button class="px-5 py-2 bg-purple-600 text-white rounded-lg shadow"
+       (click)="openChart()">  
+      عرض الشارتات
+    </button>
+  </div>
 
-        <td class="px-4 py-3">{{ r.targetDate | date:'yyyy-MM-dd' }}</td>
-        <td class="px-4 py-3">{{ r.totalTarget }}</td>
-        <td class="px-4 py-3">{{ r.totalAchieved }}</td>
+  <!-- الجدول -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-right text-sm border-collapse" dir="rtl">
+      <thead class="bg-blue-100 text-black sticky top-0 z-10">
+        <tr >
+          <th class="px-4 py-3 border text-center">التاريخ</th>
+          <th class="px-4 py-3 border text-center">التارجت</th>
+          <th class="px-4 py-3 border text-center">المنجز</th>
+          <th class="px-4 py-3 border text-center">نسبة الإنجاز</th>
+        </tr>
+      </thead>
 
-        <td class="px-4 py-3">
-          <span class="px-2 py-1 rounded-full text-xs font-semibold"
-                [ngClass]="{
-                  'bg-green-100 text-green-700': r.achievementPercentage >= 80,
-                  'bg-red-100 text-red-700': r.achievementPercentage < 80
-                }">
-            {{ r.achievementPercentage }}%
-          </span>
-        </td>
+      <tbody>
+        <tr *ngFor="let r of pagedRows"
+            class="border-b hover:bg-blue-50 transition">
 
-      </tr>
-    </tbody>
+          <td class="px-4 py-3 border text-center">{{ r.targetDate | date:'yyyy-MM-dd' }}</td>
+          <td class="px-4 py-3 border text-center">{{ r.totalTarget }}</td>
+          <td class="px-4 py-3 border text-center">{{ r.totalAchieved }}</td>
 
-  </table>
+          <td class="px-4 py-3 border text-center">
+            <span class="px-2 py-1 rounded-full text-xs font-semibold"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': r.achievementPercentage >= 80,
+                    'bg-red-100 text-red-700': r.achievementPercentage < 80
+                  }">
+              {{ r.achievementPercentage }}%
+            </span>
+          </td>
 
-  <div class="flex gap-4 mt-6">
-    <button class="px-5 py-2 bg-green-600 text-white rounded-lg shadow">
-      تحميل Excel
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+
+  <!-- الباجينيشن -->
+  <div class="flex justify-between items-center mt-6">
+
+    <button (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
+      السابق
     </button>
 
-    <button class="px-5 py-2 bg-purple-600 text-white rounded-lg shadow">
-      عرض الشارت
+    <span class="text-sm text-gray-600">
+      صفحة {{ currentPage }} من {{ totalPages }}
+    </span>
+
+    <button (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
+      التالي
     </button>
+
   </div>
 
 </div>

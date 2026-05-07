@@ -51,13 +51,14 @@ getTodayTarget(branchId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
 
-  getBranchPeriodReport(branchId: number, fromDate: string, toDate: string) {
-  return this.http.get<BranchTargetPeriodReport>(
-    `${this.baseUrl}/BranchDailyTarget/branch-period-report`,
-    {
-      params: { branchId, fromDate, toDate }
+getBranchPeriodReport(branchId: number, fromDate: string, toDate: string) {
+  return this.http.get(`${this.baseUrl}/branch-period-report`, {
+    params: {
+      branchId,
+      fromDate,
+      toDate
     }
-  );
+  });
 }
 
 }
