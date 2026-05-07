@@ -42,7 +42,7 @@ export class DailyPerformanceTargetUploadComponent {
     this.message = '';
 
     this.targetService.uploadExcel(this.selectedFile).subscribe({
-      next: (res) => {
+      next: (res:any) => {
         this.isUploading = false;
         this.isSuccess = res.success;
         this.message = res.message || 'تم رفع الملف ومعالجة التارجت بنجاح';

@@ -39,37 +39,42 @@ export class DailyPerformanceComponent implements OnInit {
     this.load();
   }
 
-  load() {
-    if (!this.targetDate || !this.branchId) return;
+load() {
+  if (!this.targetDate || !this.branchId) return;
 
-    this.isLoading = true;
-    this.performanceService.get(this.branchId, this.targetDate)
-      .subscribe({
-        next: (res) => {
-          this.data = res;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.data = null;
-          this.isLoading = false;
-        }
-      });
-  }
+  this.isLoading = true;
 
-  saveAchievement() {
-    if (!this.data) return;
+  this.performanceService.get(this.branchId, this.targetDate)
+    .subscribe({
+      next: (res: any) => {
+        this.data = res.data;   // ← أهم تعديل
+        this.isLoading = false;
+      },
+      error: () => {
+        this.data = null;
+        this.isLoading = false;
+      }
+    });
+}
 
-    const model = {
-      branchId: this.branchId,
-      targetDate: this.targetDate,
-      branchAchievedAmount: this.data.branchAchievedAmount,
-      branchInvoicesCountAchieved: this.data.branchInvoicesCountAchieved,
-      branchItemsCountAchieved: this.data.branchItemsCountAchieved
-    };
 
-    this.performanceService.saveAchievement(model).subscribe(() => {
+saveAchievement() {
+  if (!this.data) return;
+
+  const model = {
+    branchId: this.branchId,
+    targetDate: this.targetDate,
+    branchAchievedAmount: this.data.branchAchievedAmount,
+    branchInvoicesCountAchieved: this.data.branchInvoicesCountAchieved,
+    branchItemsCountAchieved: this.data.branchItemsCountAchieved
+  };
+
+  this.performanceService.saveAchievement(model).subscribe({
+    next: (res: any) => {
       alert('تم حفظ إنجاز الفرع بنجاح');
       this.load();
-    });
-  }
+    }
+  });
+}
+
 }

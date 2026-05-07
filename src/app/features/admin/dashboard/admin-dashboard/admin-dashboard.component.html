@@ -50,6 +50,18 @@
           </div>
           <div class="text-xl text-[var(--text-tertiary)]">ادخل اليوميه من هنا </div>
         </div>
+              <div *hasPermission="'dashbord.dailysails'"
+            (click)="opendailyBranchTarget()"
+            class="stat-card cursor-pointer hover:shadow-md transition text-2xl"
+            style="border-left-color: var(--info);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">تارجت الفرع</span>
+            <div class="icon-box bg-[var(--info-light)] text-[var(--info)]">
+              <iconify-icon icon="solar:receipt-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xl text-[var(--text-tertiary)]">تارجت الفرع</div>
+        </div>
 
         <!-- إدارة المرتجعات والخصومات -->
         <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
