@@ -77,6 +77,22 @@
           <div class="text-xs text-[var(--text-tertiary)]">إدارة المرتجعات والخصومات</div>
         </div>
 
+         <!-- تقرير الشبكة والعجز للفروع -->
+        <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
+            (click)="openReports()"
+            class="stat-card cursor-pointer hover:shadow-md transition"
+            style="border-left-color: var(--danger);">
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-caption">المرتجعات والخصومات</span>
+            <div class="icon-box bg-[var(--danger-light)] text-[var(--danger)]">
+              <iconify-icon icon="solar:receipt-text-bold-duotone" width="18"></iconify-icon>
+            </div>
+          </div>
+          <div class="text-xs text-[var(--text-tertiary)]">إدارة المرتجعات والخصومات</div>
+        </div>
+
+
+
         <!-- استعلام -->
         <div *ngIf="auth.hasPermission('dashbord.dailysails') || auth.hasPermission('Finance.View')"
             (click)="queries()"
