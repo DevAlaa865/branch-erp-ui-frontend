@@ -18,9 +18,9 @@ export class BranchNetworkShortageComponent implements OnInit {
   cityId: number | null = null;
 
   data: any[] = [];
+  shortageTypes: any[] = [];   // ← أنواع العجز (أعمدة الجدول)
   isLoading = false;
 
-  // 🔥 هنا هنخزن المدن
   cities: any[] = [];
 
   constructor(
@@ -36,11 +36,9 @@ export class BranchNetworkShortageComponent implements OnInit {
     this.loadCities();
   }
 
-  // 🔥 تحميل المدن من MasterDataService
   loadCities() {
     this.masterData.getCities().subscribe({
       next: (res) => {
-        // حسب الـ API عندك: غالبًا res.data
         this.cities = res.data || [];
       },
       error: () => {
@@ -61,10 +59,20 @@ export class BranchNetworkShortageComponent implements OnInit {
     this.reportService.getReport(filter).subscribe({
       next: (res) => {
         this.data = res.data || [];
+
+        // استخراج أنواع العجز من أول صف
+        if (this.data.length > 0) {
+          this.shortageTypes = this.data[0].shortages.map((s: any) => ({
+            shortageTypeId: s.shortageTypeId,
+            shortageTypeName: s.shortageTypeName
+          }));
+        }
+
         this.isLoading = false;
       },
       error: () => {
         this.data = [];
+        this.shortageTypes = [];
         this.isLoading = false;
       }
     });

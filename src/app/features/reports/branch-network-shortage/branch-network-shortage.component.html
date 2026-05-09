@@ -7,6 +7,7 @@
 
     <div class="card-body">
 
+      <!-- Filters -->
       <div class="row mb-3">
         <div class="col-md-4">
           <label>من تاريخ</label>
@@ -29,19 +30,41 @@
 
       <button class="btn btn-primary mb-3" (click)="load()">عرض التقرير</button>
 
+      <!-- Dynamic Table -->
       <table class="table table-bordered table-striped" *ngIf="data.length > 0">
         <thead class="table-dark">
           <tr>
             <th>الفرع</th>
             <th>مبلغ الشبكة</th>
+
+            <!-- أعمدة أنواع العجز -->
+            <th *ngFor="let t of shortageTypes">
+              {{ t.shortageTypeName }}
+            </th>
+
             <th>إجمالي العجز</th>
           </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let row of data">
             <td>{{ row.branchName }}</td>
             <td>{{ row.networkAmount | number }}</td>
-            <td>{{ row.totalShortage | number }}</td>
+
+            <!-- قيم العجز حسب النوع -->
+            <td *ngFor="let t of shortageTypes">
+              {{
+                row.shortages.find(s => s.shortageTypeId === t.shortageTypeId)?.amount || 0
+                | number
+              }}
+            </td>
+
+            <td>
+              {{
+                row.shortages.reduce((sum, s) => sum + s.amount, 0)
+                | number
+              }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -54,4 +77,3 @@
   </div>
 
 </div>
-
