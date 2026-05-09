@@ -53,18 +53,10 @@
 
             <!-- قيم العجز حسب النوع -->
             <td *ngFor="let t of shortageTypes">
-              {{
-                row.shortages.find(s => s.shortageTypeId === t.shortageTypeId)?.amount || 0
-                | number
-              }}
+              {{ getShortageAmount(row, t.shortageTypeId) | number }}
             </td>
 
-            <td>
-              {{
-                row.shortages.reduce((sum, s) => sum + s.amount, 0)
-                | number
-              }}
-            </td>
+            <td>{{ getTotalShortage(row) | number }}</td>
           </tr>
         </tbody>
       </table>

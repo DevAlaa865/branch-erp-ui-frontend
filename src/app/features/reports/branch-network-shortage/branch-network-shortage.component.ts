@@ -18,7 +18,7 @@ export class BranchNetworkShortageComponent implements OnInit {
   cityId: number | null = null;
 
   data: any[] = [];
-  shortageTypes: any[] = [];   // ← أنواع العجز (أعمدة الجدول)
+  shortageTypes: any[] = [];
   isLoading = false;
 
   cities: any[] = [];
@@ -60,7 +60,6 @@ export class BranchNetworkShortageComponent implements OnInit {
       next: (res) => {
         this.data = res.data || [];
 
-        // استخراج أنواع العجز من أول صف
         if (this.data.length > 0) {
           this.shortageTypes = this.data[0].shortages.map((s: any) => ({
             shortageTypeId: s.shortageTypeId,
@@ -77,4 +76,15 @@ export class BranchNetworkShortageComponent implements OnInit {
       }
     });
   }
+
+  // 🔥 Getter لحساب إجمالي العجز بدون Parser Error
+getShortageAmount(row: any, typeId: number): number {
+  const item = row.shortages.find((s: any) => s.shortageTypeId === typeId);
+  return item ? item.amount : 0;
+}
+
+getTotalShortage(row: any): number {
+  return row.shortages.reduce((sum: number, s: any) => sum + s.amount, 0);
+}
+
 }
