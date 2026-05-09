@@ -6,7 +6,7 @@ import {
   BranchDailyPerformanceDto,
   BranchDailyPerformanceCreateUpdateDto
 } from '../shared/models/employee-target.models';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,11 +16,12 @@ export class BranchDailyPerformanceService {
 
   constructor(private http: HttpClient) {}
 
-  get(branchId: number, date: string): Observable<BranchDailyPerformanceDto> {
-    return this.http.get<BranchDailyPerformanceDto>(`${this.baseUrl}`, {
-      params: { branchId, date }
-    });
-  }
+get(branchId: number, date: string): Observable<any> {
+  return this.http.get<any>(`${this.baseUrl}`, {
+    params: { branchId, date }
+  });
+}
+
 
   saveAchievement(model: BranchDailyPerformanceCreateUpdateDto): Observable<any> {
     return this.http.post(`${this.baseUrl}/achievement`, model);

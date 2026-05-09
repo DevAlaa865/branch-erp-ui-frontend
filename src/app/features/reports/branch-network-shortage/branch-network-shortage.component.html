@@ -1,0 +1,57 @@
+<div class="container mt-4">
+
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white">
+      تقرير العجوزات حسب الفروع والشبكة
+    </div>
+
+    <div class="card-body">
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>من تاريخ</label>
+          <input type="date" class="form-control" [(ngModel)]="fromDate">
+        </div>
+
+        <div class="col-md-4">
+          <label>إلى تاريخ</label>
+          <input type="date" class="form-control" [(ngModel)]="toDate">
+        </div>
+
+        <div class="col-md-4">
+          <label>المنطقة</label>
+          <select class="form-control" [(ngModel)]="cityId">
+            <option [ngValue]="null">كل المناطق</option>
+            <option *ngFor="let c of cities" [ngValue]="c.id">{{ c.cityName }}</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary mb-3" (click)="load()">عرض التقرير</button>
+
+      <table class="table table-bordered table-striped" *ngIf="data.length > 0">
+        <thead class="table-dark">
+          <tr>
+            <th>الفرع</th>
+            <th>مبلغ الشبكة</th>
+            <th>إجمالي العجز</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of data">
+            <td>{{ row.branchName }}</td>
+            <td>{{ row.networkAmount | number }}</td>
+            <td>{{ row.totalShortage | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="data.length === 0 && !isLoading" class="alert alert-warning">
+        لا توجد بيانات في الفترة المحددة.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+

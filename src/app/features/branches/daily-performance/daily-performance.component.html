@@ -1,94 +1,85 @@
-<div class="container mt-4">
-
-  <div class="card shadow-sm">
-    <div class="card-header bg-info text-white">
+<div class="container py-4">
+  <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="card-header bg-gradient bg-info  py-3">
       <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <strong>أداء الفرع اليومي</strong>
-        </div>
-        <div class="small">
-          الفرع: {{ branchName }} ({{ branchId }}) — المشرف: {{ supervisorName }}
-        </div>
+        <h5 class="mb-0 fw-bold">📊 أداء الفرع اليومي</h5>
+        <small class="fw-semibold">
+          الفرع: <span class="text-warning">{{ branchName }}</span> ({{ branchId }}) —
+          المشرف: <span class="text-light">{{ supervisorName }}</span>
+        </small>
       </div>
     </div>
 
-    <div class="card-body">
-
-      <div class="row mb-3">
+    <div class="card-body bg-light">
+      <div class="row mb-4">
         <div class="col-md-4">
-          <label class="form-label">التاريخ</label>
+          <label class="form-label fw-semibold text-secondary">📅 التاريخ</label>
           <input type="date"
-                 class="form-control"
+                 class="form-control border-info shadow-sm"
                  [(ngModel)]="targetDate"
                  (change)="load()">
         </div>
       </div>
 
-      <div *ngIf="isLoading" class="text-center my-4">
-        <div class="spinner-border text-info"></div>
-        <p class="mt-2 text-muted">جاري تحميل بيانات اليوم...</p>
+      <div *ngIf="isLoading" class="text-center my-5">
+        <div class="spinner-border text-info" style="width:3rem;height:3rem;"></div>
+        <p class="mt-3 text-muted fs-6">جاري تحميل بيانات اليوم...</p>
       </div>
 
-      <div *ngIf="!isLoading && data" class="row">
-
-        <div class="col-md-6 mb-3">
-          <div class="card border-primary h-100">
-            <div class="card-header bg-primary text-white">
-              تارجت الفرع (من الإدارة)
+      <div *ngIf="!isLoading && data" class="row g-4">
+        <!-- Target Card -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-primary text-white fw-bold">
+              🎯 تارجت الفرع (من الإدارة)
             </div>
             <div class="card-body">
-              <label class="form-label">قيمة التارجت</label>
+              <label class="form-label fw-semibold">قيمة التارجت</label>
               <input type="number"
-                     class="form-control"
+                     class="form-control border-primary shadow-sm"
                      [(ngModel)]="data.branchTargetAmount"
                      disabled>
-
-              <div class="mt-3 text-muted small">
+              <p class="mt-3 text-muted small">
                 هذه القيمة تأتي من ملف الإكسل الذي ترفعه الإدارة ولا يمكن تعديلها من هنا.
-              </div>
+              </p>
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 mb-3">
-          <div class="card border-success h-100">
-            <div class="card-header bg-success text-white">
-              إنجاز الفرع
+        <!-- Achievement Card -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-success text-white fw-bold">
+              🏆 إنجاز الفرع
             </div>
             <div class="card-body">
-
-              <label class="form-label">المبلغ المنجز</label>
+              <label class="form-label fw-semibold">المبلغ المنجز</label>
               <input type="number"
-                     class="form-control"
+                     class="form-control border-success shadow-sm"
                      [(ngModel)]="data.branchAchievedAmount">
 
-              <label class="form-label mt-2">عدد الفواتير</label>
+              <label class="form-label fw-semibold mt-3">عدد الفواتير</label>
               <input type="number"
-                     class="form-control"
+                     class="form-control border-success shadow-sm"
                      [(ngModel)]="data.branchInvoicesCountAchieved">
 
-              <label class="form-label mt-2">عدد الأصناف</label>
+              <label class="form-label fw-semibold mt-3">عدد الأصناف</label>
               <input type="number"
-                     class="form-control"
+                     class="form-control border-success shadow-sm"
                      [(ngModel)]="data.branchItemsCountAchieved">
 
-              <button class="btn btn-success mt-3"
+              <button class="btn btn-success w-100 mt-4 fw-bold shadow-sm"
                       (click)="saveAchievement()">
-                حفظ إنجاز الفرع
+                💾 حفظ إنجاز الفرع
               </button>
-
             </div>
           </div>
         </div>
-
       </div>
 
-      <div *ngIf="!isLoading && !data" class="alert alert-warning mt-3">
-        لا توجد بيانات لهذا اليوم حتى الآن. تأكد أن ملف تارجت الفروع تم رفعه من الإدارة.
+      <div *ngIf="!isLoading && !data" class="alert alert-warning mt-4 text-center fw-semibold shadow-sm">
+        ⚠️ لا توجد بيانات لهذا اليوم حتى الآن. تأكد أن ملف تارجت الفروع تم رفعه من الإدارة.
       </div>
-
     </div>
   </div>
-
 </div>
-

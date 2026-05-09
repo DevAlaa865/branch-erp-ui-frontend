@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BranchDailyPerformanceService } from '../../../services/branch-daily-performance.service';
 import { BranchDailyPerformanceDto } from '../../../shared/models/employee-target.models';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-daily-performance',
@@ -22,22 +23,23 @@ export class DailyPerformanceComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private performanceService: BranchDailyPerformanceService
+    private performanceService: BranchDailyPerformanceService,
+    private auth :AuthService
   ) {}
 
-  ngOnInit(): void {
-    const userJson = localStorage.getItem('user');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      this.branchId = user.branchId;
-      this.branchName = user.branchName;
-      this.supervisorName = user.fullName;
-    }
+ngOnInit(): void {
+const user = this.auth.getUserInfo();
 
-    const today = new Date();
-    this.targetDate = today.toISOString().substring(0, 10);
-    this.load();
-  }
+this.branchId = user.branchId!;
+this.branchName = decodeURIComponent(escape(user.branchName!));
+this.supervisorName = user.userName!;
+
+
+  const today = new Date();
+  this.targetDate = today.toLocaleDateString('en-CA');
+
+  this.load();
+}
 
 load() {
   if (!this.targetDate || !this.branchId) return;

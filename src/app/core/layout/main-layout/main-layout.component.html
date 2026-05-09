@@ -95,6 +95,15 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>رفع ملف التارجت</span>
       </a>
+       <a
+      *hasPermission="'Permissions.Manage'"
+       routerLink="/reports/branch-network-shortage"
+         routerLinkActive="active"
+         class="nav-item     
+         ">
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير الشبكة والعجوزات للفروع</span>
+      </a>
       <a 
       *hasPermission="'Permissions.Manage'"
       routerLink="/reports/branch-daily-summary"

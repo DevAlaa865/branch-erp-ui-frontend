@@ -95,7 +95,10 @@ if (isDark) document.documentElement.classList.add('dark');
   closeSidebar() {
     this.isSidebarOpen = false;
   }
-
+/*     UploadTarget()
+    {
+      
+    } */
   // Theme
   toggleTheme() {
     const root = document.documentElement;
