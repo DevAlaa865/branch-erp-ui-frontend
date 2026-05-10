@@ -77,14 +77,15 @@ export class BranchNetworkShortageComponent implements OnInit {
     });
   }
 
-  // 🔥 Getter لحساب إجمالي العجز بدون Parser Error
-getShortageAmount(row: any, typeId: number): number {
-  const item = row.shortages.find((s: any) => s.shortageTypeId === typeId);
-  return item ? item.amount : 0;
-}
+  // 🔥 Getter لحساب مبلغ العجز حسب النوع
+  getShortageAmount(row: any, typeId: number): number {
+    const item = row.shortages.find((s: any) => s.shortageTypeId === typeId);
+    return item ? item.amount : 0;
+  }
 
-getTotalShortage(row: any): number {
-  return row.shortages.reduce((sum: number, s: any) => sum + s.amount, 0);
-}
+  // 🔥 Getter لحساب إجمالي العجز
+  getTotalShortage(row: any): number {
+    return row.shortages.reduce((sum: number, s: any) => sum + s.amount, 0);
+  }
 
 }

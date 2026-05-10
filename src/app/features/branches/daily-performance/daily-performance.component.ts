@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { BranchDailyPerformanceService } from '../../../services/branch-daily-performance.service';
 import { BranchDailyPerformanceDto } from '../../../shared/models/employee-target.models';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { MasterDataService } from '../../../services/master-data.service';
 
 @Component({
   selector: 'app-daily-performance',
@@ -19,12 +21,14 @@ export class DailyPerformanceComponent implements OnInit {
   supervisorName!: string;
 
   targetDate: string = '';
-  data: BranchDailyPerformanceDto | null = null;
+  data: any = {};
   isLoading = false;
 
   constructor(
     private performanceService: BranchDailyPerformanceService,
-    private auth :AuthService
+    private auth :AuthService,
+    private router:Router,
+        private master: MasterDataService,
   ) {}
 
 ngOnInit(): void {
@@ -32,7 +36,12 @@ const user = this.auth.getUserInfo();
 
 this.branchId = user.branchId!;
 this.branchName = decodeURIComponent(escape(user.branchName!));
-this.supervisorName = user.userName!;
+this.master.getBranchById(this.branchId).subscribe(res => {
+  const branch = res?.data;
+  if (branch) {
+    this.supervisorName = branch.supervisorName || '';
+  }
+});
 
 
   const today = new Date();
@@ -42,22 +51,33 @@ this.supervisorName = user.userName!;
 }
 
 load() {
-  if (!this.targetDate || !this.branchId) return;
-
   this.isLoading = true;
 
-  this.performanceService.get(this.branchId, this.targetDate)
-    .subscribe({
-      next: (res: any) => {
-        this.data = res.data;   // ← أهم تعديل
-        this.isLoading = false;
-      },
-      error: () => {
-        this.data = null;
-        this.isLoading = false;
-      }
-    });
+  this.performanceService.get(this.branchId, this.targetDate).subscribe({
+    next: (res: any) => {
+
+      // لو الـ API رجّع null → نحط object فاضي
+      this.data = res?.data || {
+        branchTargetAmount: 0,
+        branchAchievedAmount: 0,
+        branchInvoicesCountAchieved: 0,
+        branchItemsCountAchieved: 0
+      };
+
+      this.isLoading = false;
+    },
+    error: () => {
+      this.data = {
+        branchTargetAmount: 0,
+        branchAchievedAmount: 0,
+        branchInvoicesCountAchieved: 0,
+        branchItemsCountAchieved: 0
+      };
+      this.isLoading = false;
+    }
+  });
 }
+
 
 
 saveAchievement() {
@@ -74,9 +94,35 @@ saveAchievement() {
   this.performanceService.saveAchievement(model).subscribe({
     next: (res: any) => {
       alert('تم حفظ إنجاز الفرع بنجاح');
+
+      // تحميل البيانات لو حبيت تراجعها قبل التحويل
       this.load();
+
+      // 🔹 التحويل التلقائي إلى شاشة الداشبورد
+      this.router.navigate(['/branches/performance-dashboard'], {
+        queryParams: {
+          branchId: this.branchId,
+          branchName: this.branchName,
+          supervisorName: this.supervisorName,
+          date: this.targetDate
+        }
+      });
+    },
+    error: () => {
+      alert('حدث خطأ أثناء حفظ الإنجاز، حاول مرة أخرى.');
     }
   });
 }
 
+goBack()
+{
+        this.router.navigate(['/branches/performance-dashboard'], {
+        queryParams: {
+          branchId: this.branchId,
+          branchName: this.branchName,
+          supervisorName: this.supervisorName,
+          date: this.targetDate
+        }
+      });
+}
 }

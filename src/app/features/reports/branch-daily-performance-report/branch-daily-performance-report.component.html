@@ -1,0 +1,110 @@
+<div class="p-4 space-y-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl text-white mt-14">
+
+  <!-- 🔵 العنوان -->
+  <h1 class="text-xl md:text-2xl font-bold text-[var(--text)] flex items-center gap-2">
+    <i class="fa fa-chart-line text-emerald-400"></i>
+    تقرير أداء الفروع اليومي
+  </h1>
+
+  <!-- 🟣 الفلاتر -->
+  <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+    <!-- التاريخ -->
+    <div class="space-y-1">
+      <label class="text-[var(--text)]">📅 التاريخ</label>
+      <input
+        type="date"
+        lang="en"
+        dir="ltr"
+        formControlName="date"
+        class="w-full p-2 rounded bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
+      />
+    </div>
+
+    <!-- المدينة -->
+    <div class="space-y-1">
+      <label class="text-[var(--text)]">🏙️ المدينة</label>
+      <select
+        formControlName="cityId"
+        (change)="onCityChange()"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+      >
+        <option [ngValue]="null" disabled selected>اختر المدينة</option>
+        <option *ngFor="let c of cities" [ngValue]="c.id">{{ c.cityName || c.name }}</option>
+      </select>
+    </div>
+
+    <!-- الفرع -->
+    <div class="space-y-1">
+      <label class="text-[var(--text)]">🏬 الفرع</label>
+      <select
+        formControlName="branchId"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+      >
+        <option [ngValue]="null" disabled selected>اختر الفرع</option>
+        <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.branchName || b.name }}</option>
+      </select>
+    </div>
+
+    <!-- زر عرض التقرير -->
+    <div class="flex items-end">
+      <button
+        type="button"
+        (click)="loadReport()"
+        class="bg-emerald-600 hover:bg-emerald-700 text-[var(--text)] px-4 py-2 rounded w-full font-semibold transition"
+      >
+        🔍 عرض التقرير
+      </button>
+    </div>
+  </form>
+
+  <!-- ⚠️ رسالة الخطأ -->
+  <div *ngIf="errorMessage" class="text-red-400 font-semibold">
+    {{ errorMessage }}
+  </div>
+
+  <!-- 📊 جدول التقرير -->
+  <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
+
+    <div *ngIf="report.length > 0 && !loading" class="overflow-x-auto text-center">
+      <table class="w-full text-right text-sm">
+        <thead class="bg-slate-200 text-slate-900">
+          <tr>
+            <th class="p-3 border-b border-slate-300 text-center">الفرع</th>
+            <th class="p-3 border-b border-slate-300 text-center">المدينة</th>
+            <th class="p-3 border-b border-slate-300 text-center">التاريخ</th>
+            <th class="p-3 border-b border-slate-300 text-center">التارجت</th>
+            <th class="p-3 border-b border-slate-300 text-center">المنجز</th>
+            <th class="p-3 border-b border-slate-300 text-center">نسبة الإنجاز</th>
+            <th class="p-3 border-b border-slate-300 text-center">العمولة</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of report" class="border-b hover:bg-blue-50 transition">
+            <td class="p-3 text-center text-black">{{ row.branchName }}</td>
+            <td class="p-3 text-center text-black">{{ row.cityName }}</td>
+            <td class="p-3 text-center text-black">{{ row.targetDate | date:'yyyy-MM-dd' }}</td>
+            <td class="p-3 text-center text-black">{{ row.targetAmount | number:'1.0-0' }}</td>
+            <td class="p-3 text-center text-black">{{ row.achievedAmount | number:'1.0-0' }}</td>
+            <td class="p-3 text-center text-black">
+              <span [ngClass]="{
+                'text-green-600 font-bold': row.achievementPercentage >= 100,
+                'text-yellow-600 font-bold': row.achievementPercentage >= 80 && row.achievementPercentage < 100,
+                'text-red-600 font-bold': row.achievementPercentage < 80
+              }">
+                {{ row.achievementPercentage }}%
+              </span>
+            </td>
+            <td class="p-3 text-center text-black">{{ row.commissionAmount | number:'1.0-0' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ⚠️ لا توجد بيانات -->
+    <div *ngIf="report.length === 0 && loaded && !loading" class="text-center py-6 text-red-500 font-semibold">
+      ⚠️ لا توجد بيانات لهذا اليوم.
+    </div>
+  </div>
+</div>

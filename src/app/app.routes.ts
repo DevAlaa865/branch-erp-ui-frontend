@@ -72,13 +72,26 @@ export const routes: Routes = [
       loadComponent: () =>
         import('./features/reports/branch-network-shortage/branch-network-shortage.component')
           .then(m => m.BranchNetworkShortageComponent)
-    },
-      {
+       },
+       {
+          path: 'branches/performance-dashboard',
+          loadComponent: () =>
+            import('./features/branches/performance-dashboard/performance-dashboard.component')
+              .then(m => m.PerformanceDashboardComponent)
+        },
+        {
+          path: 'reports/branch-daily-performance',
+          loadComponent: () =>
+            import('./features/reports/branch-daily-performance-report/branch-daily-performance-report.component')
+              .then(m => m.BranchDailyPerformanceReportComponent)
+        },
+
+        {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/admin-dashboard/admin-dashboard.component')
             .then(m => m.AdminDashboardComponent)
-      },
+        },
 
       // ============================
       // Dashboard (صفحة الكروت)

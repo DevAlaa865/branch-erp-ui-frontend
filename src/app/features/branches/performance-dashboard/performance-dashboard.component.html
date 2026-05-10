@@ -1,0 +1,42 @@
+<div class="container mt-6">
+
+  <h2 class="text-xl font-bold text-blue-600 mb-4 flex items-center gap-2">
+    <i class="fa fa-chart-pie text-blue-500"></i>
+    لوحة أداء الفروع
+  </h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- كارت أداء الفرع -->
+    <div class="bg-white p-5 rounded-2xl shadow-md border border-blue-200 cursor-pointer hover:shadow-lg transition"
+         (click)="goTo('/branches/daily-performance')">
+      <h3 class="text-lg font-bold text-blue-600 mb-3 flex items-center gap-2">
+        <i class="fa fa-bullseye text-blue-500"></i>
+        أداء الفرع
+      </h3>
+      <p class="text-slate-600">عرض أداء الفرع اليومي</p>
+    </div>
+
+    <!-- كارت الشيفت الصباحي -->
+    <div class="bg-white p-5 rounded-2xl shadow-md border border-green-200 cursor-pointer hover:shadow-lg transition"
+         (click)="goTo('/branches/performance-dashboard/morning-shift-performance')">
+      <h3 class="text-lg font-bold text-green-600 mb-3 flex items-center gap-2">
+        <i class="fa fa-sun text-yellow-500"></i>
+        أداء الشيفت الصباحي
+      </h3>
+      <p class="text-slate-600">عرض أداء الشيفت الصباحي</p>
+    </div>
+
+    <!-- كارت الشيفت المسائي -->
+    <div class="bg-white p-5 rounded-2xl shadow-md border border-purple-200 cursor-pointer hover:shadow-lg transition"
+         (click)="goTo('/branches/performance-dashboard/evening-shift-performance')">
+      <h3 class="text-lg font-bold text-purple-600 mb-3 flex items-center gap-2">
+        <i class="fa fa-moon text-purple-500"></i>
+        أداء الشيفت المسائي
+      </h3>
+      <p class="text-slate-600">عرض أداء الشيفت المسائي</p>
+    </div>
+
+  </div>
+
+</div>

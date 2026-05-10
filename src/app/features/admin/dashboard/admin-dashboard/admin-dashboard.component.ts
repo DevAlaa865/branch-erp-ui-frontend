@@ -61,9 +61,17 @@ openReports()
     this.router.navigate(['/reports/branch-daily-summary']);
 
 }
-opendailyBranchTarget()
+/* opendailyBranchTarget()
 {
    this.router.navigate(['/branches/daily-performance']);
+} */
+opendailyTarget()
+{
+   this.router.navigate(['/branches/performance-dashboard']);
+}
+opendailyTargetReport()
+{
+   this.router.navigate(['/reports/branch-daily-performance']);
 }
   openAreas() {
     this.router.navigate(['/admin/areas']);
