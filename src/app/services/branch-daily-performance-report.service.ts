@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
-
+import { map } from 'rxjs/operators';   // 👈 مهم جدًا
 export interface BranchDailyPerformanceReportFilterDto {
   date: string;
   cityId?: number;
@@ -29,9 +29,11 @@ export class BranchDailyPerformanceReportService {
   constructor(private http: HttpClient) {}
 
   // 🔹 جلب التقرير
-  getReport(filter: BranchDailyPerformanceReportFilterDto): Observable<BranchDailyPerformanceReportRowDto[]> {
-    return this.http.post<BranchDailyPerformanceReportRowDto[]>(`${this.apiUrl}/report`, filter);
-  }
+getReport(filter: BranchDailyPerformanceReportFilterDto): Observable<BranchDailyPerformanceReportRowDto[]> {
+  return this.http.post<any>(`${this.apiUrl}/report`, filter).pipe(
+    map((res) => res.data)   // 👈 مهم جدًا
+  );
+}
 
   // 🔹 جلب المدن
   getCities(): Observable<any[]> {

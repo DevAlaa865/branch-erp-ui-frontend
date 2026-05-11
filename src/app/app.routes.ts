@@ -85,6 +85,13 @@ export const routes: Routes = [
             import('./features/reports/branch-daily-performance-report/branch-daily-performance-report.component')
               .then(m => m.BranchDailyPerformanceReportComponent)
         },
+        {
+          path: 'commission-rules',
+          loadComponent: () =>
+            import('./pages/commission-rules/commission-rules.component')
+              .then(m => m.CommissionRulesComponent)
+        },
+
 
         {
         path: 'dashboard',

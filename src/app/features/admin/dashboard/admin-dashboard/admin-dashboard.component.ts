@@ -73,6 +73,10 @@ opendailyTargetReport()
 {
    this.router.navigate(['/reports/branch-daily-performance']);
 }
+openCommesionRecording()
+{
+    this.router.navigate(['/commission-rules']);
+}
   openAreas() {
     this.router.navigate(['/admin/areas']);
   }

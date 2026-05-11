@@ -1,7 +1,7 @@
-<div class="p-4 space-y-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl text-white mt-14">
+<div class="p-6 space-y-6 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl text-white mt-14">
 
   <!-- 🔵 العنوان -->
-  <h1 class="text-xl md:text-2xl font-bold text-[var(--text)] flex items-center gap-2">
+  <h1 class="text-2xl font-bold text-[var(--text)] flex items-center gap-2">
     <i class="fa fa-chart-line text-emerald-400"></i>
     تقرير أداء الفروع اليومي
   </h1>
@@ -27,7 +27,7 @@
       <select
         formControlName="cityId"
         (change)="onCityChange()"
-        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition"
       >
         <option [ngValue]="null" disabled selected>اختر المدينة</option>
         <option *ngFor="let c of cities" [ngValue]="c.id">{{ c.cityName || c.name }}</option>
@@ -39,7 +39,7 @@
       <label class="text-[var(--text)]">🏬 الفرع</label>
       <select
         formControlName="branchId"
-        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition"
       >
         <option [ngValue]="null" disabled selected>اختر الفرع</option>
         <option *ngFor="let b of branches" [ngValue]="b.id">{{ b.branchName || b.name }}</option>
@@ -51,7 +51,7 @@
       <button
         type="button"
         (click)="loadReport()"
-        class="bg-emerald-600 hover:bg-emerald-700 text-[var(--text)] px-4 py-2 rounded w-full font-semibold transition"
+        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded w-full font-semibold transition"
       >
         🔍 عرض التقرير
       </button>
@@ -108,3 +108,4 @@
     </div>
   </div>
 </div>
+

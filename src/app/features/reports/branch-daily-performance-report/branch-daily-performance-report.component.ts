@@ -37,9 +37,6 @@ export class BranchDailyPerformanceReportComponent implements OnInit {
     this.loadCities();
   }
 
-  // ============================
-  // بناء النموذج (Reactive Form)
-  // ============================
   buildForm(): void {
     const today = new Date().toISOString().split('T')[0];
 
@@ -50,9 +47,6 @@ export class BranchDailyPerformanceReportComponent implements OnInit {
     });
   }
 
-  // ============================
-  // تحميل المدن
-  // ============================
   loadCities(): void {
     this.masterService.getCities().subscribe({
       next: (res) => {
@@ -64,9 +58,6 @@ export class BranchDailyPerformanceReportComponent implements OnInit {
     });
   }
 
-  // ============================
-  // تحميل الفروع عند اختيار مدينة
-  // ============================
   onCityChange(): void {
     const cityId = this.form.value.cityId;
 
@@ -86,13 +77,9 @@ export class BranchDailyPerformanceReportComponent implements OnInit {
     });
   }
 
-  // ============================
-  // تحميل التقرير
-  // ============================
   loadReport(): void {
     this.errorMessage = null;
     this.loading = true;
-console.log("FILTER SENT TO API:", this.form.value);
 
     const filter = this.form.value;
 
