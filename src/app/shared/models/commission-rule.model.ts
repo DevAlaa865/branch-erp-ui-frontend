@@ -1,6 +1,6 @@
 export enum CommissionType {
-  Branch = 0,
-  Employee = 1
+  Branch = 1,
+  Employee = 2
 }
 
 export interface CommissionRuleDto {

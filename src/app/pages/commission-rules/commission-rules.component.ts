@@ -57,14 +57,16 @@ export class CommissionRulesComponent implements OnInit {
     if (this.form.invalid) return;
 
     const dto: CommissionRuleCreateUpdateDto = this.form.value;
-
+  console.log("🚀 DTO قبل الإرسال:", dto);   // 👈 هنا بالظبط
     if (this.isEdit && this.editId !== null) {
       this.commissionRuleService.update(this.editId, dto).subscribe({
         next: () => {
           this.resetForm();
           this.loadRules();
         }
+        
       });
+      console.log(this.form)
     } else {
       this.commissionRuleService.create(dto).subscribe({
         next: () => {

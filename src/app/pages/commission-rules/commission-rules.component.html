@@ -28,7 +28,7 @@
         <div class="form-group">
           <label>النوع</label>
           <select formControlName="type">
-            <option *ngFor="let t of commissionTypes" [value]="t.value">{{ t.label }}</option>
+            <option *ngFor="let t of commissionTypes" [ngValue]="t.value">{{ t.label }}</option>
           </select>
         </div>
 

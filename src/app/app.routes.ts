@@ -92,7 +92,12 @@ export const routes: Routes = [
               .then(m => m.CommissionRulesComponent)
         },
 
-
+        {
+          path: 'branch-performance-chart',
+          loadComponent: () =>
+            import('./features/reports/branch-performance-chart/branch-performance-chart.component')
+              .then(m => m.BranchPerformanceChartComponent)
+        },
         {
         path: 'dashboard',
         loadComponent: () =>

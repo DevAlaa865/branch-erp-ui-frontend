@@ -6,16 +6,32 @@
     تقرير أداء الفروع اليومي
   </h1>
 
-  <!-- 🟣 الفلاتر -->
-  <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <!-- 🟣 أزرار التحكم -->
+  <div class="flex gap-4 mt-4">
+    <button
+      (click)="exportToExcel()"
+      [disabled]="loading"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition flex items-center gap-2"
+    >
+      <span *ngIf="!loading">📤 تصدير Excel</span>
+      <span *ngIf="loading" class="animate-pulse">⏳ جاري التصدير...</span>
+    </button>
 
+    <button
+      (click)="showChart()"
+      class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded font-semibold transition"
+    >
+      📊 عرض الشارت
+    </button>
+  </div>
+
+  <!-- 🟣 الفلاتر -->
+  <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
     <!-- التاريخ -->
     <div class="space-y-1">
-      <label class="text-[var(--text)]">📅 التاريخ</label>
+      <label>📅 التاريخ</label>
       <input
         type="date"
-        lang="en"
-        dir="ltr"
         formControlName="date"
         class="w-full p-2 rounded bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
       />
@@ -23,7 +39,7 @@
 
     <!-- المدينة -->
     <div class="space-y-1">
-      <label class="text-[var(--text)]">🏙️ المدينة</label>
+      <label>🏙️ المدينة</label>
       <select
         formControlName="cityId"
         (change)="onCityChange()"
@@ -36,7 +52,7 @@
 
     <!-- الفرع -->
     <div class="space-y-1">
-      <label class="text-[var(--text)]">🏬 الفرع</label>
+      <label>🏬 الفرع</label>
       <select
         formControlName="branchId"
         class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition"
@@ -65,29 +81,27 @@
 
   <!-- 📊 جدول التقرير -->
   <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
-
-    <div *ngIf="report.length > 0 && !loading" class="overflow-x-auto text-center">
+    <div *ngIf="pagedReport.length > 0 && !loading" class="overflow-x-auto text-center">
       <table class="w-full text-right text-sm">
         <thead class="bg-slate-200 text-slate-900">
           <tr>
-            <th class="p-3 border-b border-slate-300 text-center">الفرع</th>
-            <th class="p-3 border-b border-slate-300 text-center">المدينة</th>
-            <th class="p-3 border-b border-slate-300 text-center">التاريخ</th>
-            <th class="p-3 border-b border-slate-300 text-center">التارجت</th>
-            <th class="p-3 border-b border-slate-300 text-center">المنجز</th>
-            <th class="p-3 border-b border-slate-300 text-center">نسبة الإنجاز</th>
-            <th class="p-3 border-b border-slate-300 text-center">العمولة</th>
+            <th class="p-3">الفرع</th>
+            <th class="p-3">المدينة</th>
+            <th class="p-3">التاريخ</th>
+            <th class="p-3">التارجت</th>
+            <th class="p-3">المنجز</th>
+            <th class="p-3">نسبة الإنجاز</th>
+            <th class="p-3">العمولة</th>
           </tr>
         </thead>
-
         <tbody>
-          <tr *ngFor="let row of report" class="border-b hover:bg-blue-50 transition">
-            <td class="p-3 text-center text-black">{{ row.branchName }}</td>
-            <td class="p-3 text-center text-black">{{ row.cityName }}</td>
-            <td class="p-3 text-center text-black">{{ row.targetDate | date:'yyyy-MM-dd' }}</td>
-            <td class="p-3 text-center text-black">{{ row.targetAmount | number:'1.0-0' }}</td>
-            <td class="p-3 text-center text-black">{{ row.achievedAmount | number:'1.0-0' }}</td>
-            <td class="p-3 text-center text-black">
+          <tr *ngFor="let row of pagedReport" class="border-b hover:bg-blue-50 transition">
+            <td class="p-3 text-black">{{ row.branchName }}</td>
+            <td class="p-3 text-black">{{ row.cityName }}</td>
+            <td class="p-3 text-black">{{ row.targetDate | date:'yyyy-MM-dd' }}</td>
+            <td class="p-3 text-black">{{ row.targetAmount | number:'1.0-0' }}</td>
+            <td class="p-3 text-black">{{ row.achievedAmount | number:'1.0-0' }}</td>
+            <td class="p-3 text-black">
               <span [ngClass]="{
                 'text-green-600 font-bold': row.achievementPercentage >= 100,
                 'text-yellow-600 font-bold': row.achievementPercentage >= 80 && row.achievementPercentage < 100,
@@ -96,7 +110,7 @@
                 {{ row.achievementPercentage }}%
               </span>
             </td>
-            <td class="p-3 text-center text-black">{{ row.commissionAmount | number:'1.0-0' }}</td>
+            <td class="p-3 text-black">{{ row.commissionAmount | number:'1.0-0' }}</td>
           </tr>
         </tbody>
       </table>
@@ -107,5 +121,27 @@
       ⚠️ لا توجد بيانات لهذا اليوم.
     </div>
   </div>
-</div>
 
+  <!-- 🔢 الباجينيشن -->
+  <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-4 mt-6">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="bg-slate-300 hover:bg-slate-400 text-black px-3 py-1 rounded transition"
+    >
+      ⬅️ السابق
+    </button>
+
+    <span class="text-white font-semibold">
+      صفحة {{ currentPage }} من {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="bg-slate-300 hover:bg-slate-400 text-black px-3 py-1 rounded transition"
+    >
+      التالي ➡️
+    </button>
+  </div>
+</div>
