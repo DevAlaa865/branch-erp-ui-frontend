@@ -1,0 +1,16 @@
+.chart-container {
+  position: relative;
+  height: 320px;
+}
+
+.summary-card {
+  @apply rounded-xl p-4 flex flex-col gap-1 shadow-sm;
+}
+
+.summary-title {
+  @apply text-xs font-semibold text-slate-500;
+}
+
+.summary-value {
+  @apply text-2xl font-bold;
+}
