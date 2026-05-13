@@ -25,6 +25,11 @@ export class DailyReturnsComponent implements OnInit {
   cities: any[] = [];
   branches: any[] = [];
 
+  // 🔥 الباجينيشن
+  pageSize = 10;
+  currentPage = 1;
+  totalPages = 0;
+
   constructor(
     private returnsService: BranchDailyReturnsService,
     private masterService: MasterDataService,
@@ -43,7 +48,6 @@ export class DailyReturnsComponent implements OnInit {
     this.loadCities();
     this.loadReturns();
 
-    // 🔥 عند تغيير المدينة → تحميل الفروع
     this.filterForm.get('cityId')?.valueChanges.subscribe(cityId => {
       if (cityId) {
         this.loadBranches(cityId);
@@ -55,27 +59,18 @@ export class DailyReturnsComponent implements OnInit {
     });
   }
 
-  // ============================
-  // 🔥 تحميل المدن
-  // ============================
   loadCities() {
     this.masterService.getCities().subscribe(res => {
       this.cities = res.data;
     });
   }
 
-  // ============================
-  // 🔥 تحميل الفروع حسب المدينة
-  // ============================
   loadBranches(cityId: number) {
     this.masterService.getBranchesByCity(cityId).subscribe((res: any) => {
       this.branches = res.data || res;
     });
   }
 
-  // ============================
-  // 🔥 تحميل المرتجعات مع الفلاتر
-  // ============================
   loadReturns(): void {
     this.loading = true;
     this.error = null;
@@ -90,6 +85,11 @@ export class DailyReturnsComponent implements OnInit {
             ...item,
             returnDate: item.returnDate.substring(0, 10)
           }));
+
+          // 🔥 حساب عدد الصفحات
+          this.totalPages = Math.ceil(this.returns.length / this.pageSize);
+          this.currentPage = 1;
+
           this.loading = false;
         },
         error: () => {
@@ -104,7 +104,23 @@ export class DailyReturnsComponent implements OnInit {
   }
 
   // ============================
-  // 🔥 فتح نافذة التعديل
+  // 🔥 الباجينيشن
+  // ============================
+get pagedReturns(): BranchDailyReturn[] {
+  const start = (this.currentPage - 1) * this.pageSize;
+  return this.returns.slice(start, start + this.pageSize);
+}
+
+nextPage(): void {
+  if (this.currentPage < this.totalPages) this.currentPage++;
+}
+
+previousPage(): void {
+  if (this.currentPage > 1) this.currentPage--;
+}
+
+  // ============================
+  // التعديل
   // ============================
   openEditDialog(item: BranchDailyReturn): void {
     this.selectedReturn = { ...item };
@@ -116,9 +132,6 @@ export class DailyReturnsComponent implements OnInit {
     this.selectedReturn = null;
   }
 
-  // ============================
-  // 🔥 حفظ التعديلات
-  // ============================
   saveChanges(): void {
     if (!this.selectedReturn) return;
 
@@ -158,4 +171,30 @@ export class DailyReturnsComponent implements OnInit {
       }
     });
   }
+
+  exportToExcel(): void {
+  const filter = this.filterForm.value;
+  this.loading = true;
+
+  this.returnsService.exportToExcel(filter).subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+
+      const fileName = `DailyReturns_${filter.fromDate}_to_${filter.toDate}.xlsx`;
+
+      a.href = url;
+      a.download = fileName;
+      a.click();
+
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+      alert("حدث خطأ أثناء تصدير ملف المرتجعات");
+    }
+  });
+}
+
 }

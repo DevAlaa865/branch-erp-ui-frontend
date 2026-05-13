@@ -1,12 +1,10 @@
-<div class="p-6 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
+<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
   <h2 class="text-xl font-bold mb-4 text-slate-800">
     قائمة المرتجعات اليومية
   </h2>
 
   <!-- فلاتر -->
   <form [formGroup]="filterForm" class="flex gap-4 mb-4 flex-wrap">
-
-    <!-- من تاريخ -->
     <div>
       <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
       <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
@@ -18,7 +16,6 @@
       </div>
     </div>
 
-    <!-- إلى تاريخ -->
     <div>
       <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
       <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
@@ -74,14 +71,19 @@
         </select>
       </div>
     </div>
-
   </form>
 
   <!-- 🔥 زرارين فوق الجدول -->
   <div class="flex gap-4 mb-4 justify-end ">
-    <button class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700">
-      تصدير Excel
+      <button
+      (click)="exportToExcel()"
+      [disabled]="loading"
+      class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span *ngIf="!loading">📤 تصدير Excel</span>
+      <span *ngIf="loading" class="animate-pulse">⏳ جاري التصدير...</span>
     </button>
+
 
     <button class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
       عرض الشارت
@@ -111,7 +113,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let item of returns" class="hover:bg-slate-50">
+      <tr *ngFor="let item of pagedReturns" class="hover:bg-slate-50">
         <td class="border p-2">{{ item.returnDate | date:'yyyy-MM-dd' }}</td>
         <td class="border p-2">{{ item.branchNumber }}</td>
         <td class="border p-2">{{ item.branchName }}</td>
@@ -130,7 +132,47 @@
         </td>
       </tr>
     </tbody>
+
+
   </table>
+
+
+<!-- 🔢 الباجينيشن (ستايل تقرير الأداء اليومي المحترف) -->
+<div *ngIf="totalPages >= 1" class="flex justify-center items-center gap-6 mt-8 select-none">
+
+  <!-- زر السابق -->
+  <button
+    (click)="previousPage()"
+    [disabled]="currentPage === 1"
+    class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+           border border-slate-300 bg-slate-100 text-slate-700
+           hover:bg-slate-200 hover:text-slate-900
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100"
+  >
+    <i class="fa fa-arrow-left text-slate-500"></i>
+    السابق
+  </button>
+
+  <!-- رقم الصفحة -->
+  <span class="text-lg font-bold text-slate-800">
+    صفحة {{ currentPage }} من {{ totalPages }}
+  </span>
+
+  <!-- زر التالي -->
+  <button
+    (click)="nextPage()"
+    [disabled]="currentPage === totalPages"
+    class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+           border border-slate-300 bg-slate-100 text-slate-700
+           hover:bg-slate-200 hover:text-slate-900
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100"
+  >
+    التالي
+    <i class="fa fa-arrow-right text-slate-500"></i>
+  </button>
+
+</div>
+
 </div>
 
 <!-- نافذة تعديل المرتجع -->

@@ -73,4 +73,33 @@ export class BranchDailyReturnsService {
   ): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${id}`, payload);
   }
+
+  // ============================================================
+// 🔥 EXPORT TO EXCEL
+// ============================================================
+exportToExcel(filter: {
+  fromDate?: string;
+  toDate?: string;
+  branchId?: number;
+  branchNumber?: number;
+  cityId?: number;
+  returnType?: number;
+}): Observable<Blob> {
+
+  let params = new HttpParams();
+
+  if (filter.fromDate) params = params.set('fromDate', filter.fromDate);
+  if (filter.toDate) params = params.set('toDate', filter.toDate);
+  if (filter.branchId) params = params.set('branchId', filter.branchId);
+  if (filter.branchNumber) params = params.set('branchNumber', filter.branchNumber);
+  if (filter.cityId) params = params.set('cityId', filter.cityId);
+  if (filter.returnType !== undefined && filter.returnType !== null)
+    params = params.set('returnType', filter.returnType);
+
+  return this.http.get(`${this.baseUrl}/export`, {
+    params,
+    responseType: 'blob'
+  });
+}
+
 }
