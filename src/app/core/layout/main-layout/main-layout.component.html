@@ -95,6 +95,16 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>رفع ملف التارجت</span>
       </a>
+
+       <a
+      *hasPermission="'Permissions.Manage'"
+       routerLink="/returns-upload"
+         routerLinkActive="active"
+         class="nav-item     
+         ">
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>رفع ملف المرتجعات</span>
+      </a>
        <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/reports/branch-network-shortage"
@@ -112,6 +122,15 @@
          (click)="closeSidebar()">
         <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
         <span>تقرير يوميات الفروع</span>
+      </a>
+       <a 
+      *hasPermission="'Permissions.Manage'"
+      routerLink="/daily-returns"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
+        <span>تقرير المرتجعات اليوميه</span>
       </a>
 
     </div>

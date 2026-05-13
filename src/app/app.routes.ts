@@ -99,6 +99,18 @@ export const routes: Routes = [
               .then(m => m.BranchPerformanceChartComponent)
         },
         {
+        path: 'returns-upload',
+        loadComponent: () =>
+          import('./pages/returns-upload/returns-upload.component')
+            .then(m => m.ReturnsUploadComponent)
+        },
+       {
+          path: 'daily-returns',
+          loadComponent: () =>
+            import('./features/branches/daily-returns/daily-returns.component')
+              .then(m => m.DailyReturnsComponent)
+        },
+        {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/admin-dashboard/admin-dashboard.component')
