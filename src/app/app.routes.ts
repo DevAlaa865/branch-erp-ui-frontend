@@ -111,6 +111,12 @@ export const routes: Routes = [
               .then(m => m.DailyReturnsComponent)
         },
         {
+          path: 'branches/daily-returns-chart',
+          loadComponent: () =>
+            import('./features/branches/daily-returns/daily-returns-chart/daily-returns-chart.component')
+              .then(m => m.DailyReturnsChartComponent)
+        },
+        {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/admin-dashboard/admin-dashboard.component')

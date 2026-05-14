@@ -25,6 +25,10 @@ export class DailyReturnsComponent implements OnInit {
   cities: any[] = [];
   branches: any[] = [];
 
+  // 🔥 الإجماليات
+  totalAmount: number = 0;
+  totalCount: number = 0;
+
   // 🔥 الباجينيشن
   pageSize = 10;
   currentPage = 1;
@@ -48,13 +52,17 @@ export class DailyReturnsComponent implements OnInit {
     this.loadCities();
     this.loadReturns();
 
+    // 🔥 عند تغيير المدينة
     this.filterForm.get('cityId')?.valueChanges.subscribe(cityId => {
+      // تصفير الفروع والفرع المختار
+      this.branches = [];
+      this.filterForm.patchValue({ branchNumber: null }, { emitEvent: false });
+
       if (cityId) {
         this.loadBranches(cityId);
-      } else {
-        this.branches = [];
-        this.filterForm.patchValue({ branchNumber: null }, { emitEvent: false });
       }
+
+      // تحميل المرتجعات بعد تصفير الفلاتر
       this.loadReturns();
     });
   }
@@ -86,6 +94,10 @@ export class DailyReturnsComponent implements OnInit {
             returnDate: item.returnDate.substring(0, 10)
           }));
 
+          // 🔥 حساب الإجماليات
+          this.totalAmount = this.returns.reduce((sum, r) => sum + r.returnAmount, 0);
+          this.totalCount = this.returns.length;
+
           // 🔥 حساب عدد الصفحات
           this.totalPages = Math.ceil(this.returns.length / this.pageSize);
           this.currentPage = 1;
@@ -106,21 +118,21 @@ export class DailyReturnsComponent implements OnInit {
   // ============================
   // 🔥 الباجينيشن
   // ============================
-get pagedReturns(): BranchDailyReturn[] {
-  const start = (this.currentPage - 1) * this.pageSize;
-  return this.returns.slice(start, start + this.pageSize);
-}
+  get pagedReturns(): BranchDailyReturn[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.returns.slice(start, start + this.pageSize);
+  }
 
-nextPage(): void {
-  if (this.currentPage < this.totalPages) this.currentPage++;
-}
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) this.currentPage++;
+  }
 
-previousPage(): void {
-  if (this.currentPage > 1) this.currentPage--;
-}
+  previousPage(): void {
+    if (this.currentPage > 1) this.currentPage--;
+  }
 
   // ============================
-  // التعديل
+  // 🔥 التعديل
   // ============================
   openEditDialog(item: BranchDailyReturn): void {
     this.selectedReturn = { ...item };
@@ -172,29 +184,47 @@ previousPage(): void {
     });
   }
 
+  // ============================
+  // 🔥 تصدير Excel
+  // ============================
   exportToExcel(): void {
+    const filter = this.filterForm.value;
+    this.loading = true;
+
+    this.returnsService.exportToExcel(filter).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const fileName = `DailyReturns_${filter.fromDate}_to_${filter.toDate}.xlsx`;
+
+        a.href = url;
+        a.download = fileName;
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        alert('حدث خطأ أثناء تصدير ملف المرتجعات');
+      }
+    });
+  }
+openChart(): void {
   const filter = this.filterForm.value;
-  this.loading = true;
 
-  this.returnsService.exportToExcel(filter).subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
+  this.returnsService.getChartData(filter).subscribe({
+    next: (res) => {
+      const data = JSON.stringify(res.data);
+      const encoded = encodeURIComponent(data);
 
-      const fileName = `DailyReturns_${filter.fromDate}_to_${filter.toDate}.xlsx`;
-
-      a.href = url;
-      a.download = fileName;
-      a.click();
-
-      window.URL.revokeObjectURL(url);
-      this.loading = false;
+      // فتح صفحة الشارت
+      window.open(`/branches/daily-returns-chart?data=${encoded}`, "_blank");
     },
     error: () => {
-      this.loading = false;
-      alert("حدث خطأ أثناء تصدير ملف المرتجعات");
+      alert("حدث خطأ أثناء تحميل بيانات الشارت");
     }
   });
 }
-
+ 
 }

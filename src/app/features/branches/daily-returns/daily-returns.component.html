@@ -68,6 +68,8 @@
           <option [value]="0">الكل</option>
           <option [value]="1">كاش</option>
           <option [value]="2">استبدال</option>
+          <option [value]="3">تابى</option>
+           <option [value]="4">تمارا</option>
         </select>
       </div>
     </div>
@@ -84,10 +86,12 @@
       <span *ngIf="loading" class="animate-pulse">⏳ جاري التصدير...</span>
     </button>
 
-
-    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-      عرض الشارت
-    </button>
+<button
+  (click)="openChart()"
+  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow"
+>
+  📊 عرض الشارت
+</button>
   </div>
 
   <!-- جدول -->
@@ -98,6 +102,20 @@
   <div *ngIf="error" class="text-center py-6 text-red-600 font-semibold">
     {{ error }}
   </div>
+<!-- 🔥 صندوق الإجماليات -->
+<div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
+
+  <div class="text-slate-700 text-lg font-bold">
+    إجمالي عدد المرتجعات:
+    <span class="text-emerald-700">{{ totalCount }}</span>
+  </div>
+
+  <div class="text-slate-700 text-lg font-bold">
+    إجمالي قيمة المرتجعات:
+    <span class="text-emerald-700">{{ totalAmount | number:'1.2-2' }}</span> ريال
+  </div>
+
+</div>
 
   <table *ngIf="!loading && !error" class="w-full border-collapse text-sm">
     <thead>
