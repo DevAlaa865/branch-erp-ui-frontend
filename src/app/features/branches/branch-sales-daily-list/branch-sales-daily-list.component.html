@@ -1,0 +1,538 @@
+<!-- branch-sales-daily-list.component.html -->
+<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
+  <h2 class="text-xl font-bold mb-4 text-slate-800">بحث عن يوميات المبيعات</h2>
+
+  <!-- فلاتر -->
+  <form [formGroup]="filterForm" class="grid grid-cols-4 gap-4 mb-6 items-center">
+
+    <!-- من تاريخ -->
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-calendar text-blue-500 text-base"></i>
+        <input type="date"
+               formControlName="fromDate"
+               class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+      </div>
+    </div>
+
+    <!-- إلى تاريخ -->
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-calendar text-blue-500 text-base"></i>
+        <input type="date"
+               formControlName="toDate"
+               class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+      </div>
+    </div>
+
+    <!-- الفرع Dropdown -->
+    <app-custom-select
+      label="الفرع"
+      [items]="branches"
+      bindLabel="label"
+      bindValue="id"
+      placeholder="اختر الفرع"
+      [control]="filterForm.get('branchId')"
+      [searchable]="true"
+      [clearable]="true"
+      dropdownPosition="bottom">
+    </app-custom-select>
+
+    <!-- رقم الفرع -->
+    <div>
+      <label class="block mb-1 text-sm">رقم الفرع</label>
+      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
+        <i class="fa fa-store text-blue-500 text-base"></i>
+        <input
+          type="number"
+          formControlName="branchNumber"
+          class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
+          placeholder="اكتب رقم الفرع">
+      </div>
+    </div>
+
+  </form>
+
+  <button
+    (click)="search()"
+    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow">
+    🔍 بحث
+  </button>
+
+  <!-- جدول النتائج -->
+  <table class="w-full border-collapse text-sm mt-6" *ngIf="results.length > 0">
+    <thead>
+      <tr class="bg-slate-100 text-slate-700">
+        <th class="border p-2">التاريخ</th>
+        <th class="border p-2">الفرع</th>
+        <th class="border p-2">نقدي</th>
+        <th class="border p-2">شبكة</th>
+        <th class="border p-2">آجل</th>
+        <th class="border p-2">إجمالي البيع</th>
+        <th class="border p-2">الإجمالي الكلي</th>
+        <th class="border p-2">الفرق</th>
+        <th class="border p-2 text-center">إجراءات</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of pagedResults" class="hover:bg-slate-50">
+        <td class="border p-2">{{ row.salesDate }}</td>
+        <td class="border p-2">{{ row.branchName }}</td>
+        <td class="border p-2">{{ row.cashAmount }}</td>
+        <td class="border p-2">{{ row.networkAmount }}</td>
+        <td class="border p-2">{{ row.creditAmount }}</td>
+        <td class="border p-2">{{ row.totalSales }}</td>
+        <td class="border p-2">{{ row.grandTotal }}</td>
+        <td class="border p-2">{{ row.difference }}</td>
+
+        <td class="border p-2 text-center">
+          <div class="flex justify-center gap-2">
+            <button (click)="edit(row)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
+              تعديل
+            </button>
+            <button (click)="details(row.id)" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-xs">
+              تفاصيل
+            </button>
+          <button (click)="openDeleteDialog(row.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs">
+                حذف
+         </button>
+
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- لا توجد بيانات -->
+  <div *ngIf="results.length === 0" class="text-center text-slate-500 mt-6">
+    لا توجد بيانات لعرضها
+  </div>
+
+  <!-- 🔢 الباجينيشن -->
+  <div *ngIf="totalPages >= 1" class="flex justify-center items-center gap-6 mt-8 select-none">
+
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+             border border-slate-300 bg-slate-100 text-slate-700
+             hover:bg-slate-200 hover:text-slate-900
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100">
+      <i class="fa fa-arrow-left text-slate-500"></i>
+      السابق
+    </button>
+
+    <span class="text-lg font-bold text-slate-800">
+      صفحة {{ currentPage }} من {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+             border border-slate-300 bg-slate-100 text-slate-700
+             hover:bg-slate-200 hover:text-slate-900
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100">
+      التالي
+      <i class="fa fa-arrow-right text-slate-500"></i>
+    </button>
+
+  </div>
+
+</div>
+
+<!-- 🔥 نافذة تعديل اليومية مع تفاصيل العجز -->
+<div *ngIf="selectedDaily" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-start justify-center z-[9998] pt-24 pb-8 z-50">
+<div class="bg-white rounded-xl shadow-lg p-4 w-[900px] max-h-[85vh] overflow-y-auto border border-slate-200">
+    <h3 class="text-2xl font-bold mb-6 text-slate-800 text-center">
+      تعديل بيانات يومية المبيعات
+    </h3>
+
+    <form [formGroup]="editForm" class="space-y-6">
+
+      <!-- الهيدر + القيم المالية -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">التاريخ</label>
+          <input type="date" formControlName="salesDate"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">الفرع</label>
+          <input type="text" [value]="selectedDaily.branchName"
+                 class="border rounded-lg p-2 w-full text-sm bg-slate-50" readonly />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات</label>
+          <input type="text" formControlName="supervisorNotes"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+      </div>
+
+      <!-- صورة اليومية -->
+      <div class="mt-2">
+        <label class="block text-sm font-medium text-slate-700 mb-1">صورة اليومية</label>
+        <div class="flex items-center gap-4 flex-wrap">
+          <div *ngIf="editForm.get('attachmentPath')?.value" class="flex items-center gap-3">
+            <img [src]="getImageUrl(editForm.get('attachmentPath')?.value)"
+                 class="w-24 h-24 object-cover rounded border border-slate-200" alt="صورة اليومية" />
+            <a [href]="getImageUrl(editForm.get('attachmentPath')?.value)" target="_blank"
+               class="text-xs text-blue-600 underline">عرض الصورة بالحجم الكامل</a>
+          </div>
+          <input type="file" (change)="onEditHeaderFileSelected($event)"
+                 class="border rounded-lg p-2 text-sm" />
+        </div>
+      </div>
+
+      <!-- القيم المالية -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">نقدي</label>
+          <input type="number" formControlName="cashAmount"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">شبكة</label>
+          <input type="number" formControlName="networkAmount"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">آجل</label>
+          <input type="number" formControlName="creditAmount"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">إجمالي البيع</label>
+          <input type="number" formControlName="totalSales"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">الإجمالي الكلي</label>
+          <input type="number" formControlName="grandTotal"
+                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">الفرق</label>
+          <input type="number" formControlName="difference"
+                 class="border rounded-lg p-2 w-full text-sm bg-slate-50" readonly />
+        </div>
+      </div>
+
+      <!-- تفاصيل العجز -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-base font-semibold text-slate-800 flex items-center gap-2">
+            <i class="fa fa-triangle-exclamation text-amber-500"></i>
+            تفاصيل العجز
+          </h4>
+
+          <button type="button"
+                  (click)="addEditShortageRow()"
+                  class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 flex items-center gap-1">
+            <i class="fa fa-plus"></i>
+            إضافة عجز
+          </button>
+        </div>
+
+        <div formArrayName="shortageDetails" class="space-y-4">
+
+          <div *ngFor="let row of editShortageDetails.controls; let i = index"
+               [formGroupName]="i"
+               class="p-4 rounded-lg border border-blue-200 bg-white space-y-4">
+
+  <!-- 🔥 صف منظم ومقسم على صفين -->
+<div class="space-y-4">
+  <!-- الصف الأول: نوع العجز -->
+  <div class="grid grid-cols-1 md:grid-cols-1">
+    <app-custom-select
+      label="نوع العجز"
+      [items]="shortageTypes"
+      bindLabel="name"
+      bindValue="id"
+      placeholder="اختر نوع العجز"
+      [control]="getEditShortageControl(row)"
+      [searchable]="true"
+      [clearable]="false"
+      dropdownPosition="bottom">
+    </app-custom-select>
+  </div>
+
+  <!-- الصف الثاني: باقي الحقول -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+    <!-- الموظف -->
+    <div *ngIf="row.get('employeeId')?.validator">
+      <app-custom-select
+        label="الموظف"
+        [items]="employeeOptions"
+        bindLabel="name"
+        bindValue="id"
+        placeholder="اختر الموظف"
+        [control]="getEditEmployeeControl(row)"
+        [searchable]="true"
+        [clearable]="true"
+        dropdownPosition="bottom">
+      </app-custom-select>
+    </div>
+
+    <!-- قيمة العجز -->
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">قيمة العجز</label>
+      <input type="number"
+             formControlName="amount"
+             class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+    </div>
+
+<!-- مرفق + اختيار ملف في نفس الصف -->
+<div class="flex flex-col gap-1">
+  <label class="block text-sm font-medium text-slate-700 mb-1">مرفق</label>
+  <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div *ngIf="row.get('attachmentPath')?.value" class="flex flex-col items-center gap-1">
+        <img [src]="getImageUrl(row.get('attachmentPath')?.value)"
+             class="w-20 h-20 object-cover rounded border border-slate-200" alt="مرفق العجز" />
+        <a [href]="getImageUrl(row.get('attachmentPath')?.value)" target="_blank"
+           class="text-[11px] text-blue-600 underline">عرض المرفق الحالي</a>
+      </div>
+    </div>
+    <input type="file" (change)="onEditShortageFileSelected($event, i)"
+           class="border rounded-lg p-2 text-sm w-[180px]" />
+  </div>
+</div>
+
+  </div>
+</div>
+
+            <!-- 🔥 ملاحظات المرتجعات أو الخصومات -->
+            <div *ngIf="isReturnType(row) || isDiscountType(row)" class="mt-3">
+              <label class="block text-sm font-medium text-slate-700 mb-1">
+                {{ isReturnType(row) ? 'ملاحظات المرتجعات' : 'ملاحظات الخصومات' }}
+              </label>
+
+              <input type="text"
+                     [formControlName]="isReturnType(row) ? 'returnNotes' : 'discountNotes'"
+                     class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+            </div>
+
+            <!-- زرار حذف صف العجز -->
+            <div class="flex justify-end mt-3">
+              <button type="button"
+                      (click)="removeEditShortageRow(i)"
+                      class="px-3 py-1.5 rounded-lg bg-rose-500 text-white text-xs hover:bg-rose-600 flex items-center gap-1">
+                <i class="fa fa-trash"></i>
+                حذف
+              </button>
+            </div>
+
+          </div> <!-- نهاية كارت صف العجز -->
+
+        </div> <!-- نهاية الفورم آراي -->
+
+      </div> <!-- نهاية كارت تفاصيل العجز -->
+
+      <!-- 🔥 أزرار الحفظ والإلغاء -->
+      <div class="flex justify-end gap-3 mt-4">
+        <button type="button"
+                (click)="closeEditDialog()"
+                class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+          إلغاء
+        </button>
+
+        <button type="button"
+                (click)="saveEdit()"
+                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+          حفظ التعديلات
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<div *ngIf="selectedDailyDetails" 
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-start justify-center pt-16 pb-8 z-[9999]">
+
+  <div class="bg-white rounded-xl shadow-lg p-4 w-[900px] max-h-[85vh] overflow-y-auto border border-slate-200">
+
+    <h3 class="text-2xl font-bold mb-6 text-slate-800 text-center">
+      تفاصيل يومية المبيعات
+    </h3>
+
+    <!-- الهيدر -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">التاريخ</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.salesDate | date:'yyyy-MM-dd' }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">الفرع</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.branchName }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المشرف</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.supervisorNotes || '—' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- صورة اليومية -->
+    <div class="mt-4">
+      <label class="block text-sm font-medium text-slate-700 mb-1">صورة اليومية</label>
+      <img [src]="getImageUrl(selectedDailyDetails.attachmentPath)"
+           class="w-32 h-32 object-cover rounded border border-slate-200" />
+    </div>
+
+    <!-- القيم المالية -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">نقدي</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.cashAmount }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">شبكة</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.networkAmount }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">آجل</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.creditAmount }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">إجمالي البيع</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.totalSales }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">الإجمالي الكلي</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.grandTotal }}
+        </span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">الفرق</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+          {{ selectedDailyDetails.difference }}
+        </span>
+      </div>
+
+    </div>
+
+    <!-- تفاصيل العجز -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 mt-6">
+      <h4 class="text-base font-semibold text-slate-800 mb-3">
+        تفاصيل العجز
+      </h4>
+
+      <div *ngFor="let row of selectedDailyDetails.shortageDetails"
+           class="p-3 rounded-lg border border-blue-200 bg-white space-y-3">
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+          <span>نوع العجز: {{ row.shortageTypeName }}</span>
+         <span *ngIf="row.employeeName">الموظف: {{ row.employeeName }}</span>
+          <span>قيمة العجز: {{ row.amount }}</span>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">المرفق</label>
+            <img [src]="getImageUrl(row.attachmentPath)"
+                 class="w-20 h-20 object-cover rounded border border-slate-200" />
+          </div>
+        </div>
+
+        <div *ngIf="row.returnNotes">
+          <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المرتجعات</label>
+          <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+            {{ row.returnNotes }}
+          </span>
+        </div>
+
+        <div *ngIf="row.discountNotes">
+          <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات الخصومات</label>
+          <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
+            {{ row.discountNotes }}
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- زر الإغلاق -->
+    <div class="flex justify-end mt-4">
+      <button (click)="closeDetailsDialog()"
+              class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+        إغلاق
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- 🔥 Popup حذف احترافي -->
+<div *ngIf="showDeleteDialog"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
+
+  <div class="bg-white w-[380px] rounded-2xl shadow-xl p-6 animate-fadeIn border border-slate-200">
+
+    <!-- أيقونة التحذير -->
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+        <i class="fa fa-trash text-red-600 text-3xl"></i>
+      </div>
+    </div>
+
+    <!-- العنوان -->
+    <h3 class="text-xl font-bold text-center text-slate-800 mb-2">
+      تأكيد الحذف
+    </h3>
+
+    <!-- النص -->
+    <p class="text-center text-slate-600 mb-6">
+      هل أنت متأكد من حذف هذه اليومية نهائيًا؟  
+      لا يمكن التراجع بعد الحذف.
+    </p>
+
+    <!-- الأزرار -->
+    <div class="flex justify-between gap-3">
+      <button 
+        class="flex-1 bg-gray-200 text-slate-700 py-2 rounded-lg hover:bg-gray-300 font-semibold"
+        (click)="closeDeleteDialog()">
+        إلغاء
+      </button>
+
+      <button 
+        class="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 font-semibold"
+        (click)="deleteDaily()">
+        حذف
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+

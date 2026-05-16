@@ -59,6 +59,9 @@ getCityBranchSalesSummary(filter: any) {
   );
 }
 
+search(filter: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/search`, filter);
+}
 
 
 }

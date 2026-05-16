@@ -1,0 +1,6 @@
+export interface BranchSalesDailySearchFilter {
+  branchId?: number;
+  branchNumber?: number;
+  fromDate: string;
+  toDate: string;
+}

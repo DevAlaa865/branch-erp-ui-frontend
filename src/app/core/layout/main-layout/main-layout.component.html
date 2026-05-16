@@ -86,6 +86,14 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>تقرير تارجت فرع خلال فترة</span>
       </a>
+           <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/branches/branch-sales-daily-list"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير بيانات فرع</span>
+      </a>
      <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/branches/daily-performance-target-upload"
