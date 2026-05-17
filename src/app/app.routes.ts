@@ -123,6 +123,12 @@ export const routes: Routes = [
               .then(m => m.BranchSalesDailyListComponent)
         },
         {
+        path: 'reports/branch-daily-difference-report',
+        loadComponent: () =>
+          import('./features/reports/branch-daily-difference-report/branch-daily-difference-report.component')
+            .then(m => m.BranchDailyDifferenceReportComponent)
+      },
+        {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/admin/dashboard/admin-dashboard/admin-dashboard.component')
