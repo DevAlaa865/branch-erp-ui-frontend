@@ -1,117 +1,297 @@
-<div class="bg-white p-6 rounded-xl shadow border border-slate-200">
+<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
 
-    <!-- التاريخ من وإلى -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+  <h2 class="text-xl font-bold mb-4 text-slate-800">تقرير الفرق بين المبيعات والشبكة</h2>
 
-  <div>
-    <label class="font-semibold text-slate-700">من تاريخ</label>
-    <input 
-      type="date" 
-      class="w-full border rounded p-2"
-      [(ngModel)]="filter.fromDate">
-  </div>
+  <!-- 🔥 Toggle نوع التقرير -->
+  <div class="flex gap-6 mb-4">
+    <label class="flex items-center gap-2 text-slate-700">
+      <input type="radio"
+             name="rtype"
+             value="difference"
+             [checked]="form.value.reportType === 'difference'"
+             (change)="changeReportType('difference')">
+      تقرير الفرق
+    </label>
 
-  <div>
-    <label class="font-semibold text-slate-700">إلى تاريخ</label>
-    <input 
-      type="date" 
-      class="w-full border rounded p-2"
-      [(ngModel)]="filter.toDate">
-  </div>
-
-</div>
-
-  <!-- المدينة -->
-  <div class="mb-4">
-    <label class="font-semibold text-slate-700">المدينة</label>
-    <select class="w-full border rounded p-2" [(ngModel)]="filter.cityId" (change)="loadBranches()">
-      <option value="">اختر المدينة</option>
-      <option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
-    </select>
-  </div>
-
-  <!-- الفروع -->
-  <div class="mb-4">
-    <label class="font-semibold text-slate-700">الفروع</label>
-    <select class="w-full border rounded p-2" multiple [(ngModel)]="filter.branchIds">
-      <option *ngFor="let b of branches" [value]="b.id">{{ b.name }}</option>
-    </select>
-  </div>
-
-  <!-- الفرق -->
-  <div class="mb-4">
-    <label class="font-semibold text-slate-700">الفرق</label>
-    <div class="flex gap-4 mt-2">
-      <label class="flex items-center gap-2">
-        <input type="radio" name="diff" (change)="selectDiff('less')" />
-        أقل من أو يساوي 35 ريال
-      </label>
-      <label class="flex items-center gap-2">
-        <input type="radio" name="diff" (change)="selectDiff('greater')" />
-        أكبر من 35 ريال
-      </label>
-    </div>
-  </div>
-
-  <!-- تقرير الشبكة -->
-  <div class="mb-4">
-    <label class="flex items-center gap-2">
-      <input type="checkbox" [(ngModel)]="filter.isNetworkReport" />
-      تقرير الشبكة فقط
+    <label class="flex items-center gap-2 text-slate-700">
+      <input type="radio"
+             name="rtype"
+             value="network"
+             [checked]="form.value.reportType === 'network'"
+             (change)="changeReportType('network')">
+      تقرير الشبكة
     </label>
   </div>
 
-  <!-- زر عرض التقرير -->
-  <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          (click)="loadReport()">
-    عرض التقرير
+  <!-- 🔥 Toggle طريقة اختيار الفرع -->
+  <div class="flex gap-6 mb-6">
+    <label class="flex items-center gap-2 text-slate-700">
+      <input type="radio"
+             name="bmode"
+             value="manual"
+             [checked]="form.value.branchMode === 'manual'"
+             (change)="changeBranchMode('manual')">
+      إدخال رقم الفرع يدويًا
+    </label>
+
+    <label class="flex items-center gap-2 text-slate-700">
+      <input type="radio"
+             name="bmode"
+             value="dropdown"
+             [checked]="form.value.branchMode === 'dropdown'"
+             (change)="changeBranchMode('dropdown')">
+      اختيار منطقة وفروع
+    </label>
+  </div>
+
+<!-- كارت الفلاتر -->
+<div class="rounded-xl border border-blue-200 bg-slate-50 p-6 shadow-sm">
+  <form [formGroup]="form" class="grid grid-cols-4 gap-4 items-end">
+
+    <!-- 🔥 صف واحد يحتوي على من تاريخ / إلى تاريخ / المدينة أو رقم الفرع / الفروع -->
+    <div class="col-span-4">
+      <div class="grid grid-cols-4 gap-4 items-end">
+
+        <!-- من تاريخ -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
+          <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+            <i class="fa fa-calendar text-blue-500 text-base"></i>
+            <input type="date"
+                   formControlName="fromDate"
+                   (change)="resetReport()"
+                   class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- إلى تاريخ -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
+          <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+            <i class="fa fa-calendar text-blue-500 text-base"></i>
+            <input type="date"
+                   formControlName="toDate"
+                   (change)="resetReport()"
+                   class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+          </div>
+        </div>
+
+        <!-- المدينة أو رقم الفرع -->
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">
+            {{ form.value.branchMode === 'manual' ? 'رقم الفرع' : 'المدينة' }}
+          </label>
+
+          <!-- رقم الفرع -->
+          <input *ngIf="form.value.branchMode === 'manual'"
+                 type="number"
+                 formControlName="branchNumber"
+                 (input)="resetReport()"
+                 placeholder="اكتب رقم الفرع"
+                 class="w-full rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm text-base text-slate-800 focus:outline-none">
+
+          <!-- المدينة -->
+          <app-custom-select *ngIf="form.value.branchMode === 'dropdown'"
+            [items]="cities"
+            bindLabel="cityName"
+            bindValue="id"
+            placeholder="اختر المدينة"
+            [control]="form.get('cityId')"
+            [multiple]="false"
+            [searchable]="true"
+            [clearable]="true"
+            [closeOnSelect]="true"
+            dropdownPosition="bottom"
+            (selectionChange)="onCityChange(); resetReport()">
+          </app-custom-select>
+        </div>
+
+        <!-- الفروع (تظهر فقط في وضع dropdown) -->
+        <div *ngIf="form.value.branchMode === 'dropdown'">
+          <div class="flex justify-between items-center mb-1">
+            <label class="block text-sm font-medium text-slate-700">الفروع</label>
+            <button type="button"
+                    class="text-xs text-blue-600 underline"
+                    (click)="selectAllBranches()">
+              اختيار الكل
+            </button>
+          </div>
+
+          <app-custom-select
+            label=""
+            [items]="branches"
+            bindLabel="branchName"
+            bindValue="id"
+            placeholder="اختر الفروع"
+            [control]="branchIdsControl"
+            [multiple]="true"
+            [searchable]="true"
+            [clearable]="true"
+            [closeOnSelect]="false"
+            dropdownPosition="bottom"
+            (selectionChange)="resetReport()">
+          </app-custom-select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ⭐ فلاتر الفرق الجديدة -->
+    <div class="col-span-2 space-y-2" *ngIf="form.value.reportType === 'difference'">
+      <label class="block text-sm font-medium text-slate-700">نوع الفرق</label>
+
+      <div class="flex flex-col gap-2 bg-white border border-blue-200 rounded-lg p-3 shadow-sm">
+        <label class="flex items-center gap-2 text-slate-700">
+          <input type="radio" name="diff" (change)="selectDiff('allowed')">
+          عجز مسموح به(من  1 الى 35 ريال )
+        </label>
+
+        <label class="flex items-center gap-2 text-slate-700">
+          <input type="radio" name="diff" (change)="selectDiff('big')">
+          عجز (اكبر من  35 ريال )
+        </label>
+
+        <label class="flex items-center gap-2 text-slate-700">
+          <input type="radio" name="diff" (change)="selectDiff('increase')">
+          زيادة 
+        </label>
+      </div>
+    </div>
+
+    <!-- تقرير الشبكة -->
+    <div class="col-span-2 space-y-2" *ngIf="form.value.reportType === 'network'">
+      <label class="block text-sm font-medium text-slate-700">تقرير الشبكة</label>
+
+      <div class="flex items-center gap-2 bg-white border border-blue-200 rounded-lg p-3 shadow-sm">
+        <input type="checkbox"
+               formControlName="isNetworkReport"
+               (change)="toggleNetworkReport()">
+        <span class="text-slate-700">شبكة فقط</span>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+
+  <!-- زر البحث -->
+  <div class="mt-6 text-center">
+    <button
+      (click)="loadReport()"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition">
+      🔍 عرض التقرير
+    </button>
+  </div>
+<!-- 🔥 كارت الإجماليات -->
+<div *ngIf="loaded" class="mt-6 mb-4 grid grid-cols-3 gap-4 text-center">
+  <!-- إجمالي الفرق السالب -->
+  <div *ngIf="form.value.reportType === 'difference'" class="bg-red-50 border border-red-200 rounded-lg p-4 shadow-sm">
+    <h3 class="text-sm font-medium text-red-700">إجمالي العجز (سالب)</h3>
+    <p class="text-lg font-bold text-red-600">{{ totalNegativeDifference | number:'1.2-2' }}</p>
+  </div>
+
+  <!-- إجمالي الفرق الموجب -->
+  <div *ngIf="form.value.reportType === 'difference'" class="bg-green-50 border border-green-200 rounded-lg p-4 shadow-sm">
+    <h3 class="text-sm font-medium text-green-700">إجمالي الزيادة (موجب)</h3>
+    <p class="text-lg font-bold text-green-600">{{ totalPositiveDifference | number:'1.2-2' }}</p>
+  </div>
+
+  <!-- إجمالي الشبكة -->
+  <div *ngIf="form.value.reportType === 'network'" class="bg-blue-50 border border-blue-200 rounded-lg p-4 shadow-sm col-span-3">
+    <h3 class="text-sm font-medium text-blue-700">إجمالي مبلغ الشبكة</h3>
+    <p class="text-lg font-bold text-blue-600">{{ totalNetworkAmount | number:'1.2-2' }}</p>
+  </div>
+</div>
+<div *ngIf="loaded && report.length > 0" class="mt-6 text-right">
+  <button
+    (click)="printReport()"
+    class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition">
+    🖨️ طباعة التقرير
   </button>
 </div>
 
-<!-- جدول التقرير -->
-<div *ngIf="reportData.length > 0" class="mt-6">
-  <table class="w-full border-collapse border border-slate-300">
-    <thead class="bg-slate-100">
-      <tr>
+  <!-- جدول النتائج -->
+   <div id="reportTable">
+      <table class="w-full border-collapse text-sm mt-6" *ngIf="report.length > 0">
+        <thead>
+          <tr class="bg-slate-100 text-slate-700">
+            <th class="border p-2">التاريخ</th>
+            <th class="border p-2">رقم الفرع</th>
+            <th class="border p-2">اسم الفرع</th>
+            <th class="border p-2" *ngIf="!form.value.isNetworkReport">قيمة الفرق</th>
+            <th class="border p-2" *ngIf="form.value.isNetworkReport">قيمة الشبكة</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of pagedReport" class="hover:bg-slate-50">
+            <td class="border p-2">{{ row.salesDate | date:'yyyy-MM-dd' }}</td>
+            <td class="border p-2">{{ row.branchNumber }}</td>
+            <td class="border p-2">{{ row.branchName }}</td>
+            <td class="border p-2" *ngIf="!form.value.isNetworkReport">{{ row.difference }}</td>
+            <td class="border p-2" *ngIf="form.value.isNetworkReport">{{ row.networkAmount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="printArea" class="hidden">
+  <table class="w-full border-collapse text-sm mt-6">
+    <thead>
+      <tr class="bg-slate-100 text-slate-700">
+        <th class="border p-2">التاريخ</th>
         <th class="border p-2">رقم الفرع</th>
         <th class="border p-2">اسم الفرع</th>
-        <th class="border p-2" *ngIf="!filter.isNetworkReport">قيمة الفرق</th>
-        <th class="border p-2" *ngIf="filter.isNetworkReport">قيمة الشبكة</th>
+        <th class="border p-2" *ngIf="!form.value.isNetworkReport">قيمة الفرق</th>
+        <th class="border p-2" *ngIf="form.value.isNetworkReport">قيمة الشبكة</th>
       </tr>
     </thead>
+
     <tbody>
-      <tr *ngFor="let r of reportData">
-        <td class="border p-2">{{ r.branchId }}</td>
-        <td class="border p-2">{{ r.branchName }}</td>
-        <td class="border p-2" *ngIf="!filter.isNetworkReport">{{ r.difference }}</td>
-        <td class="border p-2" *ngIf="filter.isNetworkReport">{{ r.networkAmount }}</td>
+      <tr *ngFor="let row of report" class="hover:bg-slate-50">
+        <td class="border p-2">{{ row.salesDate | date:'yyyy-MM-dd' }}</td>
+        <td class="border p-2">{{ row.branchNumber }}</td>
+        <td class="border p-2">{{ row.branchName }}</td>
+        <td class="border p-2" *ngIf="!form.value.isNetworkReport">{{ row.difference }}</td>
+        <td class="border p-2" *ngIf="form.value.isNetworkReport">{{ row.networkAmount }}</td>
       </tr>
     </tbody>
   </table>
-  <!-- 🔢 الباجينيشن -->
-<div *ngIf="totalPages > 1" class="flex justify-center items-center gap-4 mt-6">
-
-  <button
-    (click)="previousPage()"
-    [disabled]="currentPage === 1"
-    class="bg-slate-300 hover:bg-slate-400 text-black px-3 py-1 rounded transition disabled:opacity-50"
-  >
-    ⬅️ السابق
-  </button>
-
-  <span class="text-slate-700 font-semibold">
-    صفحة {{ currentPage }} من {{ totalPages }}
-  </span>
-
-  <button
-    (click)="nextPage()"
-    [disabled]="currentPage === totalPages"
-    class="bg-slate-300 hover:bg-slate-400 text-black px-3 py-1 rounded transition disabled:opacity-50"
-  >
-    التالي ➡️
-  </button>
-
 </div>
 
 </div>
+  <!-- لا توجد بيانات -->
+  <div *ngIf="report.length === 0" class="text-center text-slate-500 mt-6">
+    لا توجد بيانات لعرضها
+  </div>
 
+  <!-- الباجينيشن -->
+  <div *ngIf="totalPages >= 1" class="flex justify-center items-center gap-6 mt-8 select-none">
+
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+             border border-slate-300 bg-slate-100 text-slate-700
+             hover:bg-slate-200 hover:text-slate-900
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100">
+      <i class="fa fa-arrow-left text-slate-500"></i>
+      السابق
+    </button>
+
+    <span class="text-lg font-bold text-slate-800">
+      صفحة {{ currentPage }} من {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
+             border border-slate-300 bg-slate-100 text-slate-700
+             hover:bg-slate-200 hover:text-slate-900
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100">
+      التالي
+      <i class="fa fa-arrow-right text-slate-500"></i>
+    </button>
+
+  </div>
+
+</div>

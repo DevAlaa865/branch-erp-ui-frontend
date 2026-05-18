@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -25,6 +25,8 @@ export class CustomSelectComponent {
   @Input() multiple: boolean = false;
   @Input() closeOnSelect: boolean = true;
   @Input() disabled: boolean = false;
+  @Output() selectionChange = new EventEmitter<any>();
+
 
   isOpen = false;
   searchTerm = '';
@@ -57,21 +59,25 @@ toggleDropdown() {
 }
 
 
-  selectItem(item: any) {
-    if (this.multiple) {
-      const current = this.control?.value || [];
-      const exists = current.includes(item[this.bindValue]);
+ selectItem(item: any) {
+  if (this.multiple) {
+    const current = this.control?.value || [];
+    const exists = current.includes(item[this.bindValue]);
 
-      if (exists) {
-        this.control?.setValue(current.filter((v: any) => v !== item[this.bindValue]));
-      } else {
-        this.control?.setValue([...current, item[this.bindValue]]);
-      }
+    if (exists) {
+      this.control?.setValue(current.filter((v: any) => v !== item[this.bindValue]));
     } else {
-      this.control?.setValue(item[this.bindValue]);
-      if (this.closeOnSelect) this.isOpen = false;
+      this.control?.setValue([...current, item[this.bindValue]]);
     }
+  } else {
+    this.control?.setValue(item[this.bindValue]);
+    if (this.closeOnSelect) this.isOpen = false;
   }
+
+  // 🔹 بعد تحديث القيمة نبعث الحدث للأب
+  this.selectionChange.emit(this.control?.value);
+}
+
 
   isSelected(item: any) {
     if (this.multiple) {
