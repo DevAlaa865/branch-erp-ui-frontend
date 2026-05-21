@@ -127,7 +127,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/reports/branch-daily-difference-report/branch-daily-difference-report.component')
             .then(m => m.BranchDailyDifferenceReportComponent)
+       },
+       {
+        path: 'branches/branch-control-issues',
+        loadComponent: () =>
+          import('./features/branches/branch-control-issues/branch-control-issues.component')
+            .then(m => m.BranchControlIssuesComponent)
       },
+
         {
         path: 'dashboard',
         loadComponent: () =>

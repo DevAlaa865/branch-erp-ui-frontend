@@ -5,6 +5,8 @@ import { BranchDailyDifferenceReportService } from '../../../services/reports/br
 import { MasterDataService } from '../../../services/master-data.service';
 import { BranchDailyDifferenceReport } from '../../../shared/models/branch-daily-difference-report.model';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
+import { BranchControlIssueService } from '../../../services/branch-control-issue.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-branch-daily-difference-report',
@@ -39,7 +41,9 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private reportService: BranchDailyDifferenceReportService,
-    private masterService: MasterDataService
+    private masterService: MasterDataService,
+    private controlIssueService: BranchControlIssueService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -54,19 +58,20 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
       fromDate: [today, Validators.required],
       toDate: [today, Validators.required],
 
-      // ⭐ طريقة اختيار الفرع
-      branchMode: ['manual'],   // manual | dropdown
+      branchMode: ['manual'],
 
       cityId: [null],
       branchNumber: [null],
 
-      // ⭐ نوع التقرير
-      reportType: ['difference'], // difference | network
+      reportType: ['difference'],
 
-      // ⭐ الفلاتر الجديدة
-      isAllowedShortage: [true],   // من -35 إلى -1
-      isBigShortage: [false],      // أقل من -35
-      isIncrease: [false],         // أكبر من 0
+      // ⭐ العجز
+      isAllowedShortage: [true],
+      isBigShortage: [false],
+
+      // ⭐ الزيادة الجديدة
+      isSmallIncrease: [false],
+      isBigIncrease: [false],
 
       isNetworkReport: [false]
     });
@@ -76,13 +81,11 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
     this.report = [];
     this.loaded = false;
 
-    // إعادة تعيين الإجماليات
     this.totalNegativeDifference = 0;
     this.totalPositiveDifference = 0;
     this.totalNetworkAmount = 0;
   }
 
-  // ⭐ تغيير طريقة اختيار الفرع
   changeBranchMode(mode: 'manual' | 'dropdown'): void {
     this.resetReport();
     this.form.patchValue({ branchMode: mode });
@@ -98,7 +101,6 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
     }
   }
 
-  // ⭐ تغيير نوع التقرير
   changeReportType(type: 'difference' | 'network'): void {
     this.resetReport();
 
@@ -109,7 +111,8 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
         isNetworkReport: false,
         isAllowedShortage: true,
         isBigShortage: false,
-        isIncrease: false
+        isSmallIncrease: false,
+        isBigIncrease: false
       });
     }
 
@@ -118,44 +121,67 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
         isNetworkReport: true,
         isAllowedShortage: null,
         isBigShortage: null,
-        isIncrease: null
+        isSmallIncrease: null,
+        isBigIncrease: null
       });
     }
   }
 
-  // ⭐ اختيار نوع الفرق (3 أنواع)
-  selectDiff(type: 'allowed' | 'big' | 'increase'): void {
-    this.resetReport();
+selectedDiffType: number | null = null; // 1 = عجز ، 2 = زيادة
+showTransferButton: boolean = false;    // ⭐ فلاج ظهور زرار التحويل
 
+selectDiff(type: 'allowed' | 'big' | 'smallIncrease' | 'bigIncrease'): void {
+  this.resetReport();
+
+  this.form.patchValue({
+    reportType: 'difference',
+    isNetworkReport: false
+  });
+
+  // ⭐ تحديد ظهور زرار التحويل
+  this.showTransferButton = (type === 'big' || type === 'bigIncrease');
+
+  if (type === 'allowed') {
+    this.selectedDiffType = 1; // عجز
     this.form.patchValue({
-      reportType: 'difference',
-      isNetworkReport: false
+      isAllowedShortage: true,
+      isBigShortage: false,
+      isSmallIncrease: false,
+      isBigIncrease: false
     });
-
-    if (type === 'allowed') {
-      this.form.patchValue({
-        isAllowedShortage: true,
-        isBigShortage: false,
-        isIncrease: false
-      });
-    }
-
-    if (type === 'big') {
-      this.form.patchValue({
-        isAllowedShortage: false,
-        isBigShortage: true,
-        isIncrease: false
-      });
-    }
-
-    if (type === 'increase') {
-      this.form.patchValue({
-        isAllowedShortage: false,
-        isBigShortage: false,
-        isIncrease: true
-      });
-    }
   }
+
+  if (type === 'big') {
+    this.selectedDiffType = 1; // عجز
+    this.form.patchValue({
+      isAllowedShortage: false,
+      isBigShortage: true,
+      isSmallIncrease: false,
+      isBigIncrease: false
+    });
+  }
+
+  if (type === 'smallIncrease') {
+    this.selectedDiffType = 2; // زيادة
+    this.form.patchValue({
+      isAllowedShortage: false,
+      isBigShortage: false,
+      isSmallIncrease: true,
+      isBigIncrease: false
+    });
+  }
+
+  if (type === 'bigIncrease') {
+    this.selectedDiffType = 2; // زيادة
+    this.form.patchValue({
+      isAllowedShortage: false,
+      isBigShortage: false,
+      isSmallIncrease: false,
+      isBigIncrease: true
+    });
+  }
+}
+
 
   toggleNetworkReport(): void {
     this.resetReport();
@@ -164,7 +190,8 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
       reportType: 'network',
       isAllowedShortage: null,
       isBigShortage: null,
-      isIncrease: null
+      isSmallIncrease: null,
+      isBigIncrease: null
     });
   }
 
@@ -222,7 +249,8 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
       // ⭐ الفلاتر الجديدة
       isAllowedShortage: this.form.value.isAllowedShortage,
       isBigShortage: this.form.value.isBigShortage,
-      isIncrease: this.form.value.isIncrease,
+      isSmallIncrease: this.form.value.isSmallIncrease,
+      isBigIncrease: this.form.value.isBigIncrease,
 
       isNetworkReport: this.form.value.isNetworkReport,
 
@@ -238,7 +266,6 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
         this.loaded = true;
         this.loading = false;
 
-        // ⭐ حساب الإجماليات
         this.calculateTotals();
       },
       error: () => {
@@ -250,25 +277,22 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
     });
   }
 
-  // ⭐ دالة حساب الإجماليات
-calculateTotals(): void {
+  calculateTotals(): void {
+    if (this.form.value.reportType === 'difference') {
+      this.totalNegativeDifference = this.report
+        .filter(r => (r.difference ?? 0) < 0)
+        .reduce((sum, r) => sum + (r.difference ?? 0), 0);
 
-  if (this.form.value.reportType === 'difference') {
+      this.totalPositiveDifference = this.report
+        .filter(r => (r.difference ?? 0) > 0)
+        .reduce((sum, r) => sum + (r.difference ?? 0), 0);
+    }
 
-    this.totalNegativeDifference = this.report
-      .filter(r => (r.difference ?? 0) < 0)
-      .reduce((sum, r) => sum + (r.difference ?? 0), 0);
-
-    this.totalPositiveDifference = this.report
-      .filter(r => (r.difference ?? 0) > 0)
-      .reduce((sum, r) => sum + (r.difference ?? 0), 0);
+    if (this.form.value.reportType === 'network') {
+      this.totalNetworkAmount = this.report
+        .reduce((sum, r) => sum + (r.networkAmount ?? 0), 0);
+    }
   }
-
-  if (this.form.value.reportType === 'network') {
-    this.totalNetworkAmount = this.report
-      .reduce((sum, r) => sum + (r.networkAmount ?? 0), 0);
-  }
-}
 
   get pagedReport(): BranchDailyDifferenceReport[] {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -283,38 +307,68 @@ calculateTotals(): void {
     if (this.currentPage > 1) this.currentPage--;
   }
 
-printReport(): void {
-  const printContents = document.getElementById('printArea')?.innerHTML;
+  printReport(): void {
+    const printContents = document.getElementById('printArea')?.innerHTML;
 
-  if (!printContents) return;
+    if (!printContents) return;
 
-  const popup = window.open('', '_blank', 'width=1000,height=800');
+    const popup = window.open('', '_blank', 'width=1000,height=800');
 
-  if (!popup) return;
+    if (!popup) return;
 
-  popup.document.open();
-  popup.document.write(`
-    <html dir="rtl" lang="ar">
-      <head>
-        <title>طباعة التقرير</title>
-        <style>
-          body { font-family: 'Tahoma', sans-serif; padding: 20px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-          th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-          th { background: #f1f5f9; }
-          h2 { text-align: center; margin-bottom: 20px; }
-        </style>
-      </head>
-      <body>
-        <h2>تقرير الفرق بين المبيعات والشبكة</h2>
-        ${printContents}
-      </body>
-    </html>
-  `);
+    popup.document.open();
+    popup.document.write(`
+      <html dir="rtl" lang="ar">
+        <head>
+          <title>طباعة التقرير</title>
+          <style>
+            body { font-family: 'Tahoma', sans-serif; padding: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            th { background: #f1f5f9; }
+            h2 { text-align: center; margin-bottom: 20px; }
+          </style>
+        </head>
+        <body>
+          <h2>تقرير الفرق بين المبيعات والشبكة</h2>
+          ${printContents}
+        </body>
+      </html>
+    `);
 
-  popup.document.close();
-  popup.print();
+    popup.document.close();
+    popup.print();
+  }
+
+transferToControl(): void {
+  if (!this.report || this.report.length === 0) {
+    alert('لا يوجد بيانات لإرسالها إلى الرقابة');
+    return;
+  }
+
+  if (!this.selectedDiffType) {
+    alert('من فضلك اختر نوع الفرق قبل التحويل إلى الرقابة');
+    return;
+  }
+
+  const userName = this.authService.getUserName();
+
+  const issues = this.report.map(r => ({
+    branchId: r.branchId,
+    salesDailyId: r.salesDailyId,
+    salesDate: r.salesDate,
+    differenceAmount: r.difference,
+
+    // ⭐ الاسم الصحيح اللي الباك‑إند مستنيه
+    differenceDirection: this.selectedDiffType,
+
+    sentByUser: userName
+  }));
+
+  this.controlIssueService.transferIssues(issues).subscribe({
+    next: () => alert('تم تحويل البيانات إلى الرقابة بنجاح'),
+    error: () => alert('حدث خطأ أثناء تحويل البيانات إلى الرقابة')
+  });
 }
-
 
 }

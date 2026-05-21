@@ -102,6 +102,14 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>تقرير فرق الفروع</span>
       </a>
+       <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/branches/branch-control-issues"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير الرقابه</span>
+      </a>
      <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/branches/daily-performance-target-upload"

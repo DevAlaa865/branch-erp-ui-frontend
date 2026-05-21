@@ -75,7 +75,30 @@
     </div>
 
   </div>
+  <!-- الصف الثاني: اسم مدخل البيانات -->
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 bg-blue-50 p-4 rounded-xl border border-blue-200 shadow-sm">
+      <div class="space-y-1">
+        <label class="block text-base text-slate-700 mb-1">اسم مدخل البيانات</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 shadow-sm">
+          <i class="fa fa-user-pen text-blue-500 text-base"></i>
+          <input type="text"
+                formControlName="dataEntryUserName"
+                class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
+                placeholder="مثال: علاء علي">
+        </div>
 
+        <!-- رسالة خطأ -->
+        <div class="text-red-600 text-xs mt-1"
+            *ngIf="form.get('dataEntryUserName')?.touched && form.get('dataEntryUserName')?.invalid">
+          <span *ngIf="form.get('dataEntryUserName')?.errors?.['required']">
+            من فضلك أدخل اسم مدخل البيانات
+          </span>
+          <span *ngIf="form.get('dataEntryUserName')?.errors?.['twoWords']">
+            يجب إدخال الاسم الأول واسم العائلة على الأقل
+          </span>
+        </div>
+      </div>
+    </div>
   <!-- الصف الثاني: 3 أعمدة -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
 

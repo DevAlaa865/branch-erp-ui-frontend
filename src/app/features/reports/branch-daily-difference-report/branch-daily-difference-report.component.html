@@ -136,25 +136,36 @@
       </div>
     </div>
 
-    <!-- ⭐ فلاتر الفرق الجديدة -->
+    <!-- ⭐ فلاتر الفرق الجديدة (٤ اختيارات) -->
     <div class="col-span-2 space-y-2" *ngIf="form.value.reportType === 'difference'">
       <label class="block text-sm font-medium text-slate-700">نوع الفرق</label>
 
       <div class="flex flex-col gap-2 bg-white border border-blue-200 rounded-lg p-3 shadow-sm">
+
+        <!-- عجز مسموح به -->
         <label class="flex items-center gap-2 text-slate-700">
           <input type="radio" name="diff" (change)="selectDiff('allowed')">
-          عجز مسموح به(من  1 الى 35 ريال )
+          عجز مسموح به (من -1 إلى -35 ريال)
         </label>
 
+        <!-- عجز كبير -->
         <label class="flex items-center gap-2 text-slate-700">
           <input type="radio" name="diff" (change)="selectDiff('big')">
-          عجز (اكبر من  35 ريال )
+          عجز كبير (اكبر من 35 ريال)
         </label>
 
+        <!-- زيادة صغيرة -->
         <label class="flex items-center gap-2 text-slate-700">
-          <input type="radio" name="diff" (change)="selectDiff('increase')">
-          زيادة 
+          <input type="radio" name="diff" (change)="selectDiff('smallIncrease')">
+          زيادة مسموح بها (من 1 إلى 35 ريال )
         </label>
+
+        <!-- زيادة كبيرة -->
+        <label class="flex items-center gap-2 text-slate-700">
+          <input type="radio" name="diff" (change)="selectDiff('bigIncrease')">
+          زيادة كبيرة (أكبر من 35 ريال)
+        </label>
+
       </div>
     </div>
 
@@ -172,6 +183,7 @@
 
   </form>
 </div>
+
 
 
   <!-- زر البحث -->
@@ -207,7 +219,14 @@
     (click)="printReport()"
     class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition">
     🖨️ طباعة التقرير
-  </button>
+</button>
+
+<button class="btn btn-warning ml-3"
+        *ngIf="showTransferButton"
+        (click)="transferToControl()">
+  تحويل إلى الرقابة
+</button>
+
 </div>
 
   <!-- جدول النتائج -->

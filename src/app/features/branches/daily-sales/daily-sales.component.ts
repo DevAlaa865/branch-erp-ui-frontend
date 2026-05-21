@@ -98,10 +98,20 @@ preventEnter(event: Event) {
 
       totalInvoicesCount: [null, [Validators.required, Validators.min(0)]],
       totalQuantities: [null, [Validators.required, Validators.min(0)]],
-
+    dataEntryUserName: ['', [Validators.required, this.twoWordsValidator]],
       shortageDetails: this.fb.array([])
     });
   }
+
+  twoWordsValidator(control: AbstractControl) {
+  const value = (control.value || '').trim();
+
+  if (!value) return null; // الـ required هيشيلها
+
+  // لازم على الأقل كلمتين بينهم مسافة
+  const parts = value.split(/\s+/);
+  return parts.length >= 2 ? null : { twoWords: true };
+}
 
   initHeaderFromUser() {
    this.userInfo = this.auth.getUserInfo();
@@ -383,6 +393,38 @@ recalculateShortageEffect() {
 
 
 save() {
+
+  // ⭐ التحقق من اسم مدخل البيانات
+const dataEntryName = this.form.get('dataEntryUserName')?.value?.trim() || '';
+
+if (!dataEntryName) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'warning',
+    title: 'من فضلك أدخل اسم مدخل البيانات',
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true
+  });
+  return;
+}
+
+// ⭐ لازم يكون اسمين على الأقل
+const parts = dataEntryName.split(/\s+/);
+if (parts.length < 2) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'warning',
+    title: 'يجب إدخال الاسم الأول واسم العائلة على الأقل',
+    showConfirmButton: false,
+    timer: 4000,
+    timerProgressBar: true
+  });
+  return;
+}
+
     const creditControl = this.form.get('creditAmount');
   if ( (creditControl?.value === null || creditControl?.value === '' || creditControl?.value === undefined)) {
 
@@ -587,7 +629,10 @@ private doSave() {
   this.isSaving = true;
 
   const payload = {
-    ...this.form.getRawValue()
+    ...this.form.getRawValue(),
+
+    // ⭐ إضافة اسم مدخل البيانات للباك إند
+    dataEntryUserName: this.form.value.dataEntryUserName
   };
 if (payload.shortageDetails && payload.shortageDetails.length > 0) {
   payload.shortageDetails = payload.shortageDetails.map((row: any) => ({

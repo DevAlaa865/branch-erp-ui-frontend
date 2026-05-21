@@ -41,6 +41,7 @@ interface BranchDailySalesReport {
   shortageDetails: ShortageDetail[];
   attachmentPath: string | null;
   supervisorNotes: string | null;
+    dataEntryUserName: string | null;
 }
 
 @Component({
@@ -272,7 +273,8 @@ this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p))
             differenceLabel: item.difference === 0 ? 'متوازن' : (item.difference > 0 ? 'زيادة' : 'عجز'),
 
             shortageDetails: item.shortageDetails || [],
-            supervisorNotes: item.supervisorNotes || null
+            supervisorNotes: item.supervisorNotes || null,
+              dataEntryUserName: item.dataEntryUserName || null
           };
 
           this.showEmployeeColumn = this.report.shortageDetails.some(x => x.employeeName);
