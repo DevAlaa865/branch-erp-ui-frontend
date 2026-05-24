@@ -134,6 +134,19 @@ export const routes: Routes = [
           import('./features/branches/branch-control-issues/branch-control-issues.component')
             .then(m => m.BranchControlIssuesComponent)
       },
+      {
+        path: 'branches/branch-control-manager-report',
+        loadComponent: () =>
+          import('./features/branches/branch-control-manager-report/branch-control-manager-report.component')
+            .then(m => m.BranchControlManagerReportComponent)
+      },
+      {
+          path: 'branches/account-control-issues-report',
+          loadComponent: () =>
+            import('./features/branches/account-control-issues-report/account-control-issues-report.component')
+              .then(m => m.AccountControlIssuesReportComponent )
+        },
+
 
         {
         path: 'dashboard',

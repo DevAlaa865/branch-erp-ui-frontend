@@ -11,3 +11,7 @@ export enum ResolutionType {
   Settled = 4,
   UnderReview = 5
 }
+export enum DifferenceDirection {
+  Shortage = 1,   // عجز
+  Increase = 2    // زيادة
+}

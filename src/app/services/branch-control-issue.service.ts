@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api.config';
 import { BranchControlIssue } from '../shared/models/branch-control-issue.model';
+import { AccountantBranchControlIssue } from '../shared/models/accountant-branch-control-issue.model';
+import { AccountantBranchControlIssueDetails } from '../shared/models/accountant-branch-control-issue-details.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,4 +29,20 @@ export class BranchControlIssueService {
   updateIssue(dto: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/update`, dto);
   }
+
+  getManagerReport(filter: any): Observable<any[]> {
+  return this.http.get<any[]>(`${this.baseUrl}/manager-report`, { params: filter });
+}
+managerApprove(dto: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/manager-approve`, dto);
+}
+getAccountantReport(filter: any) {
+  return this.http.post<AccountantBranchControlIssue[]>(`${this.baseUrl}/accountant-report`, filter);
+}
+
+getAccountantDetails(id: number) {
+  return this.http.get<AccountantBranchControlIssueDetails>(`${this.baseUrl}/accountant-report/${id}`);
+}
+
+
 }

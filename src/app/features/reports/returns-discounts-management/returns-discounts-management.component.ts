@@ -28,6 +28,9 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
   errorMessage = '';
   isLoading = false;
 
+  shortageTypes: any[] = [];
+  allowedShortageTypeIds: number[] = [];   // ⭐ الأنواع المسموح بها فقط
+
   constructor(
     private fb: FormBuilder,
     private masterDataService: MasterDataService,
@@ -38,6 +41,7 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.loadCities();
+    this.loadShortageTypes();
   }
 
   buildForm(): void {
@@ -45,7 +49,9 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
       fromDate: [null, Validators.required],
       toDate: [null, Validators.required],
       cityId: [null],
-      branchId: [null]
+      branchId: [null],
+      status: [0],             // ⭐ 0 = All
+      shortageTypeId: [null]   // ⭐ نوع العجز
     });
 
     const today = new Date().toISOString().split('T')[0];
@@ -63,6 +69,26 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
     this.masterDataService.getCities().subscribe({
       next: (res: any) => {
         this.cities = res.data || [];
+      }
+    });
+  }
+
+  loadShortageTypes(): void {
+    this.masterDataService.getShortageTypes().subscribe({
+      next: (res: any) => {
+        const allTypes = res.data || [];
+
+        // ⭐ استبعاد الأنواع غير المرغوبة
+        this.shortageTypes = allTypes.filter((t: any) =>
+          !['عجز غير معروف', 'عجز مسموح به', 'فاتورة معلنه', 'صيانه', 'تغطيه']
+            .includes(t.shortageName)
+        );
+
+        // ⭐ خزّن IDs المسموح بها فقط
+        this.allowedShortageTypeIds = this.shortageTypes.map(t => t.id);
+      },
+      error: () => {
+        this.shortageTypes = [];
       }
     });
   }
@@ -92,8 +118,11 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
       fromDate: this.form.value.fromDate,
       toDate: this.form.value.toDate,
       cityId: this.form.value.cityId || null,
-      branchId: this.form.value.branchId || null
+      branchId: this.form.value.branchId || null,
+      status: this.form.value.status,
+      shortageTypeId: this.form.value.shortageTypeId
     };
+
 
     this.isLoading = true;
 
@@ -107,9 +136,17 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
           return;
         }
 
-        this.rows = res.data || [];
-        this.currentPage = 1;
-        this.calculatePagination();
+       let rows = res.data || [];
+
+      // ⭐ فلترة النتيجة بناءً على الأنواع المسموح بها فقط
+      rows = rows.filter((r: any) =>
+        this.allowedShortageTypeIds.includes(r.shortageTypeId)
+      );
+
+      this.rows = rows;
+      this.currentPage = 1;
+      this.calculatePagination();
+
       },
       error: () => {
         this.isLoading = false;
@@ -158,4 +195,57 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
       }
     );
   }
+printReport(): void {
+  // نجهز نسخة كاملة من كل الصفوف بدون الباجينيشن
+  const fullTable = document.createElement('table');
+  fullTable.className = 'w-full text-right text-sm';
+  fullTable.innerHTML = `
+    <thead class="bg-slate-200 text-slate-900">
+      <tr>
+        <th class="p-3 border-b border-slate-300 text-center">الفرع</th>
+        <th class="p-3 border-b border-slate-300 text-center">التاريخ</th>
+        <th class="p-3 border-b border-slate-300 text-center">نوع العجز</th>
+        <th class="p-3 border-b border-slate-300 text-center">المبلغ</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${this.rows.map(r => `
+        <tr class="border-b">
+          <td class="p-3 text-center text-black">${r.branchName}</td>
+          <td class="p-3 text-center text-black">${r.journalDate}</td>
+          <td class="p-3 text-center text-black">${r.shortageTypeName}</td>
+          <td class="p-3 text-center text-black">${r.amount}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+
+  const popup = window.open('', '_blank', 'width=1000,height=800');
+  if (!popup) return;
+
+  popup.document.open();
+  popup.document.write(`
+    <html dir="rtl" lang="ar">
+      <head>
+        <title>طباعة التقرير</title>
+        <style>
+          body { font-family: 'Tahoma', sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+          th { background: #f1f5f9; }
+          h2 { text-align: center; margin-bottom: 20px; }
+        </style>
+      </head>
+      <body>
+        <h2>تقرير إدارة المرتجعات والخصومات</h2>
+        ${fullTable.outerHTML}
+      </body>
+    </html>
+  `);
+
+  popup.document.close();
+  popup.print();
+}
+
+
 }

@@ -4,6 +4,7 @@ export interface BranchControlIssue {
   id: number;
   branchId: number;
   branchName: string;
+  branchNumber: number;   // ⭐ رقم الفرع الحقيقي
   salesDate: string;
   differenceAmount: number;
 

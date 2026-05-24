@@ -110,6 +110,22 @@
         <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
         <span>تقرير الرقابه</span>
       </a>
+         <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/branches/branch-control-manager-report"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير المدير نايل على الرقابه</span>
+      </a>
+      <a
+      *hasPermission="'Permissions.Manage'"
+        routerLink="/branches/account-control-issues-report"
+         routerLinkActive="active"
+         class="nav-item" >
+        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
+        <span>تقرير الحسابات على الرقابه</span>
+      </a>
      <a
       *hasPermission="'Permissions.Manage'"
        routerLink="/branches/daily-performance-target-upload"

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { BranchControlIssueService } from '../../../services/branch-control-issue.service';
 import { BranchControlIssue } from '../../../shared/models/branch-control-issue.model';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BranchControlIssueStatus, ResolutionType } from '../../../shared/models/enums';
+import { BranchControlIssueStatus, ResolutionType, DifferenceDirection } from '../../../shared/models/enums';
 
 @Component({
   selector: 'app-branch-control-issues',
@@ -27,6 +27,21 @@ export class BranchControlIssuesComponent implements OnInit {
   // ⭐ Enums للـ HTML
   statuses = BranchControlIssueStatus;
   resolutionTypes = ResolutionType;
+  differenceDirections = DifferenceDirection;
+
+  // ⭐ الباجينيشن
+  pageSize = 15;
+  currentPage = 1;
+
+  get pagedIssues() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.issues.slice(start, end);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.issues.length / this.pageSize) || 1;
+  }
 
   constructor(private service: BranchControlIssueService, private fb: FormBuilder) {}
 
@@ -45,7 +60,8 @@ export class BranchControlIssuesComponent implements OnInit {
       toDate: [today, Validators.required],
       branchId: [null],
       status: [null],
-      resolutionType: [null]
+      resolutionType: [null],
+      differenceDirection: [null]
     });
   }
 
@@ -59,6 +75,7 @@ export class BranchControlIssuesComponent implements OnInit {
     this.service.getAll(filter).subscribe({
       next: (res) => {
         this.issues = res;
+        this.currentPage = 1; // ⭐ نرجع لأول صفحة بعد كل بحث
         this.loading = false;
       },
       error: () => {
@@ -108,4 +125,42 @@ export class BranchControlIssuesComponent implements OnInit {
       }
     });
   }
+printReport(): void {
+  const table = document.querySelector('table');
+  if (!table) {
+    alert('لا توجد بيانات للطباعة');
+    return;
+  }
+
+  const popup = window.open('', '_blank', 'width=900,height=700');
+
+  popup!.document.write(`
+    <html dir="rtl" lang="ar">
+      <head>
+        <title>تقرير الرقابة على الفروع</title>
+        <style>
+          body { font-family: 'Tahoma', sans-serif; margin: 20px; }
+          h2 { text-align: center; margin-bottom: 20px; }
+          table { width: 100%; border-collapse: collapse; font-size: 14px; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+          th { background: #f1f1f1; }
+
+          /* ⭐ إخفاء عمود الإجراءات وقت الطباعة */
+          th.no-print, td.no-print {
+            display: none !important;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>تقرير الرقابة على الفروع</h2>
+        ${table.outerHTML}
+      </body>
+    </html>
+  `);
+
+  popup!.document.close();
+  popup!.print();
+}
+
+
 }

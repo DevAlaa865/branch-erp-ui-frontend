@@ -6,15 +6,14 @@
 
   <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-<div>
-  <label class="text-[var(--text)]">من تاريخ</label>
-  <input
-    type="date"
-    formControlName="fromDate"
-    class="w-full p-2 rounded bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
-  />
-</div>
-
+    <div>
+      <label class="text-[var(--text)]">من تاريخ</label>
+      <input
+        type="date"
+        formControlName="fromDate"
+        class="w-full p-2 rounded bg-white text-black border border-slate-300 focus:ring-2 focus:ring-emerald-500"
+      />
+    </div>
 
     <div>
       <label class="text-[var(--text)]">إلى تاريخ</label>
@@ -23,28 +22,39 @@
 
     <div class="space-y-1">
       <label class="text-[var(--text)]">المدينة</label>
-    <select
+      <select
         formControlName="cityId"
-         class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-         <option [ngValue]="null" disabled selected>اختر المنطقه</option>
-
-        <option *ngFor="let c of cities" [value]="c.id">
-            {{ c.cityName }}
-        </option>
-        
-        </select>
-        
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        <option [ngValue]="null" disabled selected>اختر المنطقه</option>
+        <option *ngFor="let c of cities" [value]="c.id">{{ c.cityName }}</option>
+      </select>
     </div>
-
-
-    
 
     <div>
       <label class="text-[var(--text)]">الفرع</label>
-      <select formControlName="branchId" 
-            class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-         <option [ngValue]="null" disabled selected>اختر الفرع</option>
+      <select formControlName="branchId"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+        <option [ngValue]="null" disabled selected>اختر الفرع</option>
         <option *ngFor="let b of branches" [value]="b.id">{{ b.branchName }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="text-[var(--text)]">الحالة</label>
+      <select formControlName="status"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800">
+        <option [ngValue]="0">الكل</option>
+        <option [ngValue]="1">معتمد</option>
+        <option [ngValue]="2">غير معتمد</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="text-[var(--text)]">نوع العجز</label>
+      <select formControlName="shortageTypeId"
+        class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800">
+        <option [ngValue]="null">الكل</option>
+        <option *ngFor="let t of shortageTypes" [value]="t.id">{{ t.shortageName }}</option>
       </select>
     </div>
 
@@ -59,84 +69,62 @@
   <div *ngIf="errorMessage" class="text-red-400 font-semibold">
     {{ errorMessage }}
   </div>
-<div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
 
-<div *ngIf="pagedRows.length > 0" class="overflow-x-auto text-center">
+  <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" dir="rtl">
 
-  <table class="w-full text-right text-sm">
+    <!-- ✅ عنوان التقرير وزر الطباعة -->
+    <div *ngIf="pagedRows.length > 0" class="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50">
+      <h2 class="text-xl font-bold text-slate-800 text-center w-full">كشف أنواع العجز للفروع</h2>
+<button
+  (click)="printReport()"
+  class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition flex items-center justify-center gap-2 whitespace-nowrap">
+  <span>🖨️</span>
+  <span>طباعة التقرير</span>
+</button>
 
-    <thead class="bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100">
-      <tr>
-        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">الفرع</th>
-        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">التاريخ</th>
-        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">المرتجعات</th>
-        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">الخصومات</th>
-        <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">تفاصيل</th>
-      </tr>
-    </thead>
+    </div>
 
-    <tbody>
+    <div id="printArea">
+      <div *ngIf="pagedRows.length > 0" class="overflow-x-auto text-center">
 
-<tr *ngFor="let row of pagedRows"
- class="border-b hover:bg-blue-50 transition">
+        <table class="w-full text-right text-sm">
+          <thead class="bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-slate-100">
+            <tr>
+              <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">الفرع</th>
+              <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">التاريخ</th>
+              <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">نوع العجز</th>
+              <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">المبلغ</th>
+              <th class="p-3 border-b border-slate-300 dark:border-slate-600 text-center">تفاصيل</th>
+            </tr>
+          </thead>
 
-  <td class="p-3 text-center text-black">{{ row.branchName }}</td>
-  <td class="p-3 text-center text-black">{{ row.journalDate }}</td>
-  <td class="p-3 text-center text-black">{{ row.returnsAmount }}</td>
-  <td class="p-3 text-center text-black">{{ row.discountsAmount }}</td>
+          <tbody>
+            <tr *ngFor="let row of pagedRows" class="border-b hover:bg-blue-50 transition">
+              <td class="p-3 text-center text-black">{{ row.branchName }}</td>
+              <td class="p-3 text-center text-black">{{ row.journalDate | date:'yyyy-MM-dd' }}</td>
+              <td class="p-3 text-center text-black">{{ row.shortageTypeName }}</td>
+              <td class="p-3 text-center text-black">{{ row.amount }}</td>
+              <td class="p-3 text-center">
+                <button (click)="openDailyDetails(row)" class="text-blue-600 dark:text-blue-400 hover:underline no-print">عرض</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-  <td class="p-3 text-center">
-    <button
-      (click)="openDailyDetails(row)"
-      class="text-blue-600 dark:text-blue-400 hover:underline">
-      عرض
-    </button>
-  </td>
+        <div *ngIf="totalPages > 1"
+          class="flex flex-wrap items-center justify-center gap-3 mt-6 text-slate-900 dark:text-slate-100">
+          <button (click)="prevPage()" [disabled]="currentPage === 1"
+            class="px-4 py-2 rounded-lg border bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            السابق
+          </button>
+          <span class="font-semibold text-blue-600 text-lg">صفحة {{ currentPage }} من {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            class="px-4 py-2 rounded-lg border bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 dark:hover:bg-slate-600 transition">
+            التالي
+          </button>
+        </div>
 
-</tr>
-
-    </tbody>
-
-  </table>
- <div *ngIf="totalPages > 1"
-     class="flex flex-wrap items-center justify-center gap-3 mt-6 
-            text-slate-900 dark:text-slate-100">
-
-  <!-- السابق -->
-  <button
-    (click)="prevPage()"
-    [disabled]="currentPage === 1"
-    class="px-4 py-2 rounded-lg border 
-           bg-white dark:bg-slate-700 
-           text-slate-900 dark:text-slate-100
-           disabled:opacity-40 disabled:cursor-not-allowed
-           hover:bg-slate-100 dark:hover:bg-slate-600 transition">
-    السابق
-  </button>
-
-  <!-- رقم الصفحة -->
-  <span class="font-semibold text-lg">
-    صفحة {{ currentPage }} من {{ totalPages }}
-  </span>
-
-  <!-- التالي -->
-  <button
-    (click)="nextPage()"
-    [disabled]="currentPage === totalPages"
-    class="px-4 py-2 rounded-lg border 
-           bg-white dark:bg-slate-700 
-           text-slate-900 dark:text-slate-100
-           disabled:opacity-40 disabled:cursor-not-allowed
-           hover:bg-slate-100 dark:hover:bg-slate-600 transition">
-    التالي
-  </button>
-
-</div>
-</div>
-</div>
-
-
-
-
-
+      </div>
+    </div>
+  </div>
 </div>
