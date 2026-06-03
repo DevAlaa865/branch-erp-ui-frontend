@@ -184,17 +184,23 @@ export class ReturnsDiscountsManagementComponent implements OnInit {
     }
   }
 
-  openDailyDetails(row: any) {
-    this.router.navigate(
-      ['/reports/daily-sales-inquiry'],
+openDailyDetails(row: any) {
+
+  const url = this.router.serializeUrl(
+    this.router.createUrlTree(
+      ['/revenue-management/daily-sales-inquiry'],
       {
         queryParams: {
           branchId: row.branchId,
           salesDate: row.journalDate
         }
       }
-    );
-  }
+    )
+  );
+
+  window.open(url, '_blank');
+}
+
 printReport(): void {
   // نجهز نسخة كاملة من كل الصفوف بدون الباجينيشن
   const fullTable = document.createElement('table');

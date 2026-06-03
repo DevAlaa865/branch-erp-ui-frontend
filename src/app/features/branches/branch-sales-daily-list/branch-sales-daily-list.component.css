@@ -1,15 +1,143 @@
-.p-4.rounded-lg.border.border-blue-200.bg-white {
+/* ====== نافذة التعديل ====== */
+.fixed.inset-0 {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex-wrap: wrap;
-  align-items: stretch;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  align-items: center;       /* توسيط عمودي */
+  justify-content: center;   /* توسيط أفقي */
+  background-color: rgba(0, 0, 0, 0.45); /* خلفية شفافة */
+  backdrop-filter: blur(6px); /* ضباب خفيف */
+  z-index: 9998;
+  padding: 2rem;
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
+/* ====== الكارت الداخلي ====== */
+.fixed.inset-0 > div {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e2e8f0;
+  width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: fadeInModal 0.35s ease-out;
+}
+
+/* ====== أنيميشن فتح النافذة ====== */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ====== تحسين النصوص والخلفيات داخل النافذة ====== */
+.fixed.inset-0 input,
+.fixed.inset-0 select,
+.fixed.inset-0 textarea {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  font-weight: 500;
+}
+
+.fixed.inset-0 label {
+  color: #334155 !important;
+  font-weight: 600;
+}
+
+.fixed.inset-0 h3,
+.fixed.inset-0 h4 {
+  color: #1e293b !important;
+  font-weight: 700;
+}
+
+/* ====== أزرار الحفظ والإلغاء ====== */
+.fixed.inset-0 button {
+  transition: 0.25s ease;
+}
+
+.fixed.inset-0 button:hover {
+  transform: scale(1.05);
+}
+/* ====== نافذة التفاصيل ====== */
+.fixed.inset-0 {
+  display: flex;
+  align-items: center;       /* توسيط عمودي */
+  justify-content: center;   /* توسيط أفقي */
+  background-color: rgba(0, 0, 0, 0.45); /* خلفية شفافة */
+  backdrop-filter: blur(6px); /* ضباب خفيف */
+  z-index: 9999;
+  padding: 2rem;
+}
+
+/* ====== الكارت الداخلي ====== */
+.fixed.inset-0 > div {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e2e8f0;
+  width: 900px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: fadeInModal 0.35s ease-out;
+}
+
+/* ====== أنيميشن فتح النافذة ====== */
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ====== إصلاح النصوص والخلفيات داخل النافذة ====== */
+.fixed.inset-0 span,
+.fixed.inset-0 label,
+.fixed.inset-0 h3,
+.fixed.inset-0 h4 {
+  color: #0f172a !important; /* نص غامق وواضح */
+}
+
+.fixed.inset-0 .bg-slate-50 {
+  background-color: #f8fafc !important; /* خلفية رمادية فاتحة */
+  color: #0f172a !important;
+}
+
+/* ====== تحسين شكل القيم المالية ====== */
+.fixed.inset-0 .border {
+  border-color: #cbd5e1 !important;
+}
+
+/* ====== تفاصيل العجز ====== */
+.fixed.inset-0 .bg-white {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.fixed.inset-0 .bg-slate-50.border {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* ====== تحسين الأزرار ====== */
+.fixed.inset-0 button {
+  transition: 0.25s ease;
+}
+
+.fixed.inset-0 button:hover {
+  transform: scale(1.05);
+}
+
+/* ====== تحسين الصور داخل النافذة ====== */
+.fixed.inset-0 img {
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  background-color: #f8fafc;
 }

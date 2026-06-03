@@ -23,12 +23,13 @@ import { DailyHeaderAttachmentService } from '../../../services/daily-header-att
 import { IMAGE_BASE_URL } from '../../../api.config';
 import { BranchSalesDailyListRow } from '../../../shared/models/branch-sales-daily-list-row.model';
 import { BranchSalesDailyDetails } from '../../../shared/models/branch-sales-daily-details.model';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 
 
 @Component({
   selector: 'app-branch-sales-daily-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, CustomSelectComponent,HasPermissionDirective],
   templateUrl: './branch-sales-daily-list.component.html',
   styleUrls: ['./branch-sales-daily-list.component.scss']
 })
@@ -171,6 +172,7 @@ getImageUrl(path: string | null | undefined): string {
         const data = res.data || res;
         this.selectedDaily = data;
         this.buildEditForm(data);
+        console.log(data);
       },
       error: () => {
         alert('حدث خطأ أثناء تحميل بيانات اليومية');
@@ -189,7 +191,7 @@ getImageUrl(path: string | null | undefined): string {
       networkAmount: [data.networkAmount, [Validators.required, Validators.min(0)]],
       creditAmount: [data.creditAmount ?? 0, [Validators.min(0)]],
       grandTotal: [data.grandTotal, [Validators.required, Validators.min(0)]],
-      difference: [{ value: data.difference, disabled: true }],
+      difference: data.difference,
       supervisorNotes: [data.supervisorNotes || ''],
       // 🔥 مرفق اليومية (الهيدر)
       attachmentPath: [data.attachmentPath || ''],
@@ -201,7 +203,7 @@ getImageUrl(path: string | null | undefined): string {
     }
 
     this.setupEditTotalsCalculation();
-    this.recalcEditDifference();
+ /*    this.recalcEditDifference(); */
   }
 
   get editShortageDetails(): FormArray {
@@ -362,27 +364,30 @@ getImageUrl(path: string | null | undefined): string {
     this.editForm.get('grandTotal')?.valueChanges.subscribe(() => this.recalcEditDifference());
   }
 
-  recalcEditDifference(): void {
-    if (!this.editForm) return;
+recalcEditDifference(): void {
+  if (!this.editForm) return;
 
-    const cash = Number(this.editForm.get('cashAmount')?.value || 0);
-    const network = Number(this.editForm.get('networkAmount')?.value || 0);
-    const credit = Number(this.editForm.get('creditAmount')?.value || 0);
-    const grandTotal = Number(this.editForm.get('grandTotal')?.value || 0);
+  const cash = Number(this.editForm.get('cashAmount')?.value || 0);
+  const network = Number(this.editForm.get('networkAmount')?.value || 0);
+  const credit = Number(this.editForm.get('creditAmount')?.value || 0);
+  const grandTotal = Number(this.editForm.get('grandTotal')?.value || 0);
 
-    let diffRaw = grandTotal - (cash + network + credit);
+  // 🔥 الفرق الأساسي قبل العجز (نفس اليومية الأصلية)
+  let diffRaw = (cash + network + credit) - grandTotal;
 
-    let totalShortage = 0;
-    this.editShortageDetails.controls.forEach(row => {
-      const amount = Number(row.get('amount')?.value || 0);
-      totalShortage -= amount;
-    });
+  // 🔥 طرح مجموع العجز (نفس اليومية الأصلية)
+  let totalShortage = 0;
+  this.editShortageDetails.controls.forEach(row => {
+    const amount = Number(row.get('amount')?.value || 0);
+    totalShortage -= amount; // ← نفس منطق اليومية الأصلية
+  });
 
-    diffRaw -= totalShortage;
+  diffRaw -= totalShortage;
 
-    const diff = Number(diffRaw.toFixed(2));
-    this.editForm.get('difference')?.setValue(diff, { emitEvent: false });
-  }
+  const diff = Number(diffRaw.toFixed(2));
+  this.editForm.get('difference')?.setValue(diff, { emitEvent: false });
+}
+
 
   // ============================
   // 🔥 حفظ التعديلات
@@ -470,6 +475,19 @@ deleteDaily() {
       this.search(); // أو loadData()
     }
   });
+}
+preventNegative(event: KeyboardEvent) {
+  if (event.key === '-' || event.key === 'Minus') {
+    event.preventDefault();
+  }
+}
+fixNegative(event: any) {
+  const value = event.target.value;
+  if (value < 0) {
+    event.target.value = Math.abs(value);
+    const control = this.editShortageDetails.controls.find(c => c.get('amount')?.value === value);
+    if (control) control.get('amount')?.setValue(Math.abs(value));
+  }
 }
 
 }

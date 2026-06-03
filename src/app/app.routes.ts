@@ -28,13 +28,172 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard],
     children: [
-       
-      {
+          {
+          path: 'revenue-management',
+          loadComponent: () =>
+            import('./pages/revenue-management/revenue-management.component')
+              .then(m => m.RevenueManagementComponent)
+        },
+        {
+          path: 'revenue-management/branch-daily-difference-report',
+          loadComponent: () =>
+            import('./features/reports/branch-daily-difference-report/branch-daily-difference-report.component')
+              .then(m => m.BranchDailyDifferenceReportComponent)
+        },
+        {
+          path: 'revenue-management/branch-sales-daily-list',
+          loadComponent: () =>
+            import('./features/branches/branch-sales-daily-list/branch-sales-daily-list.component')
+              .then(m => m.BranchSalesDailyListComponent)
+        },
+
+        {
+        path: 'revenue-management/branch-daily-summary',
+        loadComponent: () =>
+        import('./features/reports/branch-daily-summary-report/branch-daily-summary-report.component')
+         .then(m => m.BranchDailySummaryReportComponent)
+       },
+       {
+        path: 'revenue-management/accounts-returns-discounts-report',
+        loadComponent: () =>
+          import('./features/reports/accounts-returns-discounts-report/accounts-returns-discounts-report.component')
+            .then(m => m.AccountsReturnsDiscountsReportComponent)
+      },
+        {
+          path: 'revenue-management/account-control-issues-report',
+          loadComponent: () =>
+            import('./features/branches/account-control-issues-report/account-control-issues-report.component')
+              .then(m => m.AccountControlIssuesReportComponent )
+        },
+        {
+        path: 'revenue-management/daily-sales-inquiry',
+        
+        loadComponent: () =>
+          import('./features/reports/daily-sales-inquiry/daily-sales-inquiry.component')
+            .then(m => m.DailySalesInquiryComponent)
+        },
+        {
+        path: 'returns-management',
+        loadComponent: () =>
+          import('./pages/returns-management/returns-management.component')
+            .then(m => m.ReturnsManagementComponent)
+       },
+       {
+        path: 'returns-management/returns-discounts-management',
+        loadComponent: () =>
+          import('./features/reports/returns-discounts-management/returns-discounts-management.component')
+            .then(m => m.ReturnsDiscountsManagementComponent)
+      },
+       {
+        path: 'returns-management/returns-upload',
+        loadComponent: () =>
+          import('./pages/returns-upload/returns-upload.component')
+            .then(m => m.ReturnsUploadComponent)
+        },
+        {
+        path: 'returns-management/daily-returns',
+        loadComponent: () =>
+          import('./features/branches/daily-returns/daily-returns.component')
+            .then(m => m.DailyReturnsComponent)
+        },
+        {
+          path: 'control-management',
+          loadComponent: () =>
+            import('./pages/control-management/control-management.component')
+              .then(m => m.ControlManagementComponent)
+        },
+
+        {
+          path: 'control-management/branch-control-issues',
+          loadComponent: () =>
+            import('./features/branches/branch-control-issues/branch-control-issues.component')
+              .then(m => m.BranchControlIssuesComponent)
+        },
+        {
+          path: 'control-management/branch-control-manager-report',
+          loadComponent: () =>
+            import('./features/branches/branch-control-manager-report/branch-control-manager-report.component')
+              .then(m => m.BranchControlManagerReportComponent)
+        },
+         {
+          path: 'control-management/account-control-issues-report',
+          loadComponent: () =>
+            import('./features/branches/account-control-issues-report/account-control-issues-report.component')
+              .then(m => m.AccountControlIssuesReportComponent )
+        }, 
+        {
+        path: 'general-management',
+        loadComponent: () =>
+          import('./pages/general-management/general-management.component')
+            .then(m => m.GeneralManagementComponent)
+        },
+
+        {
+            path: 'general-management/users',
+            loadComponent: () =>
+              import('./features/admin/users/list/users-list/users-list.component')
+                .then(m => m.UsersListComponent)
+         },
+         {
+            path: 'general-management/countries',
+            canActivate: [permissionGuard('Countries.View')],
+            loadComponent: () =>
+              import('./features/admin/master-data/countries/countries.component')
+                .then(m => m.CountriesComponent)
+          },
+          {
+             path: 'general-management/areas',
+             loadComponent: () =>
+             import('./features/admin/master-data/area/areas/areas.component')
+             .then(m => m.AreasComponent)
+           },
+           {
+            path: 'general-management/cities',
+            loadComponent: () =>
+              import('./features/admin/master-data/city/cities/cities.component')
+                .then(m => m.CitiesComponent)
+          }, 
+            {
+            path: 'general-management/activity-types',
+            loadComponent: () =>
+              import('./features/admin/master-data/activity-type/activity-types/activity-types.component')
+                .then(m => m.ActivityTypesComponent)
+          },
+
+          {
+            path: 'general-management/shortage-types',
+            loadComponent: () =>
+              import('./features/admin/master-data/shortage-type/shortage-types/shortage-types.component')
+                .then(m => m.ShortageTypesComponent)
+          },
+
+          {
+            path: 'general-management/employees',
+            loadComponent: () =>
+              import('./features/admin/master-data/employee/employees/employees.component')
+                .then(m => m.EmployeesComponent)
+          },
+
+          {
+            path: 'general-management/branch',
+            loadComponent: () =>
+              import('./features/admin/master-data/branch/branch/branch.component')
+                .then(m => m.BranchComponent)
+          },
+
+           {
+            path: 'general-management/role-permissions',
+            loadComponent: () =>
+              import('./features/admin/authorization/role-permissions/role-permissions.component')
+                .then(m => m.RolePermissionsComponent)
+          },
+          /////
+     /*  {
       path: 'reports/branch-daily-summary',
       loadComponent: () =>
         import('./features/reports/branch-daily-summary-report/branch-daily-summary-report.component')
           .then(m => m.BranchDailySummaryReportComponent)
-      },
+      }, */
        {
         path: 'reports/branch-daily-summary/result',
           loadComponent: () =>
@@ -42,12 +201,12 @@ export const routes: Routes = [
               .then(m => m.BranchDailySummaryResultComponent)
       },
             
-      {
+/*       {
         path: 'reports/returns-discounts-management',
         loadComponent: () =>
           import('./features/reports/returns-discounts-management/returns-discounts-management.component')
             .then(m => m.ReturnsDiscountsManagementComponent)
-      },
+      }, */
       ////
       {
         path: 'reports/city-branch-sales-summary',
@@ -98,56 +257,74 @@ export const routes: Routes = [
             import('./features/reports/branch-performance-chart/branch-performance-chart.component')
               .then(m => m.BranchPerformanceChartComponent)
         },
-        {
+       /*  {
         path: 'returns-upload',
         loadComponent: () =>
           import('./pages/returns-upload/returns-upload.component')
             .then(m => m.ReturnsUploadComponent)
-        },
-       {
+        }, */
+    /*    {
           path: 'daily-returns',
           loadComponent: () =>
             import('./features/branches/daily-returns/daily-returns.component')
               .then(m => m.DailyReturnsComponent)
-        },
+        }, */
         {
           path: 'branches/daily-returns-chart',
           loadComponent: () =>
             import('./features/branches/daily-returns/daily-returns-chart/daily-returns-chart.component')
               .then(m => m.DailyReturnsChartComponent)
         },
-        {
+       /*  {
           path: 'branches/branch-sales-daily-list',
           loadComponent: () =>
             import('./features/branches/branch-sales-daily-list/branch-sales-daily-list.component')
               .then(m => m.BranchSalesDailyListComponent)
-        },
-        {
+        }, */
+        /* {
         path: 'reports/branch-daily-difference-report',
         loadComponent: () =>
           import('./features/reports/branch-daily-difference-report/branch-daily-difference-report.component')
             .then(m => m.BranchDailyDifferenceReportComponent)
-       },
-       {
+       }, */
+      /*  {
         path: 'branches/branch-control-issues',
         loadComponent: () =>
           import('./features/branches/branch-control-issues/branch-control-issues.component')
             .then(m => m.BranchControlIssuesComponent)
-      },
-      {
+      }, */
+     /*  {
         path: 'branches/branch-control-manager-report',
         loadComponent: () =>
           import('./features/branches/branch-control-manager-report/branch-control-manager-report.component')
             .then(m => m.BranchControlManagerReportComponent)
+      }, */
+     /*  {
+        path: 'control-management',
+        loadComponent: () =>
+          import('./pages/control-management/control-management.component')
+            .then(m => m.ControlManagementComponent)
       },
+
       {
+        path: 'control-management/control-issues',
+        loadComponent: () =>
+          import('./features/branches/branch-control-issues/branch-control-issues.component')
+            .then(m => m.BranchControlIssuesComponent)
+      }, */
+    /*   {
           path: 'branches/account-control-issues-report',
           loadComponent: () =>
             import('./features/branches/account-control-issues-report/account-control-issues-report.component')
               .then(m => m.AccountControlIssuesReportComponent )
-        },
-
-
+        }, */
+      /*   {
+        path: 'reports/accounts-returns-discounts-report',
+        loadComponent: () =>
+          import('./features/reports/accounts-returns-discounts-report/accounts-returns-discounts-report.component')
+            .then(m => m.AccountsReturnsDiscountsReportComponent)
+      },
+ */
         {
         path: 'dashboard',
         loadComponent: () =>
@@ -182,13 +359,13 @@ export const routes: Routes = [
           import('./features/branches/daily-sales/daily-sales.component')
             .then(m => m.DailySalesComponent)
       },
-      {
+    /*   {
         path: 'reports/daily-sales-inquiry',
         
         loadComponent: () =>
           import('./features/reports/daily-sales-inquiry/daily-sales-inquiry.component')
             .then(m => m.DailySalesInquiryComponent)
-        },
+        }, */
         {
         path: 'branches/daily-target-upload',
         loadComponent: () =>
@@ -259,12 +436,12 @@ export const routes: Routes = [
                 .then(m => m.CreateUserComponent)
           },
 
-          {
+         /*  {
             path: 'role-permissions',
             loadComponent: () =>
               import('./features/admin/authorization/role-permissions/role-permissions.component')
                 .then(m => m.RolePermissionsComponent)
-          },
+          }, */
 
           {
             path: 'permissions',
@@ -273,36 +450,36 @@ export const routes: Routes = [
                 .then(m => m.PermissionsComponent)
           },
 
-          {
+         /*  {
             path: 'users',
             loadComponent: () =>
               import('./features/admin/users/list/users-list/users-list.component')
                 .then(m => m.UsersListComponent)
-          },
+          }, */
 
-          {
+         /*  {
             path: 'countries',
             canActivate: [permissionGuard('Countries.View')],
             loadComponent: () =>
               import('./features/admin/master-data/countries/countries.component')
                 .then(m => m.CountriesComponent)
           },
-
-          {
+ */
+     /*      {
             path: 'areas',
             loadComponent: () =>
               import('./features/admin/master-data/area/areas/areas.component')
                 .then(m => m.AreasComponent)
-          },
-
+          }, */
+/* 
           {
             path: 'cities',
             loadComponent: () =>
               import('./features/admin/master-data/city/cities/cities.component')
                 .then(m => m.CitiesComponent)
-          },
+          }, */
 
-          {
+        /*   {
             path: 'activity-types',
             loadComponent: () =>
               import('./features/admin/master-data/activity-type/activity-types/activity-types.component')
@@ -328,7 +505,7 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/admin/master-data/branch/branch/branch.component')
                 .then(m => m.BranchComponent)
-          }
+          } */
         ]
       }
     ]

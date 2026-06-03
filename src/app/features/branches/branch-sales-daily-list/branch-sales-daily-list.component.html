@@ -1,6 +1,6 @@
 <!-- branch-sales-daily-list.component.html -->
 <div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
-  <h2 class="text-xl font-bold mb-4 text-slate-800">بحث عن يوميات المبيعات</h2>
+  <h2 class="text-xl font-bold mb-4 text-slate-800">تعديل يوميه مبيعات فرع</h2>
 
   <!-- فلاتر -->
   <form [formGroup]="filterForm" class="grid grid-cols-4 gap-4 mb-6 items-center">
@@ -90,13 +90,13 @@
 
         <td class="border p-2 text-center">
           <div class="flex justify-center gap-2">
-            <button (click)="edit(row)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
+            <button  *hasPermission="['Permissions.Manage', 'Cities.Edit']"   (click)="edit(row)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
               تعديل
             </button>
             <button (click)="details(row.id)" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-xs">
               تفاصيل
             </button>
-          <button (click)="openDeleteDialog(row.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs">
+          <button *hasPermission="'Permissions.Manage'" (click)="openDeleteDialog(row.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs">
                 حذف
          </button>
 
@@ -218,8 +218,20 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-slate-700 mb-1">الفرق</label>
-          <input type="number" formControlName="difference"
-                 class="border rounded-lg p-2 w-full text-sm bg-slate-50" readonly />
+      <!--     <input type="number" formControlName="difference"
+                 class="border rounded-lg p-2 w-full text-sm bg-slate-50" readonly /> -->
+               <input
+  type="number"
+  formControlName="difference"
+  [value]="editForm.get('difference')?.value"
+  class="form-control text-end"
+  [readonly]="true"
+  [ngClass]="{
+    'text-red-600': editForm.get('difference')?.value < 0,
+    'text-green-600': editForm.get('difference')?.value > 0
+  }"
+/>
+
         </div>
       </div>
 
@@ -282,9 +294,13 @@
     <!-- قيمة العجز -->
     <div>
       <label class="block text-sm font-medium text-slate-700 mb-1">قيمة العجز</label>
-      <input type="number"
-             formControlName="amount"
-             class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+   <input type="number"
+       formControlName="amount"
+       class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200"
+       (keydown)="preventNegative($event)"
+       (input)="fixNegative($event)"
+/>
+
     </div>
 
 <!-- مرفق + اختيار ملف في نفس الصف -->
@@ -315,7 +331,7 @@
 
               <input type="text"
                      [formControlName]="isReturnType(row) ? 'returnNotes' : 'discountNotes'"
-                     class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+                     class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200 readonly-note" />
             </div>
 
             <!-- زرار حذف صف العجز -->
@@ -378,13 +394,13 @@
           {{ selectedDailyDetails.branchName }}
         </span>
       </div>
+  <div *ngIf="selectedDailyDetails.supervisorNotes">
+  <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المشرف</label>
+  <span class="block border rounded-lg p-2 bg-slate-50 text-sm text-slate-800">
+    {{ selectedDailyDetails.supervisorNotes }}
+  </span>
+</div>
 
-      <div>
-        <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المشرف</label>
-        <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
-          {{ selectedDailyDetails.supervisorNotes || '—' }}
-        </span>
-      </div>
     </div>
 
     <!-- صورة اليومية -->
@@ -462,19 +478,19 @@
           </div>
         </div>
 
-        <div *ngIf="row.returnNotes">
-          <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المرتجعات</label>
-          <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
-            {{ row.returnNotes }}
-          </span>
-        </div>
+      <div *ngIf="row.returnNotes">
+        <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات المرتجعات</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm text-slate-800">
+          {{ row.returnNotes }}
+        </span>
+      </div>
 
-        <div *ngIf="row.discountNotes">
-          <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات الخصومات</label>
-          <span class="block border rounded-lg p-2 bg-slate-50 text-sm">
-            {{ row.discountNotes }}
-          </span>
-        </div>
+      <div *ngIf="row.discountNotes">
+        <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات الخصومات</label>
+        <span class="block border rounded-lg p-2 bg-slate-50 text-sm text-slate-800">
+          {{ row.discountNotes }}
+        </span>
+    </div>
 
       </div>
     </div>

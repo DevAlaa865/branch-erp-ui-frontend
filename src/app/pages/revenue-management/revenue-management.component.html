@@ -1,0 +1,100 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+
+  <!-- تقرير العجز والشبكة للفروع -->
+  <div
+    class="group p-6 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['branch-daily-difference-report']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📉
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير العجز والشبكة للفروع</h3>
+        <p class="text-sm opacity-90">عرض العجز والشبكة لكل فرع</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقرير بيانات فرع -->
+  <div
+    class="group p-6 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['branch-sales-daily-list']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🏪
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير بيانات فرع</h3>
+        <p class="text-sm opacity-90"> تعديل بيانات الفرع اليومية</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقرير يوميات الفروع -->
+  <div
+    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['branch-daily-summary']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📘
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير يوميات الفروع</h3>
+        <p class="text-sm opacity-90">عرض واستعلام يوميات الفروع لكل المناطق</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقارير اعتماد المرتجعات والخصومات -->
+  <div
+    class="group p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['accounts-returns-discounts-report']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🧾
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقارير اعتماد المرتجعات والخصومات</h3>
+        <p class="text-sm opacity-90">عرض تقارير المرتجعات والخصومات المعتمدة وغير المعتمدة للفروع</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- استعلام عن يومسه -->
+  <div
+    class="group p-6 bg-gradient-to-br from-teal-500 to-indigo-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['daily-sales-inquiry']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🧾
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">استعلام عن يوميه مبيعات</h3>
+        <p class="text-sm opacity-90">عرض تفاصيل يوميه المبيعات للفرع </p>
+      </div>
+    </div>
+  </div>
+  <!-- تقرير اعتمادات الرقابة -->
+  <div
+    class="group p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['account-control-issues-report']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🛡️
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير اعتمادات الرقابة</h3>
+        <p class="text-sm opacity-90">عرض اعتماد المدير نايل على قرارات الرقابة</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>

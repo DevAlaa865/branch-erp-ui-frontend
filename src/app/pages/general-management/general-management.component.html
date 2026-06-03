@@ -1,0 +1,149 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+
+  <!-- كارت إدارة المستخدمين -->
+  <div
+    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['users']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة المستخدمين</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل وحذف المستخدمين</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة البلاد -->
+  <div
+    class="group p-6 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['countries']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🌍
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة البلاد</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل البلد</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة المدن -->
+  <div
+    class="group p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['areas']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🏙️
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة المدن</h3>
+        <p class="text-sm opacity-90">إدارة بيانات المدن</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة المناطق -->
+  <div
+    class="group p-6 bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['cities']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📍
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة المناطق</h3>
+        <p class="text-sm opacity-90">إدارة بيانات المنطقة</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة الموظفين -->
+  <div
+    class="group p-6 bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['employees']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👥
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة الموظفين</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل الموظفين</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة الأنشطة -->
+  <div
+    class="group p-6 bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['activity-types']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        ⚙️
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة الأنشطة</h3>
+        <p class="text-sm opacity-90">إدارة أنواع الأنشطة</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة أنواع العجز -->
+  <div
+    class="group p-6 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['shortage-types']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📉
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة أنواع العجز</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل أنواع العجز</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة الفروع -->
+  <div
+    class="group p-6 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['branch']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🏢
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة الفروع</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل فرع</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- إدارة الصلاحيات -->
+  <div
+    class="group p-6 bg-gradient-to-br from-gray-700 to-gray-900 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['role-permissions']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🔐
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">إدارة الصلاحيات</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل صلاحية</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>

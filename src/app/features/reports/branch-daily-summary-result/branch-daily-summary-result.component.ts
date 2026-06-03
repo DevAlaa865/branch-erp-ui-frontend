@@ -54,7 +54,9 @@ export class BranchDailySummaryResultComponent implements OnInit {
 
   isLoading = false;
   errorMessage = '';
+  selectedRowId: number | null = null;
 
+  openedRows: number[] = [];
   pagedRows: BranchDailySummaryRow[] = [];
   pageSize = 12;
   currentPage = 1;
@@ -141,19 +143,34 @@ export class BranchDailySummaryResultComponent implements OnInit {
     });
   }
 
-  openDailyDetails(row: BranchDailySummaryRow) {
-    const date = this.filter.fromDate;
 
-    this.router.navigate(
-      ['/reports/daily-sales-inquiry'],
+
+openDailyDetails(row: BranchDailySummaryRow) {
+
+  // لو الصف مش موجود → ضيفه
+  if (!this.openedRows.includes(row.branchId)) {
+    this.openedRows.push(row.branchId);
+  }
+
+  const date = this.filter.fromDate;
+
+  const url = this.router.serializeUrl(
+    this.router.createUrlTree(
+      ['/revenue-management/daily-sales-inquiry'],
       {
         queryParams: {
           branchId: row.branchId,
           salesDate: date
         }
       }
-    );
-  }
+    )
+  );
+
+  window.open(url, '_blank');
+}
+
+
+
 
   calculatePagination(): void {
     if (!this.rows || this.rows.length === 0) {

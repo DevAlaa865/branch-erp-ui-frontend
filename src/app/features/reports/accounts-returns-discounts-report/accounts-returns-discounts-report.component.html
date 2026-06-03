@@ -1,0 +1,192 @@
+<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
+
+  <h2 class="text-xl font-bold mb-4 text-slate-800">تقرير حسابات المرتجعات والخصومات</h2>
+
+  <!-- 🔥 كارت الفلاتر -->
+  <div class="rounded-xl border border-blue-200 bg-slate-50 p-6 shadow-sm">
+    <form [formGroup]="form" class="grid grid-cols-4 gap-4 items-end">
+
+      <!-- من تاريخ -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+          <i class="fa fa-calendar text-blue-500 text-base"></i>
+          <input type="date"
+                 formControlName="fromDate"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- إلى تاريخ -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
+        <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+          <i class="fa fa-calendar text-blue-500 text-base"></i>
+          <input type="date"
+                 formControlName="toDate"
+                 class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
+        </div>
+      </div>
+
+      <!-- المدينة -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">المدينة</label>
+
+        <app-custom-select
+          [items]="cities"
+          bindLabel="cityName"
+          bindValue="id"
+          placeholder="اختر المدينة"
+          [control]="form.get('cityId')"
+          [multiple]="false"
+          [searchable]="true"
+          [clearable]="true"
+          [closeOnSelect]="true"
+          dropdownPosition="bottom"
+          (selectionChange)="loadBranches(form.value.cityId)">
+        </app-custom-select>
+      </div>
+
+      <!-- الفروع -->
+      <div>
+        <div class="flex justify-between items-center mb-1">
+          <label class="block text-sm font-medium text-slate-700">الفروع</label>
+          <button type="button"
+                  class="text-xs text-blue-600 underline"
+                  (click)="selectAllBranches()">
+            اختيار الكل
+          </button>
+        </div>
+
+        <app-custom-select
+          [items]="branches"
+          bindLabel="branchName"
+          bindValue="id"
+          placeholder="اختر الفروع"
+          [control]="form.get('branchIds')"
+          [multiple]="true"
+          [searchable]="true"
+          [clearable]="true"
+          [closeOnSelect]="false"
+          dropdownPosition="bottom">
+        </app-custom-select>
+      </div>
+
+      <!-- الحالة -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">الحالة</label>
+        <select formControlName="status"
+                class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 shadow-sm">
+          <option [ngValue]="0">الكل</option>
+          <option [ngValue]="1">معتمد</option>
+          <option [ngValue]="2">غير معتمد</option>
+        </select>
+      </div>
+
+      <!-- نوع العجز -->
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">نوع العجز</label>
+        <select formControlName="shortageTypeId"
+                class="w-full border border-blue-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 shadow-sm">
+          <option [ngValue]="null">الكل</option>
+          <option *ngFor="let t of shortageTypes" [value]="t.id">{{ t.shortageName }}</option>
+        </select>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- زر البحث -->
+  <div class="mt-6 text-center">
+    <button
+      (click)="search()"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg shadow transition">
+      🔍 عرض التقرير
+    </button>
+  </div>
+
+  <!-- رسالة خطأ -->
+  <div *ngIf="errorMessage" class="text-center text-red-500 font-semibold mt-4">
+    {{ errorMessage }}
+  </div>
+
+  <!-- زر الطباعة -->
+  <div *ngIf="rows.length > 0" class="mt-6 text-right">
+    <button
+      (click)="printReport()"
+      class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-lg shadow transition">
+      🖨️ طباعة التقرير
+    </button>
+  </div>
+
+  <!-- جدول النتائج -->
+  <div class="mt-6 overflow-x-auto" *ngIf="rows.length > 0">
+
+  <table class="w-full border-collapse text-sm" dir="rtl">
+  <thead>
+    <tr class="bg-slate-100 text-slate-700">
+      <th class="border p-2 text-center">رقم الفرع</th>
+      <th class="border p-2 text-center">اسم الفرع</th>
+      <th class="border p-2 text-center">التاريخ</th>
+      <th class="border p-2 text-center">نوع العجز</th>
+      <th class="border p-2 text-center">المبلغ</th>
+      <th class="border p-2 text-center">معتمد؟</th>
+
+      <!-- ⭐ عمود جديد -->
+      <th class="border p-2 text-center">ملاحظات إدارة المرتجعات</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let row of pagedRows" class="hover:bg-slate-50">
+      <td class="border p-2 text-center">{{ row.branchNumber }}</td>
+      <td class="border p-2 text-center">{{ row.branchName }}</td>
+      <td class="border p-2 text-center">{{ row.journalDate | date:'yyyy-MM-dd' }}</td>
+      <td class="border p-2 text-center">{{ row.shortageTypeName }}</td>
+      <td class="border p-2 text-center">{{ row.amount }}</td>
+
+      <td class="border p-2 text-center">
+        <span *ngIf="row.isApproved" class="text-green-600 font-bold">✔ معتمد</span>
+        <span *ngIf="!row.isApproved" class="text-red-600 font-bold">✘ غير معتمد</span>
+      </td>
+
+      <!-- ⭐ عرض ملاحظات إدارة المرتجعات -->
+      <td class="border p-2 text-center">
+        {{ row.returnNotes && row.returnNotes.trim() !== '' ? row.returnNotes : '-' }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <!-- لا توجد بيانات -->
+  <div *ngIf="rows.length === 0 && !isLoading" class="text-center text-slate-500 mt-6">
+    لا توجد بيانات لعرضها
+  </div>
+
+  <!-- الباجينيشن -->
+  <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-6 mt-8 select-none">
+
+    <button
+      (click)="prevPage()"
+      [disabled]="currentPage === 1"
+      class="px-4 py-2 rounded-lg border bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50">
+      السابق
+    </button>
+
+    <span class="text-lg font-bold text-slate-800">
+      صفحة {{ currentPage }} من {{ totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages"
+      class="px-4 py-2 rounded-lg border bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50">
+      التالي
+    </button>
+
+  </div>
+
+</div>

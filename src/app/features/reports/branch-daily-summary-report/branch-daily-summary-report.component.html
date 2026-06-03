@@ -1,123 +1,101 @@
-<div class="page-container space-y-6 mt-14">
+<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-7xl mx-auto mt-6 fade-in">
 
-  <!-- هيدر الشاشة -->
-  <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex items-center gap-3">
-    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
-      <i class="fa fa-chart-column text-lg"></i>
+  <!-- 🔵 عنوان التقرير -->
+  <div class="flex items-center gap-3 mb-6 animate-slide-down">
+    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white shadow">
+      <i class="fa fa-chart-column text-xl"></i>
     </div>
     <div>
-      <h2 class="text-lg font-bold text-slate-900">تقرير يوميات الفروع المجمع</h2>
-      <p class="text-xs text-slate-500">اختر الفترة والفلاتر لعرض تقرير مجمع لكل الفروع.</p>
+      <h2 class="text-xl font-extrabold text-slate-900">تقرير يوميات الفروع المجمع</h2>
+      <p class="text-sm text-slate-500">اختر الفترة والفلاتر لعرض تقرير مجمع لكل الفروع.</p>
     </div>
   </div>
 
-  <!-- فورم الفلاتر -->
-  <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+  <!-- 🔵 فورم الفلاتر -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow p-6 animate-fade">
 
-    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<form [formGroup]="form" class="filter-row">
 
-      <!-- من تاريخ -->
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700">من تاريخ</label>
-        <input type="date"
-               formControlName="fromDate"
-               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-      </div>
-
-      <!-- إلى تاريخ -->
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700">إلى تاريخ</label>
-        <input type="date"
-               formControlName="toDate"
-               class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-      </div>
-
-      <!-- نوع الفرع -->
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700">نوع الفرع</label>
-        <select formControlName="branchType"
-                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-          <option value="All">الكل</option>
-          <option value="Shop">محل</option>
-          <option value="Kiosk">كشك</option>
-        </select>
-      </div>
-
-      <!-- المدينة -->
-  <!--     <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700">المدينة</label>
-        <select formControlName="cityId"
-                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-          <option [ngValue]="null">الكل</option>
-          <option *ngFor="let c of cities " [ngValue]="c?.id">
-            {{ c?.cityName }}
-          </option>
-        </select>
-      </div> -->
-<div class="space-y-1">
- 
-
-
-  <app-custom-select
-    label="المدينة"
-    [items]="cities"
-    bindLabel="cityName"
-    bindValue="id"
-    placeholder="الكل"
-    [control]="cityIdsControl"
-    [multiple]="true"
-    [closeOnSelect]="false"
-    [searchable]="true"
-    [clearable]="true"
-    [dropdownPosition]="'bottom'">
-  </app-custom-select>
-
-
-</div>
-
-      <!-- نوع النشاط -->
-      <div class="space-y-1">
-        <label class="text-sm font-medium text-slate-700">نوع النشاط</label>
-        <select formControlName="activityTypeId"
-                class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-          <option [ngValue]="null">الكل</option>
-          <option *ngFor="let a of activityTypes " [ngValue]="a?.id">
-            {{ a?.activityName }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Checkbox -->
-      <div class="flex items-center gap-2 mt-6">
-        <input type="checkbox"
-               formControlName="onlyWithShortage"
-               class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
-        <label class="text-sm text-slate-700">عرض اليوميات التي بها عجز فقط</label>
-      </div>
-
-      <!-- زر عرض التقرير -->
-      <div class="flex items-center justify-end w-full mt-6 md:col-span-3">
-        <button
-          type="button"
-            (click)="goToResult()"
-         
-          class="px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60 transition flex items-center gap-2">
-          <i class="fa fa-magnifying-glass-chart"></i>
-          <span>عرض التقرير</span>
-        </button>
-      </div>
-
-    </form>
-
-    <!-- حالة التحميل / الخطأ -->
-<!--     <div class="mt-3">
-      <p *ngIf="isLoading" class="text-xs text-slate-500">جارٍ جلب بيانات التقرير...</p>
-      <p *ngIf="errorMessage" class="text-xs text-red-600 font-medium">{{ errorMessage }}</p>
-    </div> -->
-
+  <!-- من تاريخ -->
+  <div class="filter-item">
+    <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
+    <div class="filter-box">
+      <i class="fa fa-calendar"></i>
+      <input type="date" formControlName="fromDate">
+    </div>
   </div>
 
-  <!-- مكان عرض التقرير -->
+  <!-- إلى تاريخ -->
+  <div class="filter-item">
+    <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
+    <div class="filter-box">
+      <i class="fa fa-calendar"></i>
+      <input type="date" formControlName="toDate">
+    </div>
+  </div>
 
+  <!-- نوع الفرع -->
+  <div class="filter-item">
+    <label class="block text-sm font-medium text-slate-700 mb-1">نوع الفرع</label>
+    <div class="filter-box">
+      <i class="fa fa-store"></i>
+      <select formControlName="branchType">
+        <option value="All">الكل</option>
+        <option value="Shop">محل</option>
+        <option value="Kiosk">كشك</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- المدينة -->
+  <div class="filter-item text-black">
+    <label class="block text-sm font-medium text-slate-700 mb-1">المدينة</label>
+
+   
+      <app-custom-select
+        [items]="cities"
+        bindLabel="cityName"
+        bindValue="id"
+        placeholder="كل المدن"
+        [control]="cityIdsControl"
+        [multiple]="true"
+        [closeOnSelect]="false"
+        [searchable]="true"
+        [clearable]="true"
+        [dropdownPosition]="'bottom'">
+      </app-custom-select>
+    </div>
+
+
+  <!-- نوع النشاط -->
+  <div class="filter-item">
+    <label class="block text-sm font-medium text-slate-700 mb-1">نوع النشاط</label>
+    <div class="filter-box">
+      <i class="fa fa-briefcase"></i>
+      <select formControlName="activityTypeId">
+        <option [ngValue]="null">الكل</option>
+        <option *ngFor="let a of activityTypes" [ngValue]="a?.id">
+          {{ a?.activityName }}
+        </option>
+      </select>
+    </div>
+  </div>
+<!-- زر عرض التقرير -->
+<div class="flex items-center justify-end w-full mt-6 md:col-span-3">
+  <button
+    type="button"
+    (click)="goToResult()"
+    class="bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 
+           text-white px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition 
+           flex items-center gap-2 font-semibold">
+    <i class="fa fa-magnifying-glass-chart text-base"></i>
+    <span>عرض التقرير</span>
+  </button>
+</div>
+
+</form>
+
+
+  </div>
 
 </div>

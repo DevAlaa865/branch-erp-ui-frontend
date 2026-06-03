@@ -1,0 +1,72 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+
+  <!-- اعتماد الرقابة للعجز والزيادة -->
+  <div
+    class="group p-6 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+      *hasPermission="['Permissions.Manage', 'Sales.View']"
+    [routerLink]="['branch-control-issues']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📊
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">اعتماد الرقابة للعجز والزيادة</h3>
+        <p class="text-sm opacity-90">عرض العجز والزيادة المرسل من الحسابات لاعتماده من الرقابة</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقرير مدير الرقابة -->
+  <div
+    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+   
+    *hasPermission="['Permissions.Manage', 'Discounts.View']"
+    [routerLink]="['branch-control-manager-report']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        🧑‍💼
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">اعتماد المدير نايل</h3>
+        <p class="text-sm opacity-90">عرض قرارات الرقابة لاعتمادها من المدير نايل</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقرير محاسب الرقابة -->
+  <div
+    class="group p-6 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    *hasPermission="['Permissions.Manage', 'Finance.View']"
+    [routerLink]="['account-control-issues-report']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📑
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير العجز والزيادة المعتمد من المدير نايل </h3>
+        <p class="text-sm opacity-90">عرض تقارير العجز والزيادة المعتمد من المدير نايل </p>
+      </div>
+    </div>
+  </div>
+    <!-- استعلام عن يوميه مبيعات فرع-->
+  <div
+    class="group p-6 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['/revenue-management/daily-sales-inquiry']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📑
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">استعلام يوميه فرع</h3>
+        <p class="text-sm opacity-90">عرض تفاصيل يوميه مبيعات الفرع</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>

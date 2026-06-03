@@ -1,15 +1,15 @@
-
+<!-- 
 <div class=" content-area max-w-[1800px] mx-auto">
 
-  <!-- Welcome Section -->
+   Welcome Section 
 
 
 
-  <!-- Stat Cards Grid -->
+  < Stat Cards Grid 
    <div class="cards-wrapper">
       <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 mt-14 ">
 
-        <!-- إدارة المستخدمين -->
+        < إدارة المستخدمين -
         <div *hasPermission="'Permissions.Manage'"
             (click)="openUsers()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -23,7 +23,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل المستخدمين</div>
         </div>
 
-        <!-- إدارة الصلاحيات -->
+        <!- إدارة الصلاحيات --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openRoles()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -37,7 +37,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">التحكم في صلاحيات المستخدمين</div>
         </div>
 
-        <!-- يومية المبيعات -->
+        <!- يومية المبيعات --
         <div *hasPermission="'dashbord.dailysails'"
             (click)="opendailySales()"
             class="stat-card cursor-pointer hover:shadow-md transition text-2xl"
@@ -86,7 +86,7 @@
           </div>
           <div class="text-xl text-[var(--text-tertiary)]">تسجيل نظام العموله</div>
         </div>
-        <!-- إدارة المرتجعات والخصومات -->
+        <!- إدارة المرتجعات والخصومات --
         <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
             (click)="openReports()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -100,7 +100,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">إدارة المرتجعات والخصومات</div>
         </div>
 
-         <!-- تقرير الشبكة والعجز للفروع -->
+         <!- تقرير الشبكة والعجز للفروع --
         <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View') || auth.hasPermission('Returns.View') ||auth.hasPermission('Discounts.View')"
             (click)="openReports()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -116,7 +116,7 @@
 
 
 
-        <!-- استعلام -->
+        <!-استعلام --
         <div *ngIf="auth.hasPermission('dashbord.dailysails') || auth.hasPermission('Finance.View')"
             (click)="queries()"
             class="stat-card cursor-pointer hover:shadow-md transition text-2xl bg-blue-200 "
@@ -130,7 +130,7 @@
           <div class="text-xl text-[var(--text-tertiary)] text-center">استعلم عن اليوميه</div>
         </div>
 
-        <!-- إدارة الفروع -->
+        <!- إدارة الفروع --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openBranches()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -145,7 +145,7 @@
         </div>
 
         
-        <!--تقرير خاص بالمبيعات-->
+        <!-تقرير خاص بالمبيعات--
         <div *hasPermission="'Permissions.Manage'"
             (click)="openReportOfSales()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -156,9 +156,9 @@
               <iconify-icon icon="solar:shop-bold-duotone" width="18"></iconify-icon>
             </div>
           </div>
-       <!--    <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div> -->
+           <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div> -
         </div>
-      <!--ادارة التارجت-->
+      <!-ادارة التارجت--
         <div *hasPermission="'Permissions.Manage'"
             (click)="openSalesOfTarget()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -169,9 +169,9 @@
               <iconify-icon icon="solar:shop-bold-duotone" width="18"></iconify-icon>
             </div>
           </div>
-       <!--    <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div> -->
+       <!-    <div class="text-xs text-[var(--text-tertiary)]">إضافة وتعديل الفروع</div> --
         </div>
-        <!-- إدارة المدن -->
+        <!- إدارة المدن --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openAreas()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -185,7 +185,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">تعريف المدن وربطها بالمناطق</div>
         </div>
 
-        <!-- إدارة المناطق -->
+        <!- إدارة المناطق --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openCities()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -199,7 +199,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">إضافة وربط المناطق</div>
         </div>
 
-        <!-- أنواع النشاط -->
+        <!- أنواع النشاط --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openActivities()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -213,7 +213,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع النشاط</div>
         </div>
 
-        <!-- أنواع العجز -->
+        <!- أنواع العجز --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openShortage()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -226,7 +226,7 @@
           </div>
           <div class="text-xs text-[var(--text-tertiary)]">تعريف أنواع العجز</div>
         </div>
-        <!-- التقارير -->
+        <!- التقارير --
         <div *ngIf="auth.hasPermission('Permissions.Manage') || auth.hasPermission('Finance.View')"
             (click)="openReports()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -246,7 +246,7 @@
         </div>
 
 
-        <!-- الموظفين -->
+        <!--الموظفين --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openEmployee()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -260,7 +260,7 @@
           <div class="text-xs text-[var(--text-tertiary)]">تعريف وربط الموظفين</div>
         </div>
 
-        <!-- إدارة البلاد -->
+        <!- إدارة البلاد --
         <div *hasPermission="'Permissions.Manage'"
             (click)="openCountries()"
             class="stat-card cursor-pointer hover:shadow-md transition"
@@ -276,4 +276,37 @@
 
       </div>
 </div>
+</div>
+ -->
+
+<div class="content-area max-w-[1800px] mx-auto">
+
+  <div class="cards-wrapper">
+    <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mt-14">
+
+
+
+ 
+
+      <!-- يومية المبيعات -->
+      <div *hasPermission="'dashbord.dailysails'"
+           (click)="opendailySales()"
+           class="group p-6 rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white">
+        <div class="flex items-center gap-4 mb-3">
+          <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+            🧾
+          </div>
+          <div>
+            <h3 class="text-lg font-bold">يومية المبيعات</h3>
+            <p class="text-sm opacity-90">ادخل اليومية من هنا</p>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
+  </div>
 </div>

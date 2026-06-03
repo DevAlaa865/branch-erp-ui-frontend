@@ -1,51 +1,3 @@
-/* import { CommonModule } from '@angular/common';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { HasPermissionDirective } from '../../directives/has-permission.directive';
-import { AuthService } from '../../../services/auth.service';
-
-@Component({
-  selector: 'app-main-layout',
-  standalone: true,
-  imports: [RouterModule, CommonModule,HasPermissionDirective],
-    templateUrl: './main-layout.component.html',
-  styleUrl: './main-layout.component.css',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
-export class MainLayoutComponent {
-userName: string | null = null;
-branchName: string | null = null;
-roles: string[] = [];
-
-constructor(private auth: AuthService ,private  router: Router) {}
-
-ngOnInit() {
-this.userName = this.auth.getUserName();
-const rawBranch = this.auth.getBranchName();
-this.branchName = rawBranch ? decodeURIComponent(escape(rawBranch)) : null;
-
-  this.roles = this.auth.getRoles(); // خليه زي ما هو
-}
-
-
-   currentYear = new Date().getFullYear();
-     
-   isSidebarOpen = false;
-
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
-   closeSidebar() {
-    this.isSidebarOpen = false;
-  }
-logout(){
-    this.auth.logout();
-  this.router.navigate(['/login']);
-}
-}
- */
-
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
@@ -60,46 +12,72 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './main-layout.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MainLayoutComponent implements AfterViewInit {
+export class MainLayoutComponent  {
 
-
-  ngAfterViewInit() {
-  const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = saved === 'dark' || (!saved && prefersDark);
-if (isDark) document.documentElement.classList.add('dark');
-  this.updateThemeIcon(isDark);
- }
   userName: string | null = null;
   branchName: string | null = null;
   roles: string[] = [];
   currentYear = new Date().getFullYear();
 
   isSidebarOpen = false;
+  isMobile = false;
 
   constructor(public auth: AuthService, private router: Router) {}
 
-  ngOnInit() {
-    this.userName = this.auth.getUserName();
-    const rawBranch = this.auth.getBranchName();
-    this.branchName = rawBranch ? decodeURIComponent(escape(rawBranch)) : null;
+ngOnInit() {
+     this.userName = this.auth.getUserName();
+const rawBranch = this.auth.getBranchName();
+this.branchName = rawBranch ? this.fixArabic(rawBranch) : null;
+
     this.roles = this.auth.getRoles();
+console.log("Branch from token:", this.auth.getBranchName());
+  this.isMobile = window.innerWidth < 768;
 
+  if (!this.isMobile) {
+    this.isSidebarOpen = true;
   }
+}
+fixArabic(text: string) {
+  try {
+    return decodeURIComponent(escape(text));
+  } catch {
+    return text;
+  }
+}
 
-  // Sidebar
+
+
+/* 
+  ngAfterViewInit() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved === 'dark' || (!saved && prefersDark);
+
+    if (isDark) document.documentElement.classList.add('dark');
+    this.updateThemeIcon(isDark);
+  } */
+
+  // Sidebar Toggle
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
 
   closeSidebar() {
-    this.isSidebarOpen = false;
+    if (this.isMobile) {
+      this.isSidebarOpen = false;
+    }
   }
-/*     UploadTarget()
-    {
-      
-    } */
-  // Theme
+
+  // Detect screen resize
+  onResize(event: any) {
+    this.isMobile = event.target.innerWidth < 768;
+
+    if (!this.isMobile) {
+      this.isSidebarOpen = true;
+    }
+  }
+
+  // Theme Toggle
   toggleTheme() {
     const root = document.documentElement;
     root.classList.toggle('dark');
@@ -120,8 +98,8 @@ if (isDark) document.documentElement.classList.add('dark');
   }
 
   decodeArabic(text: string) {
-  return decodeURIComponent(escape(text));
-}
+    return decodeURIComponent(escape(text));
+  }
 
   // Navigation
   navigate(path: string) {

@@ -1,13 +1,27 @@
-/* أنيميشن دخول ناعم للتقرير */
+/* ============================
+   الأساسيات العامة
+   ============================ */
+
 :host {
   display: block;
-  overflow-x: hidden;
+  padding: 1.5rem 0;
+  background: #f3f4f6;
+  color: #0f172a;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+/* حاوية عامة للشاشة */
+.page-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* أنيميشن دخول ناعم */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   100% {
     opacity: 1;
@@ -16,232 +30,602 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
+  animation: fadeInUp 0.4s ease-out;
 }
 
-/* السماح للستايل بالدخول داخل ng-select */
-:host ::ng-deep .ng-select.ng-select-custom {
+/* ============================
+   هيدر الشاشة
+   ============================ */
+
+.header-card {
+  background: #0f172a;
+  color: #e5e7eb;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.45);
+  margin-bottom: 1rem;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f9fafb;
+  font-size: 1.1rem;
+}
+
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+.header-subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* ============================
+   فورم الاستعلام
+   ============================ */
+
+.search-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dbe2f0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  margin-bottom: 1.25rem;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+@media (min-width: 768px) {
+  .search-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.field-wrapper {
+  text-align: center;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+/* حاوية الإدخال مع الأيقونة */
+.input-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #bfdbfe;
+  background: #f9fafb;
+  padding: 0.35rem 0.75rem;
+  height: 46px;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.25);
+}
+
+.input-shell i {
+  color: #2563eb;
+  font-size: 0.95rem;
+}
+
+.input-shell input[type="date"] {
   width: 100%;
-  font-size: 14px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #0f172a;
+  outline: none;
 }
 
-/* الكونتينر الأساسي */
-:host ::ng-deep .ng-select.ng-select-custom .ng-select-container {
-  background: rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid #3b82f6 !important;
-  border-radius: 8px !important;
-  min-height: 40px !important;
-  padding: 0 10px !important;
-  display: flex !important;
-  align-items: center !important;
+/* زر الاستعلام */
+.search-button-wrapper {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.search-button {
+  width: 100%;
+  padding: 0.55rem 1.25rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #f9fafb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.45);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, opacity 0.12s;
+}
+
+.search-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.55);
+}
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* رسائل الحالة */
+.status-text {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.status-loading {
+  color: #6b7280;
+}
+
+.status-error {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+/* ============================
+   فرع المستخدم / الدروب داون
+   ============================ */
+
+.branch-static {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  padding: 0.35rem 0.75rem;
+  height: 46px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.branch-static input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  color: #0f172a;
+}
+
+/* حاوية الدروب داون */
+.branch-select-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #bfdbfe;
+  background: #f9fafb;
+  padding: 0.35rem 0.75rem;
+  height: 46px;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.25);
+  overflow: visible;
+}
+
+/* ng-select داخل app-custom-select */
+app-custom-select {
+  width: 100%;
+}
+
+/* نضمن أن الدروب داون يظهر فوق كل شيء */
+app-custom-select ::ng-deep .ng-dropdown-panel {
+  z-index: 999999 !important;
+}
+
+/* تنسيق ng-select نفسه */
+app-custom-select ::ng-deep .ng-select-container {
+  background: transparent !important;
+  border: none !important;
   box-shadow: none !important;
-}
-
-/* placeholder */
-:host ::ng-deep .ng-select.ng-select-custom .ng-placeholder {
-  color: #64748b !important;
-  font-size: 14px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* ✅ إخفاء الـ placeholder لما يكون فيه قيمة فعلية */
-:host ::ng-deep .ng-select.ng-select-custom .ng-select-container:has(.ng-value) .ng-placeholder {
-  display: none !important;
+  min-height: 32px !important;
+  align-items: center !important;
 }
 
 /* النص المختار */
-:host ::ng-deep .ng-select.ng-select-custom .ng-value {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #1e293b !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* خانة البحث */
-:host ::ng-deep .ng-select.ng-select-custom .ng-input input {
-  height: 28px !important;
-  font-size: 14px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  color: #1e293b !important;
-}
-
-/* القائمة */
-:host ::ng-deep .ng-dropdown-panel {
-  border-radius: 8px !important;
-  border: 1px solid #3b82f6 !important;
-  background: white !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-  z-index: 99999 !important;
-}
-
-/* العناصر */
-:host ::ng-deep .ng-option {
-  padding: 10px 12px !important;
-  font-size: 14px !important;
-  color: #1e293b !important;
-}
-
-/* العنصر المحدد */
-:host ::ng-deep .ng-option-selected {
-  background: #e0f2fe !important;
+app-custom-select ::ng-deep .ng-value {
+  color: #0f172a !important;
+  font-size: 0.9rem !important;
   font-weight: 600 !important;
 }
 
-/* hover */
-:host ::ng-deep .ng-option:hover {
-  background: #dbeafe !important;
+/* حقل البحث داخل الدروب داون */
+app-custom-select ::ng-deep .ng-input input {
+  color: #0f172a !important;
+  background: #ffffff !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
 }
 
-/* 🔥 يمنع أي نص يظهر جنب القيمة */
-.ng-select .ng-value-label::after {
-  display: none !important;
+/* Placeholder البحث */
+app-custom-select ::ng-deep .ng-input input::placeholder {
+  color: #9ca3af !important;
 }
 
-@media (max-width: 640px) {
-  .back-btn-wrapper {
-    margin-top: 38px; /* زوّد الرقم براحتك */
-  }
-}
-@media (max-width: 640px) {
-
-  /* تصغير الخط داخل الجدول */
-  .shortage-table-mobile table {
-    font-size: 11px !important;
-  }
-
-  /* تصغير حجم الأعمدة */
- .shortage-table-mobile th,
-.shortage-table-mobile td {
-  white-space: normal !important;
+/* عناصر القائمة */
+app-custom-select ::ng-deep .ng-option {
+  color: #0f172a !important;
+  font-size: 0.9rem !important;
+  padding: 0.45rem 0.75rem !important;
 }
 
-  /* تصغير حجم النص داخل الروابط */
-  .shortage-table-mobile a span {
-    font-size: 11px !important;
-  }
-
-  /* تصغير كلمة "لا يوجد مرفق" */
-  .shortage-table-mobile .text-sm {
-    font-size: 10px !important;
-  }
-
-  /* تصغير حجم Checkbox labels */
-  .shortage-table-mobile td span {
-    font-size: 11px !important;
-  }
-}
-/* يمنع أي عنصر يكسر عرض الموبايل */
-@media (max-width: 640px) {
-
-  /* يمنع التزحلق يمين */
-  body, html {
-    overflow-x: hidden !important;
-  }
-
-  /* يمنع أي عنصر من تجاوز عرض الشاشة */
-.page-container, 
-.content, 
-.space-y-6, 
-.shortage-table-mobile {
-  max-width: 100% !important;
+app-custom-select ::ng-deep .ng-option:hover {
+  background: #e5f0ff !important;
+  color: #1d4ed8 !important;
 }
 
-  /* تصغير كل text-lg في الموبايل */
-  .text-lg {
-    font-size: 14px !important;
-  }
-
-  /* تصغير padding اللي بيكسر الشاشة */
-  .px-4 {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  /* تصغير الروابط الطويلة */
-  .shortage-table-mobile a span {
-    white-space: nowrap;
-    font-size: 11px !important;
-  }
-}
-/* يمنع أي عنصر يكسر العرض */
-* {
-  box-sizing: border-box;
+/* رسالة خطأ اختيار الفرع */
+.branch-error {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
 }
 
-/* يمنع السكرول يمين */
-body {
-  overflow-x: hidden;
+/* ============================
+   كارت معلومات اليومية
+   ============================ */
+
+.report-wrapper {
+  margin-top: 1.25rem;
 }
 
-/* إصلاح الجدول */
-.shortage-table-mobile {
+.report-header-card {
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  border-radius: 1.25rem;
+  padding: 0.9rem 1rem 1.1rem;
+  border: 1px solid rgba(15, 23, 42, 0.6);
+  color: #e5e7eb;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.6);
+  margin-bottom: 1.25rem;
+}
+
+.report-header-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.5rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .report-header-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .report-header-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.report-header-label {
+  font-size: 0.7rem;
+  color: #e5e7eb;
+}
+
+.report-header-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+/* رابط المرفق */
+.header-attachment-link {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #e0f2fe;
+  cursor: pointer;
+}
+
+.header-attachment-link i {
+  font-size: 0.9rem;
+}
+
+/* كارت مدخل البيانات */
+.data-entry-card {
+  margin-top: 0.75rem;
+  background: rgba(15, 23, 42, 0.08);
+  border-radius: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid rgba(191, 219, 254, 0.7);
+}
+
+.data-entry-label {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.data-entry-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #bfdbfe;
+  background: #f9fafb;
+  padding: 0.35rem 0.75rem;
+}
+
+.data-entry-shell input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+/* ============================
+   كروت الأرقام
+   ============================ */
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.metric-box {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 10px 25px rgba(148, 163, 184, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+}
+
+/* فرق اليومية */
+.metric-box-diff-balanced {
+  border-color: #6ee7b7;
+}
+
+.metric-box-diff-unbalanced {
+  border-color: #fb7185;
+}
+
+/* ============================
+   جدول العجز
+   ============================ */
+
+.shortage-card {
+  border-radius: 1.25rem;
+  padding: 1rem 1rem 1.1rem;
+  border: 1px solid rgba(15, 23, 42, 0.7);
+  background: linear-gradient(135deg, #4f46e5, #1f2937);
+  color: #f9fafb;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.7);
+  margin-bottom: 1.25rem;
+}
+
+.shortage-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.shortage-table-wrapper {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* خلي النص يكسر بدل ما يطلع بره */
-.shortage-table-mobile table {
-  white-space: normal !important;
-  word-break: break-word;
+.shortage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
 }
 
-/* اللينكات الطويلة */
-.shortage-table-mobile a {
-  word-break: break-word;
+.shortage-table thead tr {
+  background: #020617;
+  color: #f9fafb;
 }
 
-/* الموبايل */
+.shortage-table th,
+.shortage-table td {
+  padding: 0.55rem 0.75rem;
+  text-align: right;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.shortage-table tbody tr:hover {
+  background: rgba(15, 23, 42, 0.75);
+}
+
+.shortage-attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #e0f2fe;
+  cursor: pointer;
+}
+
+.shortage-no-file {
+  font-size: 0.75rem;
+  color: #cbd5f5;
+}
+
+/* Checkbox */
+.shortage-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================
+   ملاحظات المشرف / المرتجعات
+   ============================ */
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .notes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.notes-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 10px 25px rgba(148, 163, 184, 0.25);
+}
+
+.notes-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.4rem;
+}
+
+.notes-text {
+  font-size: 0.8rem;
+  color: #4b5563;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* ملاحظات إدارة المرتجعات */
+.returns-notes-card {
+  background: #ecfdf5;
+  border-radius: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #6ee7b7;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);
+}
+
+.returns-notes-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #047857;
+  margin-bottom: 0.4rem;
+}
+
+.returns-notes-textarea {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #6ee7b7;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.8rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  resize: vertical;
+}
+
+.returns-notes-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35);
+}
+
+/* ============================
+   زر تعديل الاعتمادات
+   ============================ */
+
+.footer-actions {
+  margin-top: 0.75rem;
+  text-align: left;
+}
+
+.update-button {
+  padding: 0.45rem 1.4rem;
+  border-radius: 0.75rem;
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #f9fafb;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.45);
+  transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+
+.update-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.55);
+}
+
+/* ============================
+   موبايل
+   ============================ */
+
 @media (max-width: 640px) {
-
-  /* أي حاجة w-fit تبقى full */
-  .w-fit {
-    width: 100% !important;
+  .header-card {
+    padding: 0.75rem 0.9rem;
   }
 
-  /* تصغير padding */
-  .px-4 {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  .metric-value {
+    font-size: 1rem;
   }
 
-  /* تصغير الخط */
-  .text-lg {
-    font-size: 13px !important;
+  .shortage-table {
+    font-size: 0.75rem;
   }
-
-  /* الزرار مايكسرش */
-  button span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* الجداول تبقى scroll بدل ما تكسر */
-  table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-  }
-
-}
-/* يمنع أي عنصر يخرج بره */
-* {
-  max-width: 100%;
-}
-
-.flex > * {
-  min-width: 0;
-}
-
-:host ::ng-deep .ng-select.ng-select-custom .ng-select-container {
-  color: var(--input-text) !important;
-  background: transparent !important;
-}
-
-:host ::ng-deep .ng-select.ng-select-custom .ng-value,
-:host ::ng-deep .ng-select.ng-select-custom .ng-placeholder {
-  color: var(--input-text) !important;
 }

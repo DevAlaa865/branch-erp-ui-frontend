@@ -1,11 +1,13 @@
+<div class="page-wrapper">
+
 <div class="space-y-6">
   <div class="flex justify-start mb-2 back-btn-wrapper">
-    <button
+  <!--   <button
       (click)="goBackToDashboard()"
       class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition text-sm font-medium">
       <i class="fa fa-arrow-right"></i>
       <span>رجوع للرئيسيه</span>
-    </button>
+    </button> -->
   </div>
   <!-- هيدر الشاشة -->
   <div class="bg-[var(--panel-bg)] backdrop-blur-xl p-4 rounded-2xl shadow-lg border border-[var(--panel-border)] text-[var(--text)]">
@@ -159,7 +161,7 @@
   <!-- ⭐ هنا نضيف اسم مدخل البيانات -->
   <div class="bg-white/90 backdrop-blur-xl p-4 rounded-2xl shadow-md border border-blue-200 mt-4">
     <label class="block text-sm md:text-base text-[var(--label-strong)] mb-1">
-      من فضلك ادخل اسم  مدخل البيانات
+    اسم  مدخل البيانات
     </label>
 
     <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 shadow-sm">
@@ -325,69 +327,28 @@
             </ng-template>
           </td>
 
-          <!-- عمود الاعتماد -->
-          <td class="px-4 py-3 text-lg" style="color:#fff">
+       <td class="px-4 py-3 text-lg">
 
-            <!-- لو نوع العجز مرتجعات -->
-       <!--      <ng-container *ngIf="  s.shortageTypeName.includes('مرتجع')">
-              <input type="checkbox" 
-                     [(ngModel)]="s['isReturnApproved']"
-                     [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد مرتجعات</span>
-            </ng-container> -->
-            <!-- اعتماد المرتجعات -->
-<ng-container 
-  *ngIf="(auth.hasPermission('Returns.View') ||
-     auth.hasPermission('Permissions.Manage')|| auth.hasPermission('Finance.View')) && s.shortageTypeName.includes('مرتجع')">
+  <!-- مرتجعات + استبدال → isReturnApproved -->
+  <ng-container *ngIf="s.shortageTypeId == 3 || s.shortageTypeId == 6">
+    <input type="checkbox"
+           [(ngModel)]="s.isReturnApproved"
+           [disabled]="!canApproveShortages"
+           class="w-5 h-5">
+    <span class="ml-1">اعتماد</span>
+  </ng-container>
 
-  <input type="checkbox" 
-         [(ngModel)]="s['isReturnApproved']"
-         [disabled]="!auth.hasPermission('Return.Edit')">
-         
-  <span class="ml-1">اعتماد </span>
+  <!-- باقي الأنواع → isDiscountApproved -->
+  <ng-container *ngIf="s.shortageTypeId != 3 && s.shortageTypeId != 6">
+    <input type="checkbox"
+           [(ngModel)]="s.isDiscountApproved"
+           [disabled]="!canApproveShortages"
+           class="w-5 h-5">
+    <span class="ml-1">اعتماد</span>
+  </ng-container>
 
-</ng-container>
+</td>
 
-
-            <!-- لو نوع العجز خصومات -->
-     <ng-container 
-            *ngIf="(auth.hasPermission('Returns.View') ||
-     auth.hasPermission('Permissions.Manage')|| auth.hasPermission('Finance.View')) && s.shortageTypeName.includes('فاتورة')">
-              <input type="checkbox" 
-                     [(ngModel)]="s['isDiscountApproved']"
-                     [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد</span>
-            </ng-container>
-
-                   <!-- لو نوع العجز استبدال -->
-           <ng-container 
-            *ngIf="(auth.hasPermission('Returns.View') ||
-              auth.hasPermission('Permissions.Manage')|| auth.hasPermission('Finance.View')) && s.shortageTypeName.includes('استبدال')">
-              <input type="checkbox" 
-                     [(ngModel)]="s['isDiscountApproved']"
-                     [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد</span>
-            </ng-container>
-                   <!-- لو نوع العجز خصم على موظف --> 
-
-            <ng-container 
-            *ngIf="(auth.hasPermission('Discounts.View') ||
-             auth.hasPermission('Permissions.Manage')|| auth.hasPermission('Finance.View')) && s.shortageTypeName.includes('موظف')">
-              <input type="checkbox" 
-                     [(ngModel)]="s['isDiscountApproved']"
-                     [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد  </span>
-            </ng-container>
-             <!-- لو نوع العجز مكافاه  لموظف -->  
-            <ng-container 
-            *ngIf="(auth.hasPermission('Discounts.View') ||
-             auth.hasPermission('Permissions.Manage')|| auth.hasPermission('Finance.View')) && s.shortageTypeName.includes('مكا')">
-              <input type="checkbox" 
-                     [(ngModel)]="s['isDiscountApproved']"
-                     [disabled]="!canApproveShortages">
-              <span class="ml-1">اعتماد</span>
-            </ng-container>
-          </td>
 
         </tr>
       </tbody>
@@ -398,15 +359,15 @@
 
 
 
-
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
   <!-- ملاحظات المشرف -->
-  <div class="bg-white rounded-2xl border border-blue-200 shadow p-5 mb-3"
+  <div class="bg-white rounded-2xl border border-blue-200 shadow p-5"
        *ngIf="report.supervisorNotes">
 
     <h3 class="text-base md:text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
       <i class="fa fa-note-sticky text-sky-500"></i>
-      <span>ملاحظات المشرف / الإدارة</span>
+      <span>ملاحظات المشرف</span>
     </h3>
 
     <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
@@ -414,6 +375,28 @@
     </p>
 
   </div>
+
+  <!-- ملاحظات إدارة المرتجعات والخصومات -->
+  <div class="bg-white rounded-2xl border border-emerald-300 shadow p-5"
+       *ngIf="report.shortageDetails.length > 0">
+
+    <h3 class="text-base md:text-lg font-semibold text-emerald-700 mb-2 flex items-center gap-2">
+      <i class="fa fa-clipboard-check text-emerald-500"></i>
+      <span>ملاحظات إدارة المرتجعات والخصومات</span>
+    </h3>
+
+    <textarea
+      [(ngModel)]="report.shortageDetails[0].returnNotes"
+      [disabled]="!canApproveShortages"
+      class="w-full border border-emerald-300 rounded-lg p-3 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500"
+      rows="4"
+      placeholder="اكتب ملاحظات إدارة المرتجعات هنا..."
+    ></textarea>
+
+  </div>
+
+</div>
+
 
 </div>
 
@@ -431,4 +414,5 @@
 </div>
 
 
+</div>
 </div>

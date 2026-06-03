@@ -1,0 +1,44 @@
+/* ====== نافذة تعديل المرتجع - إصلاح النصوص والخلفيات ====== */
+.fixed.inset-0 * {
+  color: #0f172a !important; /* نص غامق وواضح */
+}
+
+/* ====== كل الحقول داخل النافذة ====== */
+.fixed.inset-0 input,
+.fixed.inset-0 select,
+.fixed.inset-0 textarea {
+  background-color: #f8fafc !important; /* خلفية رمادي فاتح */
+  color: #0f172a !important;            /* نص غامق */
+  border: 1px solid #cbd5e1 !important;
+  font-weight: 500;
+}
+
+/* ====== Placeholder واضح ====== */
+.fixed.inset-0 input::placeholder,
+.fixed.inset-0 textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* ====== العناوين ====== */
+.fixed.inset-0 label,
+.fixed.inset-0 h3 {
+  color: #1e293b !important;
+  font-weight: 700;
+}
+
+/* ====== تحسين شكل النافذة نفسها ====== */
+.fixed.inset-0 > div {
+  background: #ffffff !important;
+  border-radius: 1rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* ====== تحسين الأزرار ====== */
+.fixed.inset-0 button {
+  transition: 0.25s ease;
+}
+
+.fixed.inset-0 button:hover {
+  transform: scale(1.05);
+}

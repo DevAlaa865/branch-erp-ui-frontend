@@ -1,31 +1,219 @@
+/* =========================================================
+   PREMIUM TABLE HEADER
+   ========================================================= */
+.report-table thead th {
+  background: linear-gradient(135deg, rgba(30,58,138,0.95), rgba(59,130,246,0.95));
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-weight: 700;
+  padding: 16px 14px;
+  text-align: right;
+  border-bottom: 2px solid rgba(255,255,255,0.25);
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+/* =========================================================
+   PREMIUM COUNTER BADGE
+   ========================================================= */
+.opened-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  width: fit-content;
+  margin-bottom: 14px;
+  animation: fadeBadge 0.4s ease;
+}
+
+.opened-counter-icon {
+  background: rgba(255,255,255,0.25);
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeBadge {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
 .table-wrapper {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto !important;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-
-  /* مهم جدًا */
-  display: block;
-  direction: ltr;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 600px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
 }
 
-/* الجدول نفسه */
+/* =========================================================
+   TABLE BASE
+   ========================================================= */
 .report-table {
-  min-width: 1200px;     /* لازم أكبر من الشاشة */
-  width: max-content;
-  white-space: nowrap;
+  width: 100%;
   border-collapse: collapse;
-
-  direction: rtl;
+  font-size: 14px;
 }
 
-/* تحسين السكرول */
-.table-wrapper::-webkit-scrollbar {
-  height: 6px;
+/* =========================================================
+   ROWS
+   ========================================================= */
+.report-table tbody tr {
+  transition: background 0.25s ease;
 }
 
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
+.report-table tbody tr:hover {
+  background: #f0f7ff;
+}
+
+/* =========================================================
+   CELLS
+   ========================================================= */
+.report-table td {
+  padding: 12px;
+  color: #1f2937;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* =========================================================
+   DETAILS BUTTON
+   ========================================================= */
+.eye-btn {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.eye-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* =========================================================
+   TOOLTIP
+   ========================================================= */
+.tooltip {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  right: 50%;
+  top: -40px;
+  transform: translateX(50%);
+  background: #111827;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.tooltip:hover::before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: -10px;
+  transform: translateX(50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #111827 transparent transparent transparent;
+}
+
+/* =========================================================
+   ROW HIGHLIGHTS
+   ========================================================= */
+.row-high-positive {
+  background: #fff3cd !important;
+}
+
+.row-high-negative {
+  background: #ffe0e0 !important;
+}
+
+.row-opened {
+  background: #d1e7ff !important;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+.row-animated {
+  animation: fadeRow 0.4s ease;
+}
+
+@keyframes fadeRow {
+  from { opacity: 0.4; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+.pagination-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  transition: 0.2s;
+}
+
+.pagination-btn:hover {
+  background: #e5e7eb;
+}
+
+.pagination-btn.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+}
+/* توسيط نص الهيدر */
+.report-table thead th {
+  text-align: center !important;
+}
+
+/* توسيط نص الخلايا */
+.report-table td {
+  text-align: center !important;
 }

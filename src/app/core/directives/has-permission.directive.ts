@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HasPermissionDirective {
 
-  private permissionCode: string | null = null;
+  private permissionCodes: string[] = [];
 
   constructor(
     private tpl: TemplateRef<any>,
@@ -15,15 +15,27 @@ export class HasPermissionDirective {
     private auth: AuthService
   ) {}
 
-  @Input() set hasPermission(code: string) {
-    this.permissionCode = code;
+  @Input() set hasPermission(code: string | string[]) {
+
+    // لو جالك string → نحوله array
+    if (typeof code === 'string') {
+      this.permissionCodes = [code];
+    } else {
+      this.permissionCodes = code;
+    }
+
     this.updateView();
   }
 
   private updateView() {
     this.vcr.clear();
 
-    if (this.permissionCode && this.auth.hasPermission(this.permissionCode)) {
+    // لو أي صلاحية من اللي مبعوتة موجودة عند المستخدم → اعرض العنصر
+    const canShow = this.permissionCodes.some(p =>
+      this.auth.hasPermission(p)
+    );
+
+    if (canShow) {
       this.vcr.createEmbeddedView(this.tpl);
     }
   }

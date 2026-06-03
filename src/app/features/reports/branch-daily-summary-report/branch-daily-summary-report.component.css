@@ -1,38 +1,91 @@
-option {
-  color: #1e293b; /* slate-800 */
-  background: white;
+/* ====== توحيد ارتفاع كل الفلاتر ====== */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
 
-
-/* إجبار لون الخط داخل الـ option */
-select option {
-  color: #1e293b !important;   /* slate-800 */
-  background-color: #ffffff !important;
+.filter-item {
+  flex: 1;
+  min-width: 220px;
 }
 
-/* إجبار لون الخط داخل القائمة المفتوحة */
-select {
-  color: #1e293b !important;
-  background-color: #ffffff !important;
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #f1f5f9;
+  padding: 0.65rem 0.9rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: 0.25s ease;
+  height: 48px; /* توحيد الارتفاع */
 }
 
-
-select option {
-  -webkit-text-fill-color: #1e293b !important;
-}
-.summary-table {
-  min-width: 900px; /* أو 1000 حسب عدد الأعمدة */
+.filter-box:hover {
+  background: #e2e8f0;
+  border-color: #2563eb;
 }
 
-.summary-table th,
-.summary-table td {
-  white-space: nowrap;
-}
-::-webkit-scrollbar {
-  height: 8px;
+.filter-box i {
+  color: #2563eb;
+  font-size: 1rem;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+.filter-box input,
+.filter-box select,
+.filter-box app-custom-select {
+  flex: 1;
+  color: #0f172a;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  height: 100%;
+}
+
+/* ====== إصلاح محاذاة دروب داون المدينة ====== */
+app-custom-select ::ng-deep .ng-select-container {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+app-custom-select ::ng-deep .ng-select .ng-select-container .ng-value {
+  color: #0f172a !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+/* ====== تحسين شكل النص داخل الدروب داون ====== */
+app-custom-select ::ng-deep .ng-select .ng-select-container .ng-value-container {
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+}
+/* ====== إصلاح لون النص داخل البحث والدروب داون ====== */
+app-custom-select ::ng-deep .ng-select-container {
+  background: #f8fafc !important; /* خلفية رمادية فاتحة */
+  color: #0f172a !important;      /* لون النص غامق وواضح */
+}
+
+app-custom-select ::ng-deep .ng-select .ng-input input {
+  color: #0f172a !important;      /* لون النص داخل مربع البحث */
+  font-weight: 500;
+}
+
+app-custom-select ::ng-deep .ng-select .ng-option {
+  color: #0f172a !important;      /* لون النص داخل القائمة */
+  background: #ffffff !important;
+}
+
+app-custom-select ::ng-deep .ng-select .ng-option:hover {
+  background: #e2e8f0 !important; /* خلفية عند المرور بالماوس */
+  color: #1e3a8a !important;
 }

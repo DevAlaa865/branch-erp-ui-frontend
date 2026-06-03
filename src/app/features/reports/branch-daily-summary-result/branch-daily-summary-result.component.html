@@ -1,142 +1,146 @@
-   <div id="view-pendaftar" class="content-area max-w-[1600px] mx-auto">
-       <div class="card-panel  flex flex-col shadow-sm" style="min-height: 600px;">
-  <!-- Export Buttons -->
-  <div class="flex justify-end mb-4 gap-2">
-<button
-  type="button"
-  (click)="exportToExcel()"
-  class="px-4 py-2 rounded-lg bg-green-600 text-white flex items-center gap-2
-         hover:bg-green-700 active:scale-95 transition-all duration-200
-         shadow-sm hover:shadow-md">
-  <iconify-icon icon="solar:document-bold-duotone" width="18"></iconify-icon>
-  <span>تصدير Excel</span>
-</button>
+<div id="view-pendaftar" class="content-area max-w-[1600px] mx-auto fade-in">
 
-   <button
-  type="button"
-  (click)="exportToPdf()"
-  class="px-4 py-2 rounded-lg bg-red-600 text-white flex items-center gap-2
-         hover:bg-red-700 active:scale-95 transition-all duration-200
-         shadow-sm hover:shadow-md">
-  <iconify-icon icon="solar:document-add-bold-duotone" width="18"></iconify-icon>
-  <span>تصدير PDF</span>
-</button>
-  </div>
+  <div class="card-panel flex flex-col shadow-sm bg-white rounded-xl p-6">
 
-  <!-- Empty State -->
-  <p class="text-xs text-[var(--text-tertiary)]" *ngIf="!rows || rows.length === 0">
-    سيتم عرض جدول التقرير هنا بعد تنفيذ البحث...
-  </p>
+    <!-- Export Buttons -->
+    <div class="flex justify-end mb-4 gap-2">
+      <button type="button" (click)="exportToExcel()"
+        class="px-4 py-2 rounded-lg bg-green-600 text-white flex items-center gap-2 hover:bg-green-700 active:scale-95 transition-all shadow-sm hover:shadow-md">
+        <iconify-icon icon="solar:document-bold-duotone" width="18"></iconify-icon>
+        <span>تصدير Excel</span>
+      </button>
 
-  <!-- Report Table -->
-  <div *ngIf="rows && rows.length > 0" class="card-panel ">
-
-    <!-- Header -->
-    <div class="p-4 border-b border-[var(--border-light)] bg-[var(--surface)] flex justify-between items-center mb-3">
-      <h4 class="m-0 text-[1.125rem] ">نتائج تقرير يوميات الفروع</h4>
+      <button type="button" (click)="exportToPdf()"
+        class="px-4 py-2 rounded-lg bg-red-600 text-white flex items-center gap-2 hover:bg-red-700 active:scale-95 transition-all shadow-sm hover:shadow-md">
+        <iconify-icon icon="solar:document-add-bold-duotone" width="18"></iconify-icon>
+        <span>تصدير PDF</span>
+      </button>
     </div>
 
-    <!-- Responsive Scroll -->
-   <div class="table-wrapper" dir="rtl">
-  <table class="report-table">
+    <!-- Empty State -->
+    <p class="text-sm text-gray-500" *ngIf="!rows || rows.length === 0">
+      سيتم عرض جدول التقرير هنا بعد تنفيذ البحث...
+    </p>
 
-        <thead >
-          <tr class="bg-blue-100 text-black">
-            <th class="px-4 py-3 text-right">الفرع</th>
-            <th class="px-4 py-3 text-right">نقدية</th>
-            <th class="px-4 py-3 text-right">شبكة</th>
-            <th class="px-4 py-3 text-right">آجل</th>
-            <th class="px-4 py-3 text-right">إجمالي البيع</th>
-            <th class="px-4 py-3 text-right">الإجمالي الكلي</th>
-            <th class="px-4 py-3 text-right">قيمة العجز</th>
+    <!-- Report Table -->
+    <div *ngIf="rows && rows.length > 0" class="fade-in">
 
-       <th  class="px-4 py-3 text-right" *ngFor="let st of shortageTypes">{{ st?.name }}</th> 
+      <div class="p-4 border-b bg-gray-50 rounded-t-xl flex justify-between items-center mb-3">
+        <h4 class="m-0 text-lg font-bold text-gray-700">نتائج تقرير يوميات الفروع</h4>
+      </div>
+<div *ngIf="openedRows.length > 0" class="opened-counter">
+  <span class="opened-counter-icon">
+    <iconify-icon icon="solar:checklist-bold-duotone" width="16"></iconify-icon>
+  </span>
+  تم فتح {{ openedRows.length }} يوميات
+</div>
 
-            <th class="px-4 py-3 text-right">الفرق</th>
-            <th class="text-right">تفاصيل</th>
-          </tr>
-        </thead>
 
-        <tbody>
-          <tr *ngFor="let row of pagedRows; trackBy: trackByBranch"  class="border-b hover:bg-blue-50 transition">
 
-            <td class="px-4 py-3 font-semibold text-black">{{ row.branchName }}</td>
+      <div class="table-wrapper" dir="rtl">
+        <table class="report-table">
 
-            <td class="px-4 py-3 font-semibold text-black">{{ row.cashAmount | number:'1.2-2' }}</td>
-            <td class="px-4 py-3 font-semibold text-black">{{ row.networkAmount | number:'1.2-2' }}</td>
-            <td class="px-4 py-3 font-semibold text-black">{{ row.creditAmount | number:'1.2-2' }}</td>
-            <td class="px-4 py-3 font-semibold text-black">{{ row.totalSales | number:'1.2-2' }}</td>
-            <td class="px-4 py-3 font-semibold text-black">{{ row.grandTotal | number:'1.2-2' }}</td>
+          <thead>
+            <tr>
+              <th>الفرع</th>
+              <th >نقدية</th>
+              <th >شبكة</th>
+              <th >آجل</th>
+              <th >إجمالي البيع</th>
+              <th>الإجمالي الكلي</th>
+              <th>قيمة العجز</th>
 
-            <td class="px-4 py-3 font-semibold text-black">{{ row.totalShortageAmount | number:'1.2-2' }}</td>
+              <th *ngFor="let st of shortageTypes">{{ st?.name }}</th>
 
-           <td *ngFor="let st of shortageTypes" class="px-4 py-3 font-semibold text-black">
-              {{
-                (row.shortages | shortByType:(st?.id ?? 0))?.amount || 0
-                | number:'1.2-2'
-              }} 
-            </td>
+              <th>الفرق</th>
+              <th>تفاصيل</th>
+            </tr>
+          </thead>
 
-            <td class="px-4 py-3 font-semibold text-black"
+          <tbody>
+           <tr
+              *ngFor="let row of pagedRows; trackBy: trackByBranch"
               [ngClass]="{
-                'text-[var(--danger)]': row.difference < 0,
-                'text-[var(--success)]': row.difference > 0,
-                'text-[var(--text-tertiary)]': row.difference === 0
+                'row-high-positive row-animated': row.difference > 30,
+                'row-high-negative row-animated': row.difference < -30,
+                'row-opened row-animated': openedRows.includes(row.branchId)
               }"
-              class="font-semibold"
+              class="border-b hover:bg-blue-50 transition"
             >
-              {{ row.difference | number:'1.2-2' }}
-            </td>
 
-            <td class="px-4 py-3 font-semibold text-black">
+
+
+
+              <td>{{ row.branchName }}</td>
+
+              <td>{{ row.cashAmount | number:'1.2-2' }}</td>
+              <td>{{ row.networkAmount | number:'1.2-2' }}</td>
+              <td>{{ row.creditAmount | number:'1.2-2' }}</td>
+              <td>{{ row.totalSales | number:'1.2-2' }}</td>
+              <td>{{ row.grandTotal | number:'1.2-2' }}</td>
+
+              <td>{{ row.totalShortageAmount | number:'1.2-2' }}</td>
+
+              <td  *ngFor="let st of shortageTypes" class="text-center">
+                {{
+                  (row.shortages | shortByType:(st?.id ?? 0))?.amount || 0
+                  | number:'1.2-2'
+                }}
+              </td>
+
+              <td class="text-center" [ngClass]="{
+                    'text-red-600': row.difference < 0,
+                    'text-green-600': row.difference > 0,
+                    'text-gray-500': row.difference === 0
+                  }">
+                {{ row.difference | number:'1.2-2' }}
+              </td>
+
+              <td>
               <button
-                
+                class="eye-btn tooltip"
+                data-tip="عرض تفاصيل اليوميات"
                 (click)="openDailyDetails(row)"
-                title="عرض التفاصيل">
+              >
                 <iconify-icon icon="solar:eye-bold-duotone" width="18"></iconify-icon>
               </button>
-            </td>
 
-          </tr>
-        </tbody>
 
-      </table>
+              </td>
+
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
     </div>
-  </div>
-  </div>
-  <!-- Pagination -->
-  <div *ngIf="rows && rows.length > 0"
-       class="flex justify-between items-center mt-6">
 
-    <span class="text-sm text-[var(--text-tertiary)]">
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="rows && rows.length > 0" class="flex justify-between items-center mt-6 fade-in">
+
+    <span class="text-sm text-gray-600">
       صفحة {{ currentPage }} من {{ totalPages }} — (إجمالي {{ rows.length }} صف)
     </span>
 
     <div class="flex gap-2">
 
-      <button
-        (click)="prevPage()"
-        [disabled]="currentPage === 1"
-        class="px-3 py-1 rounded-md bg-[var(--border)] text-[var(--text-main)] disabled:opacity-40">
+      <button (click)="prevPage()" [disabled]="currentPage === 1"
+        class="pagination-btn">
         السابق
       </button>
 
       <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
-        <button
-          type="button"
-          (click)="goToPage(i + 1)"
-          class="px-3 py-1 rounded-lg border text-[var(--text-main)] bg-[var(--surface)] hover:bg-[var(--primary-light)]"
-          [ngClass]="{
-            'bg-[var(--primary)] text-white border-[var(--primary)]': currentPage === (i + 1)
-          }">
+        <button type="button" (click)="goToPage(i + 1)"
+          class="pagination-btn"
+          [ngClass]="{ 'active': currentPage === (i + 1) }">
           {{ i + 1 }}
         </button>
       </ng-container>
 
-      <button
-        (click)="nextPage()"
-        [disabled]="currentPage === totalPages"
-        class="px-3 py-1 rounded-md bg-[var(--border)] text-[var(--text-main)] disabled:opacity-40">
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+        class="pagination-btn">
         التالي
       </button>
 

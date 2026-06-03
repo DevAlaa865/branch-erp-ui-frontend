@@ -136,9 +136,15 @@
         <td class="border p-2">{{ item.branchNumber }}</td>
         <td class="border p-2">{{ item.branchName }}</td>
         <td class="border p-2">{{ item.returnAmount | number:'1.2-2' }}</td>
-        <td class="border p-2">
-          {{ item.returnType === 1 ? 'كاش' : 'استبدال' }}
-        </td>
+       <td class="border p-2">
+        {{
+          item.returnType === 1 ? 'كاش' :
+          item.returnType === 2 ? 'استبدال' :
+          item.returnType === 3 ? 'تابى' :
+          item.returnType === 4 ? 'تمارا' :
+          'غير معروف'
+        }}
+      </td>
         <td class="border p-2">{{ item.notes || '-' }}</td>
 
         <td class="border p-2 text-center">
@@ -234,6 +240,8 @@
                 class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200">
           <option [value]="1">كاش</option>
           <option [value]="2">استبدال</option>
+          <option [value]="3">تابى</option>
+          <option [value]="4">تمارا</option>
         </select>
       </div>
 

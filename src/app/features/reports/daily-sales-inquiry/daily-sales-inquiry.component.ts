@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HasPermissionDirective } from "../../../core/directives/has-permission.directive";
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 import { IMAGE_BASE_URL } from '../../../api.config';
+
 interface ShortageDetail {
   id: number;
   shortageTypeId: number;
@@ -41,18 +42,18 @@ interface BranchDailySalesReport {
   shortageDetails: ShortageDetail[];
   attachmentPath: string | null;
   supervisorNotes: string | null;
-    dataEntryUserName: string | null;
+  dataEntryUserName: string | null;
 }
 
 @Component({
   selector: 'app-daily-sales-inquiry',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, HasPermissionDirective,CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, HasPermissionDirective, CustomSelectComponent],
   templateUrl: './daily-sales-inquiry.component.html',
   styleUrls: ['./daily-sales-inquiry.component.css']
 })
 export class DailySalesInquiryComponent implements OnInit {
-imageBaseUrl = IMAGE_BASE_URL;
+  imageBaseUrl = IMAGE_BASE_URL;
   userInfo: any;
   isBranchUser = false;
   branches: any[] = [];
@@ -68,17 +69,11 @@ imageBaseUrl = IMAGE_BASE_URL;
   errorMessage = '';
   report: BranchDailySalesReport | null = null;
 
-  // المستخدم الوحيد اللي يقدر يعدّل
+  // المستخدم الوحيد اللي يقدر يعدّل (إدارة المرتجعات / الخصومات / الأدمن)
   canApproveShortages = false;
 
   // القيمة المختارة من الدروب داون
-selectedBranch: any = null;
-
-// إعدادات الدروب داون
-
-
-
-
+  selectedBranch: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -87,33 +82,21 @@ selectedBranch: any = null;
     private master: MasterDataService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
-
-/*   getImageUrl(path: string | null | undefined): string {
-    if (!path) return '';
-  console.log("PATH FROM API:", path);
-console.log("IMAGE URL:", this.imageBaseUrl);
-    return `${this.imageBaseUrl}/${path}`;
-  }
- */
+  ) { }
 
   getImageUrl(path: string | null | undefined): string {
-  if (!path) return '';
+    if (!path) return '';
 
-  // Replace backslashes
-  path = path.replace(/\\/g, "/");
+    path = path.replace(/\\/g, "/");
 
-  // Remove leading slash
-  if (path.startsWith("/")) {
-    path = path.substring(1);
+    if (path.startsWith("/")) {
+      path = path.substring(1);
+    }
+
+    const base = this.imageBaseUrl.replace(/\/+$/, "");
+
+    return `${base}/${path}`;
   }
-
-  // Remove trailing slash from base URL
-  const base = this.imageBaseUrl.replace(/\/+$/, "");
-
-  return `${base}/${path}`;
- 
-}
 
   ngOnInit(): void {
 
@@ -124,16 +107,14 @@ console.log("IMAGE URL:", this.imageBaseUrl);
 
     this.userInfo = this.auth.getUserInfo();
 
-    // ✔ فقط اللي معاه صلاحية تعديل المرتجعات/الخصومات
-   /*  this.canApproveShortages = this.auth.hasPermission('Returns.View') ; */
+    // ✔ فقط اللي معاه صلاحية إدارة المرتجعات / الخصومات / الأدمن يقدر يعدّل
+    const editPermissions = [
+      'Returns.View',
+      'Discounts.View',
+      'Permissions.Manage'
+    ];
+    this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p));
 
-const editPermissions = [
-  'Returns.View',
-
-  'Discounts.View'
-];
-
-this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p));
     // لو المستخدم فرع
     if (this.userInfo && this.userInfo.branchId) {
       this.isBranchUser = true;
@@ -274,7 +255,7 @@ this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p))
 
             shortageDetails: item.shortageDetails || [],
             supervisorNotes: item.supervisorNotes || null,
-              dataEntryUserName: item.dataEntryUserName || null
+            dataEntryUserName: item.dataEntryUserName || null
           };
 
           this.showEmployeeColumn = this.report.shortageDetails.some(x => x.employeeName);
@@ -287,27 +268,19 @@ this.canApproveShortages = editPermissions.some(p => this.auth.hasPermission(p))
       });
   }
 
-openImageAsPdf(path: string | null | undefined) {
-  if (!path) return;
+  openImageAsPdf(path: string | null | undefined) {
+    if (!path) return;
 
-  const imageUrl = this.getImageUrl(path);
-  window.open(imageUrl, "_blank");
-}
-
-
-
-
-
+    const imageUrl = this.getImageUrl(path);
+    window.open(imageUrl, "_blank");
+  }
 
   goBackToDashboard() {
-    if(this.isBranchUser)
-    {
-       this.router.navigate(['/dashboard']);
+    if (this.isBranchUser) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/reports/branch-daily-summary']);
     }
-    else{
-this.router.navigate(['/reports/branch-daily-summary']);
-    }
-    
   }
 
   updateApprovals() {
@@ -316,7 +289,9 @@ this.router.navigate(['/reports/branch-daily-summary']);
     const updates = this.report.shortageDetails
       .filter(s =>
         s['isReturnApproved'] === true ||
-        s['isDiscountApproved'] === true
+        s['isDiscountApproved'] === true ||
+        (s.returnNotes && s.returnNotes.trim() !== '') ||
+        (s.discountNotes && s.discountNotes.trim() !== '')
       )
       .map(s => ({
         id: s.id,
@@ -327,7 +302,7 @@ this.router.navigate(['/reports/branch-daily-summary']);
       }));
 
     if (updates.length === 0) {
-      alert("من فضلك اختر عنصر واحد على الأقل للتعديل");
+      alert("من فضلك اختر عنصر واحد على الأقل للتعديل أو أضف ملاحظة");
       return;
     }
 
@@ -335,14 +310,11 @@ this.router.navigate(['/reports/branch-daily-summary']);
       .subscribe({
         next: () => {
           alert("تم تعديل اليومية بنجاح");
-          this.router.navigate(['/reports/returns-discounts-management']);
+          this.router.navigate(['/returns-management/returns-discounts-management']);
         },
         error: () => {
           alert("حدث خطأ أثناء التعديل");
         }
       });
   }
-
-
-
 }

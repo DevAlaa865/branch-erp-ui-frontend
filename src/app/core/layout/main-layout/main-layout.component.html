@@ -1,287 +1,89 @@
+<div class="flex h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 text-white overflow-hidden"
+     (window:resize)="onResize($event)">
 
-<div class="relative min-h-screen overflow-hidden">
-<img 
-  src="assets/backgroundImage/logo4.jpg"
-  class="absolute inset-0 w-full h-full object-cover object-[center_top]"
-/>
-  <!-- Overlay -->
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="flex h-screen relative z-10">
   <!-- Sidebar -->
-  <aside id="sidebar"
-         class="w-[220px] bg-surface border-r border-custom flex flex-col h-full absolute z-30 md:relative transform -translate-x-full md:translate-x-0 shadow-lg md:shadow-none transition-transform duration-300"
-         [ngClass]="{ 'translate-x-0': isSidebarOpen }">
+  <aside
+    class="w-[300px] h-screen flex flex-col bg-gradient-to-b from-gray-900/95 to-gray-800/85 backdrop-blur-xl border-r border-white/10 shadow-2xl rounded-r-2xl p-6 space-y-8 fixed md:relative z-50 transform transition-all duration-500"
+    [class.-translate-x-full]="!isSidebarOpen && isMobile"
+    [class.translate-x-0]="isSidebarOpen">
 
     <!-- Logo -->
-<div class="h-[80px] flex items-center px-6 border-b border-custom shrink-0">
-  <div class="flex items-center gap-3 text-primary-custom">
-
-    <!-- LOGO HERE -->
-    <div class="w-25 h-25 rounded-xl overflow-hidden shadow-md flex items-center justify-center">
-      <img src="assets/logo/season-logo.png" alt="Logo" class="w-full h-full object-contain" />
-    </div>
-
- 
-  </div>
-
-  <!-- Mobile Close Btn -->
-  <button class="md:hidden ml-auto btn-icon text-main" (click)="toggleSidebar()">
-    <iconify-icon icon="solar:close-circle-bold-duotone" width="24"></iconify-icon>
-  </button>
-</div>
-
-
-    <!-- Navigation -->
-    <div class="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
-
-      <div class="text-caption px-4 mb-3">القائمة الرئيسية</div>
-
-      <a routerLink="/dashboard"
-         routerLinkActive="active"
-         class="nav-item"
-         (click)="closeSidebar()">
-        <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon>
-        <span>ادارة الفروع</span>
-      </a>
-
-      <!-- <a routerLink="/branches/daily-sales"
-         routerLinkActive="active"
-         class="nav-item"
-         (click)="closeSidebar()">
-        <iconify-icon icon="solar:receipt-bold-duotone"></iconify-icon>
-        <span>يوميات الفروع</span>
-      </a> -->
-
-      <a
-      *hasPermission="'Permissions.Manage'"
-       routerLink="/reports/returns-discounts-management"
-         routerLinkActive="active"
-         class="nav-item"
-         (click)="closeSidebar()">
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>إدارة المرتجعات والخصومات</span>
-      </a>
-
-     <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/branches/daily-performance"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>عرض تارجت الفروع</span>
-      </a>
-     <!--  <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/employees/targets"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>عرض تارجت الموظفين</span>
-      </a> -->
-       <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/reports/branch-period-report"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير تارجت فرع خلال فترة</span>
-      </a>
-           <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/branches/branch-sales-daily-list"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير بيانات فرع</span>
-      </a>
-       <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/reports/branch-daily-difference-report"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير فرق الفروع</span>
-      </a>
-       <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/branches/branch-control-issues"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير الرقابه</span>
-      </a>
-         <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/branches/branch-control-manager-report"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير المدير نايل على الرقابه</span>
-      </a>
-      <a
-      *hasPermission="'Permissions.Manage'"
-        routerLink="/branches/account-control-issues-report"
-         routerLinkActive="active"
-         class="nav-item" >
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير الحسابات على الرقابه</span>
-      </a>
-     <a
-      *hasPermission="'Permissions.Manage'"
-       routerLink="/branches/daily-performance-target-upload"
-         routerLinkActive="active"
-         class="nav-item     
-         ">
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>رفع ملف التارجت</span>
-      </a>
-
-       <a
-      *hasPermission="'Permissions.Manage'"
-       routerLink="/returns-upload"
-         routerLinkActive="active"
-         class="nav-item     
-         ">
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>رفع ملف المرتجعات</span>
-      </a>
-       <a
-      *hasPermission="'Permissions.Manage'"
-       routerLink="/reports/branch-network-shortage"
-         routerLinkActive="active"
-         class="nav-item     
-         ">
-        <iconify-icon icon="solar:chart-2-bold-duotone"></iconify-icon>
-        <span>تقرير الشبكة والعجوزات للفروع</span>
-      </a>
-      <a 
-      *hasPermission="'Permissions.Manage'"
-      routerLink="/reports/branch-daily-summary"
-         routerLinkActive="active"
-         class="nav-item"
-         (click)="closeSidebar()">
-        <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
-        <span>تقرير يوميات الفروع</span>
-      </a>
-       <a 
-      *hasPermission="'Permissions.Manage'"
-      routerLink="/daily-returns"
-         routerLinkActive="active"
-         class="nav-item"
-         (click)="closeSidebar()">
-        <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
-        <span>تقرير المرتجعات اليوميه</span>
-      </a>
-
-    </div>
-
-    <!-- User Profile -->
-    <div class="p-5 border-t border-custom shrink-0 bg-[var(--bg)] m-4 rounded-xl">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-primary-custom border-2 border-surface shadow-sm"
-             style="background-color: var(--primary-light);">
-          {{ userName?.charAt(0) }}
-        </div>
-
-        <div class="flex-1 overflow-hidden">
-          <div class="text-sm font-bold truncate text-[var(--text-main)]">{{ userName }} </div>
-          <div class="text-xs font-medium text-[var(--text-tertiary)] truncate">{{ roles[0] }}</div>
-        </div>
-
-        <button class="btn-icon text-danger hover:bg-danger-light w-8 h-8" (click)="logout()">خروج
-          <iconify-icon icon="solar:logout-bold-duotone" width="20"></iconify-icon>
-        </button>
+    <div class="flex items-center justify-center mb-2 animate-fade-zoom">
+      <div class="w-24 h-24 rounded-xl overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300">
+        <img src="assets/logo/season-logo.png" alt="Logo" class="w-full h-full object-contain" />
       </div>
     </div>
 
+    <!-- Navigation -->
+    <nav class="flex flex-col space-y-3 animate-fade-slide flex-1">
+      <span class="text-sm font-semibold text-white/80 tracking-wide mb-3 border-b border-white/10 pb-2">
+        القائمة الرئيسية
+      </span>
+
+      <li *hasPermission="['Permissions.Manage', 'Finance.View']" [routerLink]="['revenue-management']" class="nav-link">إدارة الإيرادات</li>
+      <li *hasPermission="['Permissions.Manage', 'Returns.View']"  [routerLink]="['returns-management']" class="nav-link">إدارة اعتماد الخصومات والمرتجعات</li>
+      <li *hasPermission="['Permissions.Manage', 'Development.View']" [routerLink]="['control-management']" class="nav-link">إدارة الرقابة</li>
+      <li *hasPermission="'Permissions.Manage'" [routerLink]="['general-management']" class="nav-link">الإدارة العامة</li>
+      <li *hasPermission="'dashbord.dailysails'" [routerLink]="['dashboard']" class="nav-link">إدارة الفروع</li>
+    </nav>
+
+    <!-- Divider -->
+    <div class="w-full h-[1px] bg-white/10 my-4"></div>
+
+    <!-- User Box -->
+    <div class="bg-white/10 backdrop-blur-md rounded-xl p-4 flex items-center gap-3 border border-white/20 hover:bg-white/20 transition-all duration-300 animate-fade-up">
+      <div class="w-12 h-12 rounded-full flex items-center justify-center font-bold bg-white/20 border border-white/30 shadow">
+        {{ userName?.charAt(0) }}
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <div class="text-sm font-bold truncate">{{ userName }}</div>
+        <div class="text-xs opacity-80 truncate">{{ roles[0] }}</div>
+      </div>
+      <button class="text-red-300 hover:text-red-500 transition" (click)="logout()">
+        <iconify-icon icon="solar:logout-bold-duotone" width="22"></iconify-icon>
+      </button>
+    </div>
   </aside>
 
-  <!-- Overlay for mobile -->
-<div id="mobile-overlay"
-     class="fixed inset-0 bg-[var(--surface)] bg-opacity-60 backdrop-blur-md z-20 md:hidden"
-     [class.hidden]="!isSidebarOpen"
-     (click)="closeSidebar()">
-</div>
-
-
+  <!-- Overlay Mobile -->
+  <div *ngIf="isSidebarOpen && isMobile"
+       class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 animate-fade"
+       (click)="toggleSidebar()">
+  </div>
 
   <!-- Main Content -->
-  <div class="relative flex-1 flex flex-col z-10">
+  <div class="flex-1 flex flex-col relative ml-[300px] md:ml-0">
 
     <!-- Header -->
-<header class="h-[80px] bg-surface border-b border-custom flex items-center px-6 shrink-0 z-[9999] fixed top-0 w-full">
+    <header class="h-[80px] bg-white/30 backdrop-blur-xl border-b border-gray-300/40 flex items-center justify-between px-8 shadow-lg text-gray-800">
+      <button class="md:hidden text-gray-800 bg-white/40 backdrop-blur-md p-2 rounded-lg shadow hover:bg-white/60 transition"
+              (click)="toggleSidebar()">
+        <iconify-icon icon="solar:hamburger-menu-bold-duotone" width="26"></iconify-icon>
+      </button>
 
-  <!-- 1) زرار التوجل (الشمال) -->
-  <button class="btn-icon md:hidden text-[var(--text-main)]" (click)="toggleSidebar()">
-    <iconify-icon icon="solar:hamburger-menu-bold-duotone" width="26"></iconify-icon>
-  </button>
+      <h1 class="text-xl font-bold">لإدارة الأقسام الداخلية</h1>
 
-  <!-- 2) مساحة مرنة تفصل بين التوجل وباقي العناصر -->
-  <div class="flex-1"></div>
-
-  <!-- 3) العناصر اللي عايزها يمين -->
-  <div class="flex items-center gap-6 pr-6 lg:mr-40">
-
-    <!-- العنوان -->
-<div class="flex-1 flex justify-center ">
-  <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 
-              text-lg sm:text-2xl font-bold text-[var(--text-main)] 
-              text-center sm:text-right">
-
-    <!-- العنوان -->
-    <div class="flex items-center gap-2">
-  
-      <span class="leading-tight header-title">
-        لإدارة الأقسام الداخلية
-      </span>
-    </div>
-
-    <!-- الترحيب على الشمال -->
-    <div class="flex items-center gap-2 text-base sm:text-xl">
-
-      مرحباً،
-
+      <div class="flex items-center gap-4">
+        <span class="text-lg font-semibold">مرحباً،
       <ng-container *ngIf="auth.getRoles().includes('BranchManagement'); else showUserName">
         {{ decodeArabic(auth.getBranchName()!) }}
-      </ng-container>
+       </ng-container>
 
       <ng-template #showUserName>
         {{ auth.getUserName() }}
       </ng-template>
-
-      <iconify-icon icon="solar:hand-stars-bold-duotone" class="text-[#FFC107]"></iconify-icon>
-
-    </div>
-
-  </div>
-</div>
-
-
-    <!-- زرار اللايت/دارك -->
-    <button id="theme-toggle"
-            class="btn-icon bg-[var(--bg)] rounded-full hover:bg-[var(--border)]"
-            (click)="toggleTheme()">
-    </button>
-
-    <!-- النوتيفيكيشن -->
-    <button class="btn-icon relative bg-[var(--bg)] rounded-full hover:bg-[var(--border)]">
-      <iconify-icon icon="solar:bell-bold-duotone" width="22" class="text-[var(--text-main)]"></iconify-icon>
-      <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-[#DC3545] rounded-full border-2 border-surface"></span>
-    </button>
-
-  </div>
-
-</header>
-
-
+        
+      </span>
+        <iconify-icon icon="solar:hand-stars-bold-duotone" class="text-yellow-500"></iconify-icon>
+      </div>
+    </header>
 
     <!-- Page Content -->
-<main class="mt-[80px] flex-1 overflow-y-auto p-5 sm:p-8">
-  
-    <router-outlet></router-outlet>
- 
-</main>
+    <main class="flex-1 overflow-y-auto p-8 bg-gradient-to-br from-gray-50 to-gray-200 backdrop-blur-md rounded-l-2xl shadow-inner">
+      <router-outlet></router-outlet>
+    </main>
 
   </div>
-
 </div>
+
+

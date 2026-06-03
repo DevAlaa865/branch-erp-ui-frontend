@@ -1,0 +1,53 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+
+  <!-- اعتماد داوود الخصومات والمرتجعات -->
+  <div
+    class="group p-6 bg-gradient-to-br from-rose-500 to-rose-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['returns-discounts-management']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📥
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">اعتماد داوود الخصومات والمرتجعات</h3>
+        <p class="text-sm opacity-90">عرض اليوميات للفروع لاعتماد الخصومات والمرتجعات — داوود</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- رفع ملف المرتجعات اليومي -->
+  <div
+    class="group p-6 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['returns-upload']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">رفع ملف المرتجعات اليومي</h3>
+        <p class="text-sm opacity-90">رفع ملف Excel للمرتجعات اليومية</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- تقرير المرتجعات -->
+  <div
+    class="group p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['daily-returns']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📊
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير المرتجعات</h3>
+        <p class="text-sm opacity-90">عرض المرتجعات بمختلف أنواعها لأي تاريخ يتم تحديده</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<router-outlet></router-outlet>
