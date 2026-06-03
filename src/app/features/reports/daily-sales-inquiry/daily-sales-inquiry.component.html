@@ -1,418 +1,343 @@
-<div class="page-wrapper">
+<div class="page-wrapper mx-auto max-w-5xl p-4">
 
-<div class="space-y-6">
-  <div class="flex justify-start mb-2 back-btn-wrapper">
-  <!--   <button
-      (click)="goBackToDashboard()"
-      class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition text-sm font-medium">
-      <i class="fa fa-arrow-right"></i>
-      <span>رجوع للرئيسيه</span>
-    </button> -->
-  </div>
-  <!-- هيدر الشاشة -->
-  <div class="bg-[var(--panel-bg)] backdrop-blur-xl p-4 rounded-2xl shadow-lg border border-[var(--panel-border)] text-[var(--text)]">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
-        <i class="fa fa-search"></i>
-      </div>
-      <div>
-       <h2 class="text-lg md:text-xl font-bold text-[var(--text)]">
-        استعلام يومية المبيعات
-      </h2>
+  <!-- Header -->
+  <div class="bg-white shadow-lg rounded-2xl border border-slate-200 p-5 flex items-center gap-4">
+    <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md">
+      <i class="fa fa-search text-lg"></i>
+    </div>
 
-      <p class="text-xs md:text-sm text-[var(--label-text)]">
-        اختر التاريخ لعرض يومية المبيعات الخاصة بفرعك.
-      </p>
-      </div>
+    <div>
+      <h2 class="text-xl font-bold text-slate-800">استعلام يومية المبيعات</h2>
+      <p class="text-sm text-slate-500">اختر التاريخ لعرض يومية المبيعات الخاصة بفرعك.</p>
     </div>
   </div>
 
-  <!-- فورم الاستعلام -->
-  <div class="bg-white/90 backdrop-blur-xl p-4 rounded-2xl shadow-md border border-blue-200">
+  <!-- Search Form -->
+  <div class="bg-white shadow-md rounded-2xl border border-slate-200 p-5 mt-5">
 
-    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+    <form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
       <!-- التاريخ -->
-      <div class="space-y-1 text-center">
-       <label class="block text-sm md:text-base text-[var(--label-strong)] mb-1">التاريخ</label>
-        <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 h-[46px] shadow-sm">
-          <i class="fa fa-calendar text-blue-500 text-base"></i>
-          <input type="date"
-                 formControlName="salesDate"
-                 class="w-full text-center bg-white text-slate-800 rounded-lg px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">التاريخ</label>
+        <div class="flex items-center gap-2 border border-slate-300 rounded-lg bg-white px-3 h-12 shadow-sm">
+          <i class="fa fa-calendar text-blue-500"></i>
+          <input
+            type="date"
+            formControlName="salesDate"
+            class="w-full bg-transparent text-slate-800 text-center outline-none"
+          />
         </div>
       </div>
 
       <!-- الفرع -->
-<!-- الفرع -->
-<div class="space-y-1 text-center">
-<label class="block text-sm md:text-base text-[var(--label-strong)] mb-1">الفرع</label>
- 
-<div *ngIf="isBranchUser; else centralBranch"
-    class="flex items-center gap-2 rounded-lg border px-3 py-2 h-[46px]
-            bg-white/20 dark:bg-rose-500/80
-            text-slate-800 dark:text-black font-bold">
-    <i class="fa fa-store text-blue-500 text-base"></i>
-    <input type="text"
-           [value]="branchName"
-           class="w-full bg-[var(--input-bg)] text-[var(--input-text)] text-center"
-           readonly>
-  </div>
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1">الفرع</label>
 
-  <ng-template #centralBranch>
-    <div
-      class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white/20 px-3 py-2 h-[46px] shadow-sm">
+        <!-- مستخدم فرع -->
+        <div *ngIf="isBranchUser; else centralBranch"
+             class="flex items-center gap-2 border border-slate-300 rounded-lg bg-slate-50 px-3 h-12 shadow-sm font-bold text-slate-800">
+          <i class="fa fa-store text-blue-500"></i>
+          <input type="text" [value]="branchName" readonly class="w-full bg-transparent text-center" />
+        </div>
 
-      <i class="fa fa-store text-blue-500 text-base"></i>
+        <!-- مستخدم مركزي -->
+        <ng-template #centralBranch>
+          <div class="flex items-center gap-2 border border-slate-300 rounded-lg bg-white px-3 h-12 shadow-sm">
+            <i class="fa fa-store text-blue-500"></i>
 
-      <app-custom-select
-        class="w-full ng-select-custom text-sm md:text-base"
-        [items]="branches"
-        bindLabel="branchName"
-        bindValue="id"
-        placeholder="الرجاء اختيار الفرع"
-      [control]="form.get('branchId')"
-        [searchable]="true"
-        [clearable]="false"
-        [dropdownPosition]="'bottom'">
-      </app-custom-select>
+            <app-custom-select
+              class="w-full"
+              [items]="branches"
+              bindLabel="branchName"
+              bindValue="id"
+              placeholder="اختر الفرع"
+              [control]="form.get('branchId')"
+              [searchable]="true"
+              [clearable]="false"
+              [dropdownPosition]="'bottom'">
+            </app-custom-select>
+          </div>
 
-    </div>
-
-    <p *ngIf="form.get('branchId')?.touched && !form.get('branchId')?.value"
-       class="text-red-600 text-xs mt-1 font-medium">
-      الرجاء اختيار الفرع
-    </p>
-  </ng-template>
-</div>
-
-
-
+          <p *ngIf="form.get('branchId')?.touched && !form.get('branchId')?.value"
+             class="text-red-600 text-xs mt-1">
+            الرجاء اختيار الفرع
+          </p>
+        </ng-template>
+      </div>
 
       <!-- زر الاستعلام -->
-      <div class="flex md:justify-start">
+      <div class="flex items-end">
         <button
           type="button"
           (click)="search()"
           [disabled]="isLoading"
-          class="w-full md:w-auto px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm md:text-base font-semibold hover:bg-blue-700 disabled:opacity-60 transition flex items-center justify-center gap-2">
+          class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition disabled:opacity-50 flex items-center justify-center gap-2">
           <i class="fa fa-magnifying-glass"></i>
-          <span class="truncate">استعلام يومية المبيعات</span>
+          <span>استعلام</span>
         </button>
       </div>
 
     </form>
 
     <!-- حالة التحميل / الخطأ -->
-    <div class="mt-4">
-      <p *ngIf="isLoading" class="text-xs text-slate-500">
-        جارٍ جلب بيانات التقرير...
-      </p>
-      <p *ngIf="errorMessage" class="text-xs text-red-600 font-medium">
-        {{ errorMessage }}
-      </p>
+    <div class="mt-3">
+      <p *ngIf="isLoading" class="text-xs text-slate-500">جارٍ جلب البيانات...</p>
+      <p *ngIf="errorMessage" class="text-xs text-red-600 font-medium">{{ errorMessage }}</p>
     </div>
 
   </div>
+<!-- تقرير اليومية -->
+<div *ngIf="report" class="mt-6 animate-fade-in-up">
 
-  <!-- مكان عرض التقرير -->
-<div *ngIf="report" class="animate-fade-in-up">
+  <!-- كارت معلومات أساسية -->
+  <div class="bg-blue-600 text-white rounded-2xl shadow-lg p-5 border border-blue-700">
 
-  <!-- معلومات أساسية -->
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-md p-3 mb-6"
-    style="
-       background:#687be3 !important;
-       border-color:#333 !important;
-          color:#fff !important;"
-  >
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-center font-bold">
 
-    <!-- 🔥 4 أعمدة في صف واحد -->
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-start font-bold text-center">
       <div>
-        <p class="text-xs ">التاريخ</p>
-        <p class="text-lg font-semibold text-slate-800">{{ report.salesDate }}</p>
+        <p class="text-xs opacity-80">التاريخ</p>
+        <p class="text-lg">{{ report.salesDate }}</p>
       </div>
 
       <div>
-        <p class="text-xs ">الفرع</p>
-        <p class="text-lg font-semibold text-slate-800">{{ report.branchName }}</p>
+        <p class="text-xs opacity-80">الفرع</p>
+        <p class="text-lg">{{ report.branchName }}</p>
       </div>
 
       <div>
-        <p class="text-xs ">المشرف</p>
-        <p class="text-lg font-semibold text-slate-800">{{ report.supervisorName }}</p>
+        <p class="text-xs opacity-80">المشرف</p>
+        <p class="text-lg">{{ report.supervisorName }}</p>
       </div>
 
-      <!-- زر عرض / تحميل الهيدر -->
-      <div class="flex items-center justify-end">
-        <ng-container *ngIf="report!.attachmentPath; else noHeaderFile">
-          <a (click)="openImageAsPdf(report!.attachmentPath)"
-            class="flex flex-wrap items-center gap-1 text-xs hover:underline cursor-pointer break-words">
-               <i class="fa fa-file-arrow-down"></i>
-            <span class="text-sm md:text-base break-words">عرض / تحميل الموازنه والشبكه</span>
+      <div class="flex items-center justify-center">
+        <ng-container *ngIf="report.attachmentPath; else noHeaderFile">
+          <a (click)="openImageAsPdf(report.attachmentPath)"
+             class="flex items-center gap-1 text-sm underline cursor-pointer">
+            <i class="fa fa-file-arrow-down"></i>
+            <span>عرض / تحميل الموازنة</span>
           </a>
         </ng-container>
 
         <ng-template #noHeaderFile>
-          <span class="text-slate-400 text-xs">لا يوجد مرفق للهيدر</span>
+          <span class="text-xs opacity-70">لا يوجد مرفق</span>
         </ng-template>
       </div>
 
-  <!-- ⭐ هنا نضيف اسم مدخل البيانات -->
-  <div class="bg-white/90 backdrop-blur-xl p-4 rounded-2xl shadow-md border border-blue-200 mt-4">
-    <label class="block text-sm md:text-base text-[var(--label-strong)] mb-1">
-    اسم  مدخل البيانات
-    </label>
-
-    <div class="flex items-center gap-2 rounded-lg border border-blue-300 bg-white px-3 py-2 shadow-sm">
-      <i class="fa fa-user-pen text-blue-500 text-base"></i>
-      <input type="text"
-             [value]="report.dataEntryUserName || '—'"
-             class="w-full bg-transparent text-base text-slate-800 focus:outline-none"
-             readonly>
     </div>
-  </div>
+
+    <!-- مدخل البيانات -->
+    <div class="bg-white text-slate-800 rounded-xl shadow p-4 border border-blue-200 mt-4">
+      <label class="block text-sm font-semibold mb-1">اسم مدخل البيانات</label>
+
+      <div class="flex items-center gap-2 border border-blue-300 rounded-lg bg-white px-3 h-12 shadow-sm">
+        <i class="fa fa-user-pen text-blue-500"></i>
+        <input type="text"
+               [value]="report.dataEntryUserName || '—'"
+               readonly
+               class="w-full bg-transparent outline-none text-center font-semibold" />
+      </div>
     </div>
 
   </div>
 
   <!-- كروت الأرقام الأساسية -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
 
-    <!-- نقدية -->
-    <div class="flex flex-col items-center gap-1">
-    <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">نقدية</p>
-
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.cashAmount | number:'1.0-2' }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">نقدية</p>
+      <div class="bg-white border border-blue-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.cashAmount | number:'1.0-2' }}</p>
       </div>
     </div>
 
-    <!-- شبكة -->
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">شبكة</p>
-      <div class="bg-white border border-sky-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.networkAmount | number:'1.0-2' }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">شبكة</p>
+      <div class="bg-white border border-sky-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.networkAmount | number:'1.0-2' }}</p>
       </div>
     </div>
 
-    <!-- آجل -->
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">آجل / Credit</p>
-      <div class="bg-white border border-amber-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.creditAmount | number:'1.0-2' }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">آجل / Credit</p>
+      <div class="bg-white border border-amber-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.creditAmount | number:'1.0-2' }}</p>
       </div>
     </div>
 
-    <!-- إجمالي المبيعات -->
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">إجمالي البيع</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.totalSales | number:'1.0-2' }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">إجمالي البيع</p>
+      <div class="bg-white border border-blue-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.totalSales | number:'1.0-2' }}</p>
       </div>
     </div>
 
   </div>
 
   <!-- إجماليات إضافية -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
 
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">الإجمالي الكلي</p>
-      <div class="bg-white border border-purple-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.grandTotal | number:'1.0-2' }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">الإجمالي الكلي</p>
+      <div class="bg-white border border-purple-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.grandTotal | number:'1.0-2' }}</p>
       </div>
     </div>
 
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">إجمالي عدد الفواتير</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full ">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.totalInvoicesCount | number   }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">عدد الفواتير</p>
+      <div class="bg-white border border-blue-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.totalInvoicesCount | number }}</p>
       </div>
     </div>
 
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">عدد القطع</p>
-      <div class="bg-white border border-blue-300 rounded-lg shadow px-4 py-2 flex items-center justify-center w-full">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.totalQuantities | number }}
-        </p>
+    <div class="text-center">
+      <p class="text-sm text-slate-500">عدد القطع</p>
+      <div class="bg-white border border-blue-300 rounded-xl shadow p-4">
+        <p class="text-xl font-bold text-slate-900">{{ report.totalQuantities | number }}</p>
       </div>
     </div>
 
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-sm text-[var(--label-text)] leading-none m-0 text-center">الفرق</p>
-      <div class="bg-white border rounded-lg shadow px-4 py-2 flex items-center justify-center w-full"
+    <div class="text-center">
+      <p class="text-sm text-slate-500">الفرق</p>
+      <div class="bg-white rounded-xl shadow p-4 border"
            [ngClass]="{
              'border-emerald-300': report.difference === 0,
              'border-rose-300': report.difference !== 0
            }">
-        <p class="text-xl font-bold text-slate-900 leading-none m-0 text-center">
-          {{ report.difference | number:'1.0-2' }}
-        </p>
+        <p class="text-xl font-bold text-slate-900">{{ report.difference | number:'1.0-2' }}</p>
       </div>
     </div>
 
   </div>
 
-<!-- تفاصيل العجز -->
-<div class="rounded-2xl border shadow p-5 mb-6"
-     style="
-       background:#687be3 !important;
-       border-color:#333 !important;
-       color:#fff !important;
-     "
-     *ngIf="report.shortageDetails && report.shortageDetails.length">
+  <!-- تفاصيل العجز -->
+  <div *ngIf="report.shortageDetails?.length"
+       class="bg-blue-600 text-white rounded-2xl shadow-lg p-5 border border-blue-700 mt-6">
 
-  <div class="flex items-center justify-between mb-3">
-    <h3 class="text-base md:text-lg font-semibold flex items-center gap-2" style="color:#fff">
-      <i class="fa fa-triangle-exclamation text-amber-500"></i>
-      <span>تفاصيل العجز</span>
-    </h3>
-  </div>
-
-  <div class="overflow-x-auto shortage-table-mobile">
-    <table class="min-w-full text-xs md:text-sm text-right" style="width:100%">
-      <thead class="text-center">
-        <tr style="background:#111; color:#fff">
-          <th class="px-4 py-3 text-lg text-right">نوع العجز</th>
-          <th class="px-4 py-3 text-lg text-right">مبلغ </th>
-          <th *ngIf="showEmployeeColumn" class="px-4 py-3 text-lg text-right">الموظف</th>
-          <th class="px-4 py-3 text-lg text-right">مرفقات</th>
-          <th class="px-4 py-3 text-lg text-right">اعتماد</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let s of report.shortageDetails"
-            style="border-bottom:1px solid #333"
-            class="hover:bg-[#1a1a1a] transition">
-
-          <td class="px-4 py-3 text-lg" style="color:#fff">
-            {{ s.shortageTypeName }}
-          </td>
-
-          <td class="px-4 py-3 text-lg" style="color:#fff">
-            {{ s.amount | number:'1.0-2' }}
-          </td>
-
-          <td *ngIf="showEmployeeColumn" class="px-4 py-3 text-lg" style="color:#fff">
-            <span *ngIf="s.employeeName">{{ s.employeeName }}</span>
-          </td>
-
-          <td class="px-4 py-3 font-bold text-lg" style="color:#fff">
-            <ng-container *ngIf="s.attachmentPath; else noFile">
-              <a (click)="openImageAsPdf(s.attachmentPath)"
-                 class="inline-flex items-center gap-1 cursor-pointer"
-                 style="color:#d0dce9">
-                <i class="fa fa-file-arrow-down"></i>
-                <span class="text-lg">تحميل مرفقات</span>
-              </a>
-            </ng-container>
-
-            <ng-template #noFile>
-              <span style="color:#aaa" class="text-sm">لا يوجد مرفق</span>
-            </ng-template>
-          </td>
-
-       <td class="px-4 py-3 text-lg">
-
-  <!-- مرتجعات + استبدال → isReturnApproved -->
-  <ng-container *ngIf="s.shortageTypeId == 3 || s.shortageTypeId == 6">
-    <input type="checkbox"
-           [(ngModel)]="s.isReturnApproved"
-           [disabled]="!canApproveShortages"
-           class="w-5 h-5">
-    <span class="ml-1">اعتماد</span>
-  </ng-container>
-
-  <!-- باقي الأنواع → isDiscountApproved -->
-  <ng-container *ngIf="s.shortageTypeId != 3 && s.shortageTypeId != 6">
-    <input type="checkbox"
-           [(ngModel)]="s.isDiscountApproved"
-           [disabled]="!canApproveShortages"
-           class="w-5 h-5">
-    <span class="ml-1">اعتماد</span>
-  </ng-container>
-
-</td>
-
-
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-</div>
-
-
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-  <!-- ملاحظات المشرف -->
-  <div class="bg-white rounded-2xl border border-blue-200 shadow p-5"
-       *ngIf="report.supervisorNotes">
-
-    <h3 class="text-base md:text-lg font-semibold text-slate-900 mb-2 flex items-center gap-2">
-      <i class="fa fa-note-sticky text-sky-500"></i>
-      <span>ملاحظات المشرف</span>
+    <h3 class="text-lg font-semibold flex items-center gap-2 mb-4">
+      <i class="fa fa-triangle-exclamation text-amber-400"></i>
+      تفاصيل العجز
     </h3>
 
-    <p class="text-sm text-slate-700 leading-relaxed whitespace-pre-line">
-      {{ report.supervisorNotes }}
-    </p>
+    <div class="overflow-x-auto">
+<table class="w-full text-sm text-right border-collapse">
+  <thead>
+    <tr class="bg-gradient-to-r from-blue-700 to-blue-500 text-white text-center">
+      <th class="px-4 py-3 font-semibold text-center">نوع العجز</th>
+      <th class="px-4 py-3 font-semibold text-center">المبلغ</th>
+      <th *ngIf="showEmployeeColumn" class="px-4 py-3 font-semibold text-center">الموظف</th>
+      <th class="px-4 py-3 font-semibold text-center">مرفقات</th>
+      <th class="px-4 py-3 font-semibold text-center">اعتماد</th>
+    </tr>
+  </thead>
+
+  <tbody class="divide-y divide-blue-400">
+    <tr *ngFor="let s of report.shortageDetails"
+        class="hover:bg-blue-600 transition text-center">
+
+      <!-- نوع العجز -->
+      <td class="px-4 py-3 text-white font-medium text-center">
+        {{ s.shortageTypeName }}
+      </td>
+
+      <!-- المبلغ -->
+      <td class="px-4 py-3 text-blue-100 font-semibold text-center">
+        {{ s.amount | number:'1.0-2' }}
+      </td>
+
+      <!-- الموظف -->
+      <td *ngIf="showEmployeeColumn" class="px-4 py-3 text-white text-center">
+        {{ s.employeeName || '' }}
+      </td>
+
+      <!-- المرفقات -->
+      <td class="px-4 py-3 text-center">
+        <ng-container *ngIf="s.attachmentPath; else noFile">
+          <a (click)="openImageAsPdf(s.attachmentPath)"
+             class="text-blue-200 underline cursor-pointer inline-flex items-center justify-center gap-1">
+            <i class="fa fa-file-arrow-down"></i>
+            تحميل
+          </a>
+        </ng-container>
+
+        <ng-template #noFile>
+          <span class="text-blue-100 text-xs">لا يوجد</span>
+        </ng-template>
+      </td>
+
+      <!-- الاعتماد -->
+      <td class="px-4 py-3 text-center">
+        <ng-container *ngIf="s.shortageTypeId == 3 || s.shortageTypeId == 6">
+          <input type="checkbox"
+                 [(ngModel)]="s.isReturnApproved"
+                 [disabled]="!canApproveShortages"
+                 class="w-5 h-5 accent-emerald-400 cursor-pointer" />
+        </ng-container>
+
+        <ng-container *ngIf="s.shortageTypeId != 3 && s.shortageTypeId != 6">
+          <input type="checkbox"
+                 [(ngModel)]="s.isDiscountApproved"
+                 [disabled]="!canApproveShortages"
+                 class="w-5 h-5 accent-emerald-400 cursor-pointer" />
+        </ng-container>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+
+
+    </div>
 
   </div>
 
-  <!-- ملاحظات إدارة المرتجعات والخصومات -->
-  <div class="bg-white rounded-2xl border border-emerald-300 shadow p-5"
-       *ngIf="report.shortageDetails.length > 0">
+  <!-- ملاحظات -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
-    <h3 class="text-base md:text-lg font-semibold text-emerald-700 mb-2 flex items-center gap-2">
-      <i class="fa fa-clipboard-check text-emerald-500"></i>
-      <span>ملاحظات إدارة المرتجعات والخصومات</span>
-    </h3>
+    <!-- ملاحظات المشرف -->
+    <div *ngIf="report.supervisorNotes"
+         class="bg-white rounded-2xl border border-slate-200 shadow p-5">
 
-    <textarea
-      [(ngModel)]="report.shortageDetails[0].returnNotes"
-      [disabled]="!canApproveShortages"
-      class="w-full border border-emerald-300 rounded-lg p-3 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500"
-      rows="4"
-      placeholder="اكتب ملاحظات إدارة المرتجعات هنا..."
-    ></textarea>
+      <h3 class="text-lg font-semibold text-slate-800 mb-2 flex items-center gap-2">
+        <i class="fa fa-note-sticky text-blue-500"></i>
+        ملاحظات المشرف
+      </h3>
+
+      <p class="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+        {{ report.supervisorNotes }}
+      </p>
+
+    </div>
+
+    <!-- ملاحظات إدارة المرتجعات -->
+    <div *ngIf="report.shortageDetails.length"
+         class="bg-white rounded-2xl border border-emerald-300 shadow p-5">
+
+      <h3 class="text-lg font-semibold text-emerald-700 mb-2 flex items-center gap-2">
+        <i class="fa fa-clipboard-check text-emerald-500"></i>
+        ملاحظات إدارة المرتجعات والخصومات
+      </h3>
+
+      <textarea
+        [(ngModel)]="report.shortageDetails[0].returnNotes"
+        [disabled]="!canApproveShortages"
+        rows="4"
+        class="w-full border border-emerald-300 rounded-lg p-3 text-sm text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500"
+        placeholder="اكتب ملاحظات إدارة المرتجعات هنا..."></textarea>
+
+    </div>
 
   </div>
 
-</div>
+  <!-- زر التعديل -->
+  <div class="mt-6 text-left">
+    <button
+      *ngIf="auth.hasPermission('Returns.View') || auth.hasPermission('Discounts.View')"
+      (click)="updateApprovals()"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow font-semibold">
+      تعديل
+    </button>
+  </div>
 
-
-</div>
-
-
-<div class="mt-4 text-left" *ngIf="report" >
-  <button class="px-6 py-2 bg-blue-600 text-white rounded-lg"
-    *ngIf="
-          auth.hasPermission('Returns.View') ||
-          auth.hasPermission('Discounts.View')
-       
-        "
-          (click)="updateApprovals()">
-    تعديل
-  </button>
-</div>
-
-
-</div>
 </div>
