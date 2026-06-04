@@ -15,3 +15,30 @@
 
 
 }
+
+/* جميع حقول الإدخال */
+input,
+select,
+textarea {
+  color: #000 !important;
+}
+
+/* النص المكتوب داخل البحث */
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+/* عناصر الـ dropdown */
+option {
+  color: #000 !important;
+  background: #fff !important;
+}
+.ng-select .ng-select-container {
+  color: #000 !important;
+}
+
+.ng-dropdown-panel .ng-option {
+  color: #000 !important;
+  background: #fff !important;
+}

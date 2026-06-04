@@ -275,7 +275,7 @@
       </button>
     </div>
 
-    <div formArrayName="shortageDetails" class="space-y-4">
+    <div formArrayName="shortageDetails" class="space-y-4 text-blue-600">
 
       <div *ngFor="let row of shortageDetails.controls; let i = index"
            [formGroupName]="i"
@@ -412,6 +412,9 @@
       <span>حفظ اليومية</span>
     </button>
   </div>
+
+
+</form>
 <!-- بوب أب نجاح الحفظ -->
 <div *ngIf="showSuccessPopup"
      class="fixed inset-0 flex items-center justify-center z-50">
@@ -446,5 +449,3 @@
     </div>
   </div>
 </div>
-
-</form>
