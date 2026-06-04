@@ -158,7 +158,7 @@ private baseUrl = API_BASE_URL;
 
           if (res.success) {
             this.message = 'تم إنشاء المستخدم بنجاح';
-            setTimeout(() => this.router.navigate(['/admin/users']), 800);
+            setTimeout(() => this.router.navigate(['/general-management/users']), 800);
           } else {
             this.message = res.message || 'حدث خطأ أثناء إنشاء المستخدم';
           }

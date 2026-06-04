@@ -30,41 +30,45 @@
         </div>
       </div>
 
-      <!-- الفرع -->
-      <div>
-        <label class="block text-sm font-semibold text-slate-700 mb-1">الفرع</label>
+    <!-- الفرع -->
+<div>
+  <label class="block text-sm font-semibold text-slate-700 mb-1">الفرع</label>
 
-        <!-- مستخدم فرع -->
-        <div *ngIf="isBranchUser; else centralBranch"
-             class="flex items-center gap-2 border border-slate-300 rounded-lg bg-slate-50 px-3 h-12 shadow-sm font-bold text-slate-800">
-          <i class="fa fa-store text-blue-500"></i>
-          <input type="text" [value]="branchName" readonly class="w-full bg-transparent text-center" />
-        </div>
+  <!-- مستخدم فرع -->
+  <div *ngIf="isBranchUser; else centralBranch"
+       class="flex items-center gap-2 border border-slate-300 rounded-lg bg-slate-50 px-3 h-12 shadow-sm font-bold text-slate-800">
+    <i class="fa fa-store text-blue-500"></i>
+    <input type="text"
+           [value]="branchName"
+           readonly
+           class="w-full bg-transparent text-center text-slate-800" />
+  </div>
 
-        <!-- مستخدم مركزي -->
-        <ng-template #centralBranch>
-          <div class="flex items-center gap-2 border border-slate-300 rounded-lg bg-white px-3 h-12 shadow-sm">
-            <i class="fa fa-store text-blue-500"></i>
+  <!-- مستخدم مركزي -->
+  <ng-template #centralBranch>
+    <div class="flex items-center gap-2 border border-slate-300 rounded-lg bg-white text-blue-600 px-3 h-12 shadow-sm relative">
+      <i class="fa fa-store text-blue-500"></i>
 
-            <app-custom-select
-              class="w-full"
-              [items]="branches"
-              bindLabel="branchName"
-              bindValue="id"
-              placeholder="اختر الفرع"
-              [control]="form.get('branchId')"
-              [searchable]="true"
-              [clearable]="false"
-              [dropdownPosition]="'bottom'">
-            </app-custom-select>
-          </div>
+      <app-custom-select
+        class="w-full ng-select-custom"
+        [items]="branches"
+        bindLabel="branchName"
+        bindValue="id"
+        placeholder="اختر الفرع"
+        [control]="form.get('branchId')"
+        [searchable]="true"
+        [clearable]="false"
+        [dropdownPosition]="'bottom'">
+      </app-custom-select>
+    </div>
 
-          <p *ngIf="form.get('branchId')?.touched && !form.get('branchId')?.value"
-             class="text-red-600 text-xs mt-1">
-            الرجاء اختيار الفرع
-          </p>
-        </ng-template>
-      </div>
+    <p *ngIf="form.get('branchId')?.touched && !form.get('branchId')?.value"
+       class="text-red-600 text-xs mt-1">
+      الرجاء اختيار الفرع
+    </p>
+  </ng-template>
+</div>
+
 
       <!-- زر الاستعلام -->
       <div class="flex items-end">

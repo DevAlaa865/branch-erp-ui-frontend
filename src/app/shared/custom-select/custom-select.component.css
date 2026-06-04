@@ -86,3 +86,19 @@
   display: block;
   min-width: 100%;
 }
+/* خانة البحث داخل ng-select */
+:host ::ng-deep .ng-select.ng-select-custom .ng-input input {
+  height: 28px !important;
+  font-size: 14px !important;
+  padding: 4px 6px !important;
+  margin: 0 !important;
+
+  /* 🔥 أهم سطرين */
+  color: #0f172a !important;        /* ← النص أسود */
+  background: #ffffff !important;   /* ← خلفية بيضا واضحة */
+}
+
+/* placeholder */
+:host ::ng-deep .ng-select.ng-select-custom .ng-input input::placeholder {
+  color: #64748b !important;        /* ← رمادي واضح */
+}
