@@ -94,7 +94,20 @@
       </div>
     </div>
   </div>
-
+  <div
+    class="group p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['/returns-management/daily-returns']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📊
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير المرتجعات</h3>
+        <p class="text-sm opacity-90">عرض المرتجعات بمختلف أنواعها لأي تاريخ يتم تحديده</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <router-outlet></router-outlet>
