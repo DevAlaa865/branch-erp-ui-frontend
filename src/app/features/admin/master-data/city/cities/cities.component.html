@@ -2,12 +2,12 @@
 
   <!-- العنوان + زر الإضافة -->
   <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-bold ">إدارة المناطق</h1>
+    <h1 class="text-2xl font-bold text-blue-800">إدارة المدن</h1>
 
     <button
       class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-sm shadow-md transition"
       (click)="startAdd()">
-      + إضافة منطقه جديدة
+      + إضافة مدينه جديدة
     </button>
   </div>
 
@@ -15,7 +15,7 @@
   <div class="flex justify-end">
     <input
       type="text"
-      placeholder="ابحث عن منطقه..."
+      placeholder="ابحث عن مدينه..."
       [(ngModel)]="searchTerm"
       (input)="applySearch()"
       class="w-64 border border-blue-300 rounded-xl px-4 py-2 text-sm text-blue-800 outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -27,16 +27,15 @@
        class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-4 animate-[fadeIn_0.3s_ease-out]">
 
     <h2 class="text-lg font-semibold text-blue-700">
-      {{ editMode ? 'تعديل منطقه' : 'إضافة منطقه جديدة' }}
+      {{ editMode ? 'تعديل مدينه' : 'إضافة مدينه جديدة' }}
     </h2>
 
-    <!-- ⭐⭐⭐ الفورم كله على سطر واحد ⭐⭐⭐ -->
     <form [formGroup]="form" (ngSubmit)="save()"
           class="flex flex-col md:flex-row md:items-end gap-4">
 
-      <!-- اسم المنطقه -->
+      <!-- اسم المدينه -->
       <div class="flex-1">
-        <label class="block text-xs text-blue-700 mb-1">اسم المنطقه</label>
+        <label class="block text-xs text-blue-700 mb-1">اسم المدينه</label>
         <input type="text"
                formControlName="name"
                class="w-full border border-blue-300 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition text-blue-800">
@@ -45,32 +44,32 @@
              class="text-red-600 text-xs mt-1">
 
           <span *ngIf="form.controls['name'].errors?.['required']">
-            اسم المنطقه مطلوب.
+            اسم المدينه مطلوب.
           </span>
 
           <span *ngIf="form.controls['name'].errors?.['pattern']">
-            اسم المنطقه يجب أن يحتوي على حروف فقط بدون أرقام أو رموز.
+            اسم المدينه يجب أن يحتوي على حروف فقط بدون أرقام أو رموز.
           </span>
 
         </div>
       </div>
 
-      <!-- اختيار الدولة -->
+      <!-- اختيار المنطقة -->
       <div class="flex-1">
-        <label class="block text-xs text-blue-700 mb-1">الدولة</label>
+        <label class="block text-xs text-blue-700 mb-1">المنطقة</label>
         <select
-          formControlName="countryId"
+          formControlName="regionId"
           class="w-full border border-blue-300 rounded-lg px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 transition text-blue-800 bg-white">
 
-          <option [ngValue]="null">اختر الدولة...</option>
-          <option *ngFor="let c of countries" [ngValue]="c.id">
-            {{ c.name }}
+          <option [ngValue]="null">اختر المنطقة...</option>
+          <option *ngFor="let r of regions" [ngValue]="r.id">
+            {{ r.name }}
           </option>
         </select>
 
-        <div *ngIf="form.controls['countryId'].invalid && form.controls['countryId'].touched"
+        <div *ngIf="form.controls['regionId'].invalid && form.controls['regionId'].touched"
              class="text-red-600 text-xs mt-1">
-          الدولة مطلوبة.
+          المنطقة مطلوبة.
         </div>
       </div>
 
@@ -95,18 +94,16 @@
  <!-- جدول المدن -->
 <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
 
-  <!-- لو مفيش بيانات -->
   <div *ngIf="pagedCities.length === 0" class="p-10 text-center text-blue-600 text-sm">
     لا توجد نتائج مطابقة.
   </div>
 
-  <!-- الجدول -->
   <table *ngIf="pagedCities.length > 0" class="w-full text-right text-sm">
     <thead class="bg-blue-100 text-blue-800">
       <tr>
-        <th class="px-4 py-3 text-right">كود المنطقه</th>
-        <th class="px-4 py-3 text-right">اسم المنطقه</th>
-        <th class="px-4 py-3 text-right">الدولة</th>
+        <th class="px-4 py-3 text-right">كود المدينه</th>
+        <th class="px-4 py-3 text-right">اسم المدينه</th>
+        <th class="px-4 py-3 text-right">المنطقة</th>
         <th class="px-4 py-3 text-right">إجراءات</th>
       </tr>
     </thead>
@@ -124,7 +121,7 @@
         </td>
 
         <td class="px-4 py-3 text-blue-700">
-          {{ c.countryName }}
+          {{ c.regionName }}
         </td>
 
         <td class="px-4 py-3 flex gap-3 justify-end">
@@ -194,6 +191,5 @@
   </div>
 
 </div>
-
 
 </div>

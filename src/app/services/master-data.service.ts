@@ -49,48 +49,58 @@ private baseUrl = `${API_BASE_URL}`;
     );
   }
 
-  // ============================
-  // Cities
-  // ============================
-  getCities(): Observable<ApiResponse<any[]>> {
-    return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/City`);
-  }
+// ============================
+// Cities
+// ============================
 
-  createCity(payload: { cityName: string; countryId: number }): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/City`, payload);
-  }
-
-  updateCity(id: number, payload: { cityName: string; countryId: number }): Observable<ApiResponse<any>> {
-    return this.http.put<ApiResponse<any>>(`${this.baseUrl}/City/${id}`, payload);
-  }
-
-  deleteCity(id: number): Observable<ApiResponse<any>> {
-    return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/City/${id}`);
-  }
-
-  // Areas (المناطق / الريجن)
-  // ============================
- getAreas() {
-  return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/Region`);
+getCities(): Observable<ApiResponse<any[]>> {
+  return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/City`);
 }
 
-createArea(payload: { areaName: string; cityId: number }) {
-  return this.http.post<ApiResponse<any>>(`${this.baseUrl}/Region`, {
-    regionName: payload.areaName,
-    cityId: payload.cityId
+createCity(payload: { cityName: string; regionId: number }): Observable<ApiResponse<any>> {
+  return this.http.post<ApiResponse<any>>(`${this.baseUrl}/City`, {
+    cityName: payload.cityName,
+    regionId: payload.regionId
   });
 }
 
-updateArea(id: number, payload: { areaName: string; cityId: number }) {
+updateCity(id: number, payload: { cityName: string; regionId: number }): Observable<ApiResponse<any>> {
+  return this.http.put<ApiResponse<any>>(`${this.baseUrl}/City/${id}`, {
+    cityName: payload.cityName,
+    regionId: payload.regionId
+  });
+}
+
+deleteCity(id: number): Observable<ApiResponse<any>> {
+  return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/City/${id}`);
+}
+
+// ============================
+// Areas (المناطق / Regions)
+// ============================
+
+getAreas() {
+  return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/Region`);
+}
+
+createArea(payload: { regionName: string; countryId: number }) {
+  return this.http.post<ApiResponse<any>>(`${this.baseUrl}/Region`, {
+    regionName: payload.regionName,
+    countryId: payload.countryId
+  });
+}
+
+updateArea(id: number, payload: { regionName: string; countryId: number }) {
   return this.http.put<ApiResponse<any>>(`${this.baseUrl}/Region/${id}`, {
-    regionName: payload.areaName,
-    cityId: payload.cityId
+    regionName: payload.regionName,
+    countryId: payload.countryId
   });
 }
 
 deleteArea(id: number) {
   return this.http.delete<ApiResponse<any>>(`${this.baseUrl}/Region/${id}`);
 }
+
 
 // Activity Types (نوعية النشاط)
 // ============================

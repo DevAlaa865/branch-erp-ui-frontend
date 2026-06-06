@@ -15,7 +15,7 @@ export class AreasComponent implements OnInit {
   areas: any[] = [];
   filteredAreas: any[] = [];
 
-  cities: any[] = [];
+  countries: any[] = [];
 
   searchTerm = '';
 
@@ -37,7 +37,7 @@ export class AreasComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadCities();
+    this.loadCountries();
     this.loadAreas();
   }
 
@@ -47,24 +47,24 @@ export class AreasComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^[A-Za-z\u0600-\u06FF ]+$/) // حروف عربية + إنجليزية + مسافات فقط
+          Validators.pattern(/^[A-Za-z\u0600-\u06FF ]+$/)
         ]
       ],
-      cityId: [null, Validators.required]
+      countryId: [null, Validators.required]
     });
   }
 
-  loadCities() {
-    this.masterData.getCities().subscribe({
+  loadCountries() {
+    this.masterData.getCountries().subscribe({
       next: res => {
         if (res.success) {
-          this.cities = res.data.map(c => ({
+          this.countries = res.data.map(c => ({
             id: c.id,
-            name: c.cityName
+            name: c.countryName
           }));
         }
       },
-      error: err => console.error('خطأ في تحميل المدن', err)
+      error: err => console.error('خطأ في تحميل الدول', err)
     });
   }
 
@@ -75,8 +75,8 @@ export class AreasComponent implements OnInit {
           this.areas = res.data.map(a => ({
             id: a.id,
             name: a.regionName,
-            cityId: a.cityId,
-            cityName: a.cityName // لو الـ API بيرجعها
+            countryId: a.countryId,
+            countryName: a.countryName
           }));
 
           this.filteredAreas = [...this.areas];
@@ -134,7 +134,7 @@ export class AreasComponent implements OnInit {
 
     this.form.patchValue({
       name: area.name,
-      cityId: area.cityId
+      countryId: area.countryId
     });
   }
 
@@ -143,7 +143,7 @@ export class AreasComponent implements OnInit {
       `تفاصيل المنطقة:\n\n` +
       `الكود: ${area.id}\n` +
       `الاسم: ${area.name}\n` +
-      `المدينة: ${area.cityName ?? ''}`
+      `الدولة: ${area.countryName ?? ''}`
     );
   }
 
@@ -161,8 +161,8 @@ export class AreasComponent implements OnInit {
     }
 
     const payload = {
-      areaName: this.form.value.name,
-      cityId: this.form.value.cityId
+      regionName: this.form.value.name,
+      countryId: this.form.value.countryId
     };
 
     if (this.editMode && this.editingId != null) {

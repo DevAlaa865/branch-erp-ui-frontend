@@ -15,7 +15,7 @@ export class CitiesComponent implements OnInit {
   cities: any[] = [];
   filteredCities: any[] = [];
 
-  countries: any[] = [];
+  regions: any[] = [];
 
   searchTerm = '';
 
@@ -37,7 +37,7 @@ export class CitiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadCountries();
+    this.loadRegions();
     this.loadCities();
   }
 
@@ -47,24 +47,24 @@ export class CitiesComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^[A-Za-z\u0600-\u06FF ]+$/) // حروف عربية + إنجليزية + مسافات فقط
+          Validators.pattern(/^[A-Za-z\u0600-\u06FF ]+$/)
         ]
       ],
-      countryId: [null, Validators.required]
+      regionId: [null, Validators.required]
     });
   }
 
-  loadCountries() {
-    this.masterData.getCountries().subscribe({
+  loadRegions() {
+    this.masterData.getAreas().subscribe({
       next: res => {
         if (res.success) {
-          this.countries = res.data.map(c => ({
-            id: c.id,
-            name: c.countryName
+          this.regions = res.data.map(r => ({
+            id: r.id,
+            name: r.regionName
           }));
         }
       },
-      error: err => console.error('خطأ في تحميل البلاد', err)
+      error: err => console.error('خطأ في تحميل المناطق', err)
     });
   }
 
@@ -75,8 +75,8 @@ export class CitiesComponent implements OnInit {
           this.cities = res.data.map(c => ({
             id: c.id,
             name: c.cityName,
-            countryId: c.countryId,
-            countryName: c.countryName // لو الـ API بيرجعها
+            regionId: c.regionId,
+            regionName: c.regionName
           }));
 
           this.filteredCities = [...this.cities];
@@ -134,7 +134,7 @@ export class CitiesComponent implements OnInit {
 
     this.form.patchValue({
       name: city.name,
-      countryId: city.countryId
+      regionId: city.regionId
     });
   }
 
@@ -143,7 +143,7 @@ export class CitiesComponent implements OnInit {
       `تفاصيل المدينة:\n\n` +
       `الكود: ${city.id}\n` +
       `الاسم: ${city.name}\n` +
-      `الدولة: ${city.countryName ?? ''}`
+      `المنطقة: ${city.regionName ?? ''}`
     );
   }
 
@@ -162,7 +162,7 @@ export class CitiesComponent implements OnInit {
 
     const payload = {
       cityName: this.form.value.name,
-      countryId: this.form.value.countryId
+      regionId: this.form.value.regionId
     };
 
     if (this.editMode && this.editingId != null) {
