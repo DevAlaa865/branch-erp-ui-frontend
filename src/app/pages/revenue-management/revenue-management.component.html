@@ -47,7 +47,22 @@
       </div>
     </div>
   </div>
-
+  <!-- تقرير مبيعات الفروع -->
+  <div
+    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+   *hasPermission="['Permissions.Manage', 'Sales.View']"
+    [routerLink]="['sales-summary-report-filters']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        📘
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تقرير مبيعات الفروع</h3>
+        <p class="text-sm opacity-90">عرض مبيعات ومرتجعات الفروع وصافى البيع</p>
+      </div>
+    </div>
+  </div>
   <!-- تقارير اعتماد المرتجعات والخصومات -->
   <div
     class="group p-6 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"

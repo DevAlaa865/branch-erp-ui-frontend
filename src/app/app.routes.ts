@@ -73,6 +73,13 @@ export const routes: Routes = [
             .then(m => m.DailySalesInquiryComponent)
         },
         {
+          path: 'revenue-management/sales-summary-report-filters',
+          loadComponent: () =>
+            import('./features/reports/sales-summary-report/filters/filters.component')
+              .then(m => m.FiltersComponent)
+        },
+
+        {
         path: 'returns-management',
         loadComponent: () =>
           import('./pages/returns-management/returns-management.component')
