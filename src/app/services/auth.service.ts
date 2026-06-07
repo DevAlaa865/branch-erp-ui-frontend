@@ -194,7 +194,7 @@ export class AuthService {
   // ============================
   // 🔥 فك التوكن مع حماية كاملة
   // ============================
-  private getTokenPayload(): any | null {
+/*   private getTokenPayload(): any | null {
     const token = this.getToken();
     if (!token) return null;
 
@@ -205,8 +205,41 @@ export class AuthService {
       this.logout();
       return null;
     }
+  } */
+
+
+private decodeBase64Url(base64Url: string): string {
+  let base64 = base64Url
+    .replace(/-/g, '+')
+    .replace(/_/g, '/');
+
+  const pad = base64.length % 4;
+  if (pad) {
+    base64 += '='.repeat(4 - pad);
   }
 
+  return atob(base64);
+}
+
+private getTokenPayload(): any | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(
+      this.decodeBase64Url(token.split('.')[1])
+    );
+
+    console.log('JWT PAYLOAD', payload);
+
+    return payload;
+  } catch (e) {
+    console.error('JWT ERROR', e);
+
+    this.logout();
+    return null;
+  }
+}
   // ============================
   // 🔥 قراءة الـ Roles
   // ============================

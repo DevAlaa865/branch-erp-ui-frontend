@@ -38,10 +38,16 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.auth.login(this.form.value).subscribe({
-     next: () => {
+     next: (res) => {
+         console.log('LOGIN RESPONSE', res);
+
+      console.log('TOKEN', localStorage.getItem('token'));
+
+      const perms = this.auth.getPermissions();
+
+      console.log('PERMISSIONS', perms);
   this.isLoading = false;
 
-        const perms = this.auth.getPermissions();
 
         if (perms.includes('Admin.Access')) {
           this.router.navigate(['/admin']);
