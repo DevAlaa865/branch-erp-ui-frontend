@@ -230,7 +230,7 @@ private getTokenPayload(): any | null {
       this.decodeBase64Url(token.split('.')[1])
     );
 
-    console.log('JWT PAYLOAD', payload);
+/*     console.log('JWT PAYLOAD', payload); */
 
     return payload;
   } catch (e) {

@@ -39,13 +39,13 @@ export class LoginComponent {
 
     this.auth.login(this.form.value).subscribe({
      next: (res) => {
-         console.log('LOGIN RESPONSE', res);
+/*          console.log('LOGIN RESPONSE', res);
 
-      console.log('TOKEN', localStorage.getItem('token'));
+      console.log('TOKEN', localStorage.getItem('token')); */
 
       const perms = this.auth.getPermissions();
 
-      console.log('PERMISSIONS', perms);
+     /*  console.log('PERMISSIONS', perms); */
   this.isLoading = false;
 
 

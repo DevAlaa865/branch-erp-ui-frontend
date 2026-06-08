@@ -30,7 +30,7 @@ const rawBranch = this.auth.getBranchName();
 this.branchName = rawBranch ? this.fixArabic(rawBranch) : null;
 
     this.roles = this.auth.getRoles();
-console.log("Branch from token:", this.auth.getBranchName());
+/* console.log("Branch from token:", this.auth.getBranchName()); */
   this.isMobile = window.innerWidth < 768;
 
   if (!this.isMobile) {

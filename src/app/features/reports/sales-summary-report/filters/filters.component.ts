@@ -125,22 +125,33 @@ export class FiltersComponent implements OnInit {
     this.filterForm.patchValue({ branchId: null }, { emitEvent: false });
   }
 
-  submit() {
-    if (this.filterForm.invalid) {
-      this.filterForm.markAllAsTouched();
-      return;
-    }
-
-    const raw = this.filterForm.value;
-
-    const filter: SalesSummaryReportFilter = {
-      fromDate: raw.fromDate,
-      toDate: raw.toDate,
-      regionId: raw.regionId ?? null,
-      cityId: raw.cityId ?? null,
-      branchId: raw.branchId ?? null
-    };
-
-    this.router.navigate(['/reports/sales-summary-report-result'], { state: { filter } });
+submit() {
+  if (this.filterForm.invalid) {
+    this.filterForm.markAllAsTouched();
+    return;
   }
+
+  const raw = this.filterForm.value;
+
+  const filter: SalesSummaryReportFilter = {
+    fromDate: raw.fromDate,
+    toDate: raw.toDate,
+    regionId: raw.regionId ?? '',
+    cityId: raw.cityId ?? '',
+    branchId: raw.branchId ?? ''
+  };
+
+  // تحويل الفلتر إلى Query String
+  const query = new URLSearchParams({
+    fromDate: filter.fromDate,
+    toDate: filter.toDate,
+    regionId: filter.regionId?.toString() ?? '',
+    cityId: filter.cityId?.toString() ?? '',
+    branchId: filter.branchId?.toString() ?? ''
+  }).toString();
+
+  // فتح صفحة جديدة
+  window.open(`/reports/sales-summary-report-result?${query}`, '_blank');
+}
+
 }

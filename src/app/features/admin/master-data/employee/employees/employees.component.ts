@@ -3,11 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { MasterDataService } from '../../../../../services/master-data.service';
+import { HasPermissionDirective } from '../../../../../core/directives/has-permission.directive';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule,HasPermissionDirective],
   templateUrl: './employees.component.html'
 })
 export class EmployeesComponent implements OnInit {

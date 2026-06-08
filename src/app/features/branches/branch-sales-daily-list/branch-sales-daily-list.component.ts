@@ -180,31 +180,37 @@ getImageUrl(path: string | null | undefined): string {
     });
   }
 
-  buildEditForm(data: any): void {
-    this.editForm = this.fb.group({
-      id: [data.id],
-      branchId: [data.branchId],
-      supervisorId: [data.supervisorId],
-      salesDate: [data.salesDate ? data.salesDate.substring(0, 10) : null, Validators.required],
-      totalSales: [data.totalSales, [Validators.required, Validators.min(0)]],
-      cashAmount: [data.cashAmount, [Validators.required, Validators.min(0)]],
-      networkAmount: [data.networkAmount, [Validators.required, Validators.min(0)]],
-      creditAmount: [data.creditAmount ?? 0, [Validators.min(0)]],
-      grandTotal: [data.grandTotal, [Validators.required, Validators.min(0)]],
-      difference: data.difference,
-      supervisorNotes: [data.supervisorNotes || ''],
-      // 🔥 مرفق اليومية (الهيدر)
-      attachmentPath: [data.attachmentPath || ''],
-      shortageDetails: this.fb.array([])
-    });
+buildEditForm(data: any): void {
+  this.editForm = this.fb.group({
+    id: [data.id],
+    branchId: [data.branchId],
+    supervisorId: [data.supervisorId],
+    salesDate: [data.salesDate ? data.salesDate.substring(0, 10) : null, Validators.required],
+    totalSales: [data.totalSales, [Validators.required, Validators.min(0)]],
+    cashAmount: [data.cashAmount, [Validators.required, Validators.min(0)]],
+    networkAmount: [data.networkAmount, [Validators.required, Validators.min(0)]],
+    creditAmount: [data.creditAmount ?? 0, [Validators.min(0)]],
+    grandTotal: [data.grandTotal, [Validators.required, Validators.min(0)]],
+    difference: data.difference,
+    supervisorNotes: [data.supervisorNotes || ''],
 
-    if (data.shortageDetails && data.shortageDetails.length > 0) {
-      data.shortageDetails.forEach((row: any) => this.addEditShortageRow(row));
-    }
+    // 🔥 الحقول الجديدة
+    invoiceCount: [data.totalInvoicesCount  ?? 0, [Validators.required, Validators.min(0)]],
+    quantityCount: [data.totalQuantities  ?? 0, [Validators.required, Validators.min(0)]],
 
-    this.setupEditTotalsCalculation();
- /*    this.recalcEditDifference(); */
+    // 🔥 مرفق اليومية
+    attachmentPath: [data.attachmentPath || ''],
+
+    shortageDetails: this.fb.array([])
+  });
+
+  if (data.shortageDetails && data.shortageDetails.length > 0) {
+    data.shortageDetails.forEach((row: any) => this.addEditShortageRow(row));
   }
+
+  this.setupEditTotalsCalculation();
+}
+
 
   get editShortageDetails(): FormArray {
     return this.editForm.get('shortageDetails') as FormArray;

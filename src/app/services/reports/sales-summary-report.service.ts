@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SalesSummaryReportFilter, SalesSummaryReportItem } from '../../shared/models/sales-summary-report.model';
-
+import { API_BASE_URL } from '../../api.config';
 interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -14,7 +14,7 @@ interface ApiResponse<T> {
 })
 export class SalesSummaryReportService {
 
-  private baseUrl = '/api/SalesSummaryReport'; // نفس اسم الكنترولر في الباك
+private baseUrl = `${API_BASE_URL}/SalesSummaryReport`;
 
   constructor(private http: HttpClient) {}
 
