@@ -53,6 +53,7 @@
   <table class="w-full text-right text-base">
     <thead class="bg-slate-300 text-slate-900">
       <tr>
+        <th class="p-3 border-b border-slate-400 text-center">رقم الفرع</th>
         <th class="p-3 border-b border-slate-400 text-center">الفرع</th>
         <th class="p-3 border-b border-slate-400 text-center">إجمالي البيع</th>
         <th class="p-3 border-b border-slate-400 text-center">المرتجعات</th>
@@ -64,8 +65,8 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let row of items" class="border-b">
-
+       <tr *ngFor="let row of items" class="border-b">
+       <td class="p-3 text-center font-semibold">{{ row.branchNumber }}</td>
         <td class="p-3 text-center font-semibold">{{ row.branchName }}</td>
         <td class="p-3 text-center">{{ row.totalSales | number:'1.0-2' }}</td>
         <td class="p-3 text-center">{{ row.totalReturns | number:'1.0-2' }}</td>

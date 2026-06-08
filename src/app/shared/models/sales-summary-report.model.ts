@@ -8,6 +8,7 @@ export interface SalesSummaryReportFilter {
 
 export interface SalesSummaryReportItem {
   branchId: number;
+  branchNumber:number;
   branchName: string;
   totalSales: number;
   totalReturns: number;

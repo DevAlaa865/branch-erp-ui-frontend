@@ -193,7 +193,7 @@ buildEditForm(data: any): void {
     grandTotal: [data.grandTotal, [Validators.required, Validators.min(0)]],
     difference: data.difference,
     supervisorNotes: [data.supervisorNotes || ''],
-
+    dataEntryUserName: [data.dataEntryUserName || ''],
     // 🔥 الحقول الجديدة
     invoiceCount: [data.totalInvoicesCount  ?? 0, [Validators.required, Validators.min(0)]],
     quantityCount: [data.totalQuantities  ?? 0, [Validators.required, Validators.min(0)]],

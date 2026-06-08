@@ -13,7 +13,7 @@ export interface BranchSalesDailyListRow {
   difference: number;
     invoiceCount: number;
   quantityCount: number;
-
+  dataEntryUserName?: string;
   supervisorNotes?: string; // ملاحظات المشرف
   shortageDetails?: {
     shortageTypeName: string;
