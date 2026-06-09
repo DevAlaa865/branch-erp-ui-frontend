@@ -414,7 +414,13 @@ recalcEditDifference(): void {
     }
 
     const payload = this.editForm.getRawValue();
+  // 🔥 أهم خطوة — إرسال الحقول الصحيحة للباك
+  payload.totalInvoicesCount = payload.invoiceCount;
+  payload.totalQuantities = payload.quantityCount;
 
+  delete payload.invoiceCount;
+  delete payload.quantityCount;
+  
     this.dailyService.update(payload.id, payload).subscribe({
       next: () => {
         this.closeEditDialog();
