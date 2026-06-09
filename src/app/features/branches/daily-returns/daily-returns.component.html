@@ -70,6 +70,9 @@
           <option [value]="2">استبدال</option>
           <option [value]="3">تابى</option>
            <option [value]="4">تمارا</option>
+            <option [value]="5">تحويل بنكى</option>
+            <option [value]="6">ادخال خطأ</option>
+             <option [value]="7">اخرى</option>
         </select>
       </div>
     </div>
@@ -142,6 +145,9 @@
           item.returnType === 2 ? 'استبدال' :
           item.returnType === 3 ? 'تابى' :
           item.returnType === 4 ? 'تمارا' :
+          item.returnType === 5 ? 'تحويل بنكى' :
+          item.returnType === 6 ? 'ادخال خطا' :
+          item.returnType === 7 ? 'اخرى' :
           'غير معروف'
         }}
       </td>
@@ -242,6 +248,9 @@
           <option [value]="2">استبدال</option>
           <option [value]="3">تابى</option>
           <option [value]="4">تمارا</option>
+           <option [value]="5">تحويل بنكى</option>
+            <option [value]="6">ادخال خطأ</option>
+             <option [value]="7">اخرى</option>
         </select>
       </div>
 
