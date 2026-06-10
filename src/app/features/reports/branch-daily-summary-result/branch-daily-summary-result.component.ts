@@ -261,86 +261,172 @@ openDailyDetails(row: BranchDailySummaryRow) {
     });
   }
 
-  exportToPdf(): void {
-    if (!this.rows || this.rows.length === 0) return;
+exportToPdf(): void {
+  if (!this.rows || this.rows.length === 0) return;
 
-    const doc = new jsPDF('l', 'mm', 'a4');
+  const doc = new jsPDF('l', 'mm', 'a4');
 
-    (doc as any).addFont('assets/fonts/Amiri-Regular.ttf', 'Amiri', 'normal');
+  (doc as any).addFont(
+    'assets/fonts/Amiri-Regular.ttf',
+    'Amiri',
+    'normal'
+  );
+
+  doc.setFont('Amiri');
+
+  const headers = [
+    'رقم الفرع',
+    'الفرع',
+    'نقدية',
+    'شبكة',
+    'آجل',
+    'إجمالي البيع',
+    'الإجمالي الكلي',
+    'الفرق',
+    'قيمة العجز',
+    ...this.shortageTypes.map(x => x.name)
+  ];
+
+  const totalColumns = headers.length;
+
+  const pageWidth =
+    doc.internal.pageSize.getWidth() - 20;
+
+  const columnWidth =
+    pageWidth / totalColumns;
+
+  const colWidths =
+    Array(totalColumns).fill(columnWidth);
+
+  const drawHeader = () => {
+
     doc.setFont('Amiri');
+
     doc.setFontSize(14);
+  const title =
+  `تقرير يوميات الفروع المجمع (${this.filter.fromDate})`;
+  
+    doc.text(
+      title,
 
-    doc.text('تقرير يوميات الفروع المجمع', 148, 15, { align: 'center' });
+      doc.internal.pageSize.getWidth() / 2,
+      12,
+      { align: 'center' }
+    );
 
-    const colWidths = [35, 18, 18, 18, 22, 22, 18, 22];
-
-    this.shortageTypes.forEach(() => colWidths.push(20));
-
-    doc.setFontSize(10);
     let x = 10;
 
-    const headers = [
-      'الفرع',
-      'نقدية',
-      'شبكة',
-      'آجل',
-      'إجمالي البيع',
-      'الإجمالي الكلي',
-      'الفرق',
-      'قيمة العجز'
+    headers.forEach((header, index) => {
+
+      doc.setFillColor(41, 128, 185);
+      doc.rect(
+        x,
+        18,
+        colWidths[index],
+        14,
+        'F'
+      );
+
+      doc.setTextColor(255);
+      doc.setFontSize(7);
+
+      const lines = doc.splitTextToSize(
+        header,
+        colWidths[index] - 2
+      );
+
+      doc.text(
+        lines,
+        x + colWidths[index] / 2,
+        23,
+        {
+          align: 'center',
+          baseline: 'middle'
+        } as any
+      );
+
+      x += colWidths[index];
+    });
+
+    doc.setTextColor(0);
+  };
+
+  const body = this.rows.map(row => {
+
+    const rowData: any[] = [
+      row.branchNumber ?? '',
+      row.branchName ?? '',
+      row.cashAmount?.toFixed(2) ?? '0.00',
+      row.networkAmount?.toFixed(2) ?? '0.00',
+      row.creditAmount?.toFixed(2) ?? '0.00',
+      row.totalSales?.toFixed(2) ?? '0.00',
+      row.grandTotal?.toFixed(2) ?? '0.00',
+      row.difference?.toFixed(2) ?? '0.00',
+      row.totalShortageAmount?.toFixed(2) ?? '0.00'
     ];
 
-    headers.forEach((h, i) => {
-      doc.text(h, x + colWidths[i] / 2, 25, { align: 'center' });
-      x += colWidths[i];
-    });
-
     this.shortageTypes.forEach(st => {
-      doc.text(st.name, x + 10, 25, { align: 'center' });
-      x += 20;
+
+      const found = row.shortages?.find(
+        x => x.shortageTypeId === st.id
+      );
+
+      rowData.push(
+        (found?.amount ?? 0).toFixed(2)
+      );
     });
 
-    const body = this.rows.map(row => {
-      const rowData = [
-      
-        row.branchName,
-        row.cashAmount?.toFixed(2),
-        row.networkAmount?.toFixed(2),
-        row.creditAmount?.toFixed(2),
-        row.totalSales?.toFixed(2),
-        row.grandTotal?.toFixed(2),
-        row.difference?.toFixed(2),
-        row.totalShortageAmount?.toFixed(2)
-      ];
+    return rowData;
+  });
 
-      this.shortageTypes.forEach(st => {
-        const found = row.shortages?.find(x => x.shortageTypeId === st.id);
-        rowData.push((found?.amount ?? 0).toFixed(2));
-      });
+  const columnStyles: Record<number, any> = {};
 
-      return rowData;
-    });
+  for (let i = 0; i < totalColumns; i++) {
 
-    const columnStyles: Record<number, any> = {};
-    colWidths.forEach((w, i) => columnStyles[i] = { cellWidth: w, halign: 'center' });
-
-    autoTable(doc, {
-      body,
-      startY: 30,
-      styles: {
-        font: 'Amiri',
-        fontSize: 9,
-        halign: 'center',
-        cellPadding: 2
-      },
-      columnStyles,
-      margin: { top: 20, right: 10, left: 10 },
-      showHead: 'never'
-    });
-
-    doc.save('BranchDailySummary.pdf');
+    columnStyles[i] = {
+      cellWidth: columnWidth,
+      halign: 'center',
+      valign: 'middle'
+    };
   }
 
+  autoTable(doc, {
+    body,
+    startY: 35,
+    showHead: 'never',
+    theme: 'grid',
 
+    styles: {
+      font: 'Amiri',
+      fontSize: 7,
+      cellPadding: 1.5,
+      halign: 'center',
+      valign: 'middle',
+      lineWidth: 0.1,
+      lineColor: [0, 0, 0],
+      overflow: 'linebreak'
+    },
+
+    columnStyles,
+
+    margin: {
+      top: 35,
+      left: 10,
+      right: 10
+    },
+
+    tableWidth: 'auto',
+
+    didParseCell: function (data) {
+      data.cell.styles.font = 'Amiri';
+    },
+
+    didDrawPage: () => {
+      drawHeader();
+    }
+  });
+
+  doc.save('BranchDailySummary.pdf');
+}
   
 }
