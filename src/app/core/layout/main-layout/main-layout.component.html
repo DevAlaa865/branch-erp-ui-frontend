@@ -25,6 +25,7 @@
       <li *hasPermission="['Permissions.Manage', 'Development.View']" [routerLink]="['control-management']" class="nav-link">إدارة الرقابة</li>
       <li *hasPermission="'Permissions.Manage'" [routerLink]="['general-management']" class="nav-link">الإدارة العامة</li>
       <li *hasPermission="'dashbord.dailysails'" [routerLink]="['dashboard']" class="nav-link">إدارة الفروع</li>
+      <li *hasPermission="['Permissions.Manage', 'Sales.View']" [routerLink]="['/revenue-management/sales-summary-report-filters']" class="nav-link">ادارة المبيعات</li>
     </nav>
 
     <!-- Divider -->
