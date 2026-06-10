@@ -65,7 +65,7 @@
     </thead>
 
     <tbody>
-       <tr *ngFor="let row of items" class="border-b">
+       <tr *ngFor="let row of pagedItems" class="border-b">
        <td class="p-3 text-center font-semibold">{{ row.branchNumber }}</td>
         <td class="p-3 text-center font-semibold">{{ row.branchName }}</td>
         <td class="p-3 text-center">{{ row.totalSales | number:'1.0-2' }}</td>

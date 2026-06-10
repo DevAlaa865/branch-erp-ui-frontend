@@ -26,11 +26,12 @@ export class MainLayoutComponent  {
 
 ngOnInit() {
      this.userName = this.auth.getUserName();
+     
 const rawBranch = this.auth.getBranchName();
 this.branchName = rawBranch ? this.fixArabic(rawBranch) : null;
 
     this.roles = this.auth.getRoles();
-/* console.log("Branch from token:", this.auth.getBranchName()); */
+
   this.isMobile = window.innerWidth < 768;
 
   if (!this.isMobile) {
@@ -44,18 +45,6 @@ fixArabic(text: string) {
     return text;
   }
 }
-
-
-
-/* 
-  ngAfterViewInit() {
-    const saved = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = saved === 'dark' || (!saved && prefersDark);
-
-    if (isDark) document.documentElement.classList.add('dark');
-    this.updateThemeIcon(isDark);
-  } */
 
   // Sidebar Toggle
   toggleSidebar() {

@@ -9,7 +9,8 @@ import { saveAs } from 'file-saver';
   selector: 'app-result',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './result.component.html'
+  templateUrl: './result.component.html',
+    styleUrls: ['./result.component.css']
 })
 export class ResultComponent implements OnInit {
 
@@ -143,13 +144,27 @@ getRowClass(row: any) {
 }
 
 printReport() {
-  const printContents = document.getElementById('printArea')?.innerHTML;
-
-  if (!printContents) return;
+  if (!this.items || this.items.length === 0) return;
 
   const popup = window.open('', '_blank', 'width=1000,height=800');
-
   if (!popup) return;
+
+  let tableRows = '';
+
+  this.items.forEach(row => {
+    tableRows += `
+      <tr>
+        <td>${row.branchNumber}</td>
+        <td>${row.branchName}</td>
+        <td>${row.totalSales?.toFixed(2)}</td>
+        <td>${row.totalReturns?.toFixed(2)}</td>
+        <td>${row.netSales?.toFixed(2)}</td>
+        <td>${row.invoiceCount}</td>
+        <td>${row.quantityCount}</td>
+        <td>${this.getActivityName(row.activityType)}</td>
+      </tr>
+    `;
+  });
 
   popup.document.open();
   popup.document.write(`
@@ -157,16 +172,41 @@ printReport() {
       <head>
         <title>طباعة التقرير</title>
         <style>
-          body { font-family: 'Tahoma', sans-serif; padding: 20px; }
-          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          body { font-family: Tahoma; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; }
           th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-          th { background: #f1f5f9; }
-          h2 { text-align: center; margin-bottom: 20px; }
+          th { background: #eee; }
+
+          /* 🔥 دعم الطباعة على صفحات متعددة */
+          @media print {
+            table { page-break-after: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+            td { page-break-inside: avoid; }
+            thead { display: table-header-group; }
+            tfoot { display: table-footer-group; }
+          }
         </style>
       </head>
       <body>
-        <h2>تقرير المبيعات للفروع</h2>
-        ${printContents}
+        <h2 style="text-align:center">تقرير المبيعات للفروع</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>رقم الفرع</th>
+              <th>الفرع</th>
+              <th>إجمالي البيع</th>
+              <th>المرتجعات</th>
+              <th>صافي البيع</th>
+              <th>عدد الفواتير</th>
+              <th>عدد القطع</th>
+              <th>نوع النشاط</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
       </body>
     </html>
   `);
@@ -174,6 +214,7 @@ printReport() {
   popup.document.close();
   popup.print();
 }
+
 
 exportExcel() {
   const workbook = new ExcelJS.Workbook();
