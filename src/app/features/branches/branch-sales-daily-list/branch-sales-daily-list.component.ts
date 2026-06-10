@@ -50,7 +50,7 @@ rows: BranchSalesDailyListRow[] = [];
   editForm!: FormGroup;
 selectedDaily: BranchSalesDailyListRow | null = null;
 selectedDailyDetails: BranchSalesDailyDetails | null = null;
-
+branchActivityName: string = '';
 
   // 🔥 بيانات العجز داخل نافذة التعديل
   shortageTypes: any[] = [];
@@ -172,7 +172,9 @@ getImageUrl(path: string | null | undefined): string {
         const data = res.data || res;
         this.selectedDaily = data;
         this.buildEditForm(data);
-        console.log(data);
+       this.masterData.getBranchById(data.branchId).subscribe(b => {
+       this.branchActivityName = b.data?.activityTypeName || '';
+});
       },
       error: () => {
         alert('حدث خطأ أثناء تحميل بيانات اليومية');
@@ -383,8 +385,26 @@ recalcEditDifference(): void {
 
   // 🔥 طرح مجموع العجز (نفس اليومية الأصلية)
   let totalShortage = 0;
-  this.editShortageDetails.controls.forEach(row => {
-    const amount = Number(row.get('amount')?.value || 0);
+this.editShortageDetails.controls.forEach(row => {
+  const amount = Number(row.get('amount')?.value || 0);
+
+  const typeId = row.get('shortageTypeId')?.value;
+  const type = this.shortageTypes.find(t => t.id === typeId);
+  const shortageName = type?.name || type?.shortageName || '';
+
+  // 🔥 هل الفرع نشاطه ملابس؟
+  const isClothesBranch = this.branchActivityName.includes('ملابس');
+
+  // 🔥 هل نوع العجز "مرتجعات" أو "استبدال"؟
+  const isReturnOrReplacement =
+    shortageName.includes('مرتجع') ||
+    shortageName.includes('مرتجعات') ||
+    shortageName.includes('استبدال');
+
+  // ⭐ لو الفرع ملابس والعجز مرتجع/استبدال → نتجاهله
+  if (isClothesBranch && isReturnOrReplacement) {
+    return;
+  }
     totalShortage -= amount; // ← نفس منطق اليومية الأصلية
   });
 

@@ -53,6 +53,7 @@ export class DailySalesComponent implements OnInit {
   credit = 0;
    cash=0;
    network=0;
+   branchActivityName: string = '';
   constructor(
     private fb: FormBuilder,
     private dailyService: BranchSalesDailyService,
@@ -127,6 +128,7 @@ preventEnter(event: Event) {
       if (branch) {
         this.supervisorNameDisplay = branch.supervisorName || '';
         this.form.get('supervisorId')?.setValue(branch.supervisorId || null);
+         this.branchActivityName = branch.activityTypeName || '';
       }
 
       this.form.get('branchId')?.disable({ emitEvent: false });
@@ -381,7 +383,25 @@ recalculateShortageEffect() {
 
   let totalShortage = 0;
   this.shortageDetails.controls.forEach(row => {
-    const amount = Number(row.get('amount')?.value || 0);
+  const amount = Number(row.get('amount')?.value || 0);
+
+  const typeId = row.get('shortageTypeId')?.value;
+  const type = this.shortageTypes.find(t => t.id === typeId);
+  const shortageName = type?.name || type?.shortageName || '';
+
+  // 🔥 هل الفرع نشاطه ملابس؟
+  const isClothesBranch = this.branchActivityName.includes('ملابس');
+
+  // 🔥 هل نوع العجز "مرتجعات" أو "استبدال"؟
+  const isReturnOrReplacement =
+    shortageName.includes('مرتجع') ||
+    shortageName.includes('مرتجعات') ||
+    shortageName.includes('استبدال');
+
+  // ✅ لو الفرع ملابس والعجز مرتجع/استبدال → نتجاهل هذا الصف في حساب الفرق
+  if (isClothesBranch && isReturnOrReplacement) {
+    return; // لا نضيفه إلى totalShortage
+  }
     totalShortage -= amount;
   });
   diffRaw -= totalShortage;
