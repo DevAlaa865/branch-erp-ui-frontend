@@ -16,8 +16,8 @@ interface BranchShortageSummary {
 
 interface BranchDailySummaryRow {
   branchId: number;
+  branchNumber:number;
   branchName: string;
-
   cashAmount: number;
   networkAmount: number;
   creditAmount: number;
@@ -218,6 +218,7 @@ openDailyDetails(row: BranchDailySummaryRow) {
     const worksheet = workbook.addWorksheet('Branch Daily Summary');
 
     const header: string[] = [
+      'رقم الفرع',
       'الفرع',
       'نقدية',
       'شبكة',
@@ -234,6 +235,7 @@ openDailyDetails(row: BranchDailySummaryRow) {
 
     this.rows.forEach(row => {
       const rowData: any[] = [
+        row.branchNumber,
         row.branchName,
         row.cashAmount,
         row.networkAmount,
@@ -300,6 +302,7 @@ openDailyDetails(row: BranchDailySummaryRow) {
 
     const body = this.rows.map(row => {
       const rowData = [
+      
         row.branchName,
         row.cashAmount?.toFixed(2),
         row.networkAmount?.toFixed(2),

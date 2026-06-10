@@ -42,6 +42,7 @@
 
           <thead>
             <tr>
+              <th>رقم الفرع</th>
               <th>الفرع</th>
               <th >نقدية</th>
               <th >شبكة</th>
@@ -70,7 +71,7 @@
 
 
 
-
+             <td>{{ row.branchNumber }}</td>
               <td>{{ row.branchName }}</td>
 
               <td>{{ row.cashAmount | number:'1.2-2' }}</td>
@@ -83,7 +84,7 @@
 
               <td  *ngFor="let st of shortageTypes" class="text-center">
                 {{
-                  (row.shortages | shortByType:(st?.id ?? 0))?.amount || 0
+                  (row.shortages | shortByType:(st?.id))?.amount || 0
                   | number:'1.2-2'
                 }}
               </td>
