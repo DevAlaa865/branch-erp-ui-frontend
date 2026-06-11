@@ -395,13 +395,13 @@ this.editShortageDetails.controls.forEach(row => {
   // 🔥 هل الفرع نشاطه ملابس؟
   const isClothesBranch = this.branchActivityName.includes('ملابس');
 
-  // 🔥 هل نوع العجز "مرتجعات" أو "استبدال"؟
+  // 🔥 هل نوع العجز "مرتجعات"؟
   const isReturnOrReplacement =
     shortageName.includes('مرتجع') ||
-    shortageName.includes('مرتجعات') ||
-    shortageName.includes('استبدال');
+    shortageName.includes('مرتجعات') 
+   /*  shortageName.includes('استبدال'); */
 
-  // ⭐ لو الفرع ملابس والعجز مرتجع/استبدال → نتجاهله
+  // ⭐ لو الفرع ملابس والعجز مرتجع → نتجاهله
   if (isClothesBranch && isReturnOrReplacement) {
     return;
   }

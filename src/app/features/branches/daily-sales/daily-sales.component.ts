@@ -392,13 +392,13 @@ recalculateShortageEffect() {
   // 🔥 هل الفرع نشاطه ملابس؟
   const isClothesBranch = this.branchActivityName.includes('ملابس');
 
-  // 🔥 هل نوع العجز "مرتجعات" أو "استبدال"؟
+  // 🔥 هل نوع العجز "مرتجعات"؟
   const isReturnOrReplacement =
     shortageName.includes('مرتجع') ||
-    shortageName.includes('مرتجعات') ||
-    shortageName.includes('استبدال');
-
-  // ✅ لو الفرع ملابس والعجز مرتجع/استبدال → نتجاهل هذا الصف في حساب الفرق
+    shortageName.includes('مرتجعات') 
+/*     shortageName.includes('استبدال');
+ */
+  // ✅ لو الفرع ملابس والعجز مرتجع → نتجاهل هذا الصف في حساب الفرق
   if (isClothesBranch && isReturnOrReplacement) {
     return; // لا نضيفه إلى totalShortage
   }
