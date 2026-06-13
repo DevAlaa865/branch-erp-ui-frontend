@@ -6,6 +6,8 @@ import { SalesSummaryReportItem, SalesSummaryReportFilter } from '../../../../sh
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../../../api.config';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-result',
@@ -18,19 +20,16 @@ export class ResultComponent implements OnInit {
 
   loading = false;
 
-  // ترتيب الفروع من ملف JSON
   branchOrder: any[] = [];
+  allBranches: any[] = [];
+  allCities: any[] = [];
+  allRegions: any[] = [];
 
-  // البيانات الأصلية
   items: SalesSummaryReportItem[] = [];
-
-  // البيانات المعروضة بعد الباجينيشن
   pagedItems: SalesSummaryReportItem[] = [];
 
-  // الفلتر القادم من شاشة الفلاتر
   filter!: SalesSummaryReportFilter;
 
-  // إعدادات الباجينيشن
   pageSize = 20;
   currentPage = 1;
   totalPages = 1;
@@ -43,9 +42,17 @@ export class ResultComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // 🔥 تحميل ترتيب الفروع من JSON
-    this.http.get('/assets/branch-order.json').subscribe(order => {
+    forkJoin({
+      order: this.http.get('/assets/branch-order.json'),
+      regions: this.http.get<any>(`${API_BASE_URL}/Region`),
+      cities: this.http.get<any>(`${API_BASE_URL}/City`),
+      branches: this.http.get<any>(`${API_BASE_URL}/Branch`)
+    }).subscribe(({ order, regions, cities, branches }) => {
+
       this.branchOrder = order as any[];
+      this.allRegions = regions.data || regions;
+      this.allCities = cities.data || cities;
+this.allBranches = Array.isArray(branches) ? branches : branches.data || branches.result || branches.items || [];
       this.initializeReport();
     });
   }
@@ -71,68 +78,96 @@ export class ResultComponent implements OnInit {
 
     this.loadReport();
   }
-loadReport() {
-  this.loading = true;
 
-  this.reportService.getReport(this.filter).subscribe({
-    next: res => {
-      const apiItems = res.data || [];
+  loadReport() {
+    this.loading = true;
 
-      // 🔥 1) نعمل Map للفروع اللي رجعت من الـ API
-      const existingBranches = new Map(apiItems.map(x => [x.branchNumber, x]));
+    this.reportService.getReport(this.filter).subscribe({
+      next: res => {
+        const apiItems = res.data || [];
 
-      // 🔥 2) نعمل Map لأسماء الفروع اللي رجعت من الـ API
-      const branchNamesMap = new Map(apiItems.map(x => [x.branchNumber, x.branchName]));
+        // 1) دمج بيانات الفروع مع المدن والمناطق
+        const enrichedBranchOrder = this.branchOrder.map(b => {
+          const branchInfo = this.allBranches.find(x => x.branchNumber === b.branchNumber);
+          const cityInfo = this.allCities.find(c => c.id === branchInfo?.cityId);
 
-      // 🔥 3) نضيف الفروع الناقصة من JSON
-      this.items = this.branchOrder.map(order => {
-        const found = existingBranches.get(order.branchNumber);
-
-        if (found) {
           return {
-            ...found,
-            serial: order.serial,
-            noSales: false
+            ...b,
+            cityId: branchInfo?.cityId || null,
+            regionId: cityInfo?.regionId || null
           };
+        });
+
+        // 2) فلترة حسب المنطقة
+        let filteredBranchOrder = enrichedBranchOrder;
+
+        if (this.filter.regionId) {
+          filteredBranchOrder = filteredBranchOrder.filter(b => b.regionId === this.filter.regionId);
         }
 
-        // 🔥 اسم الفرع الحقيقي لو موجود في API
-        const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`;
+        // 3) فلترة حسب المدينة
+        if (this.filter.cityId) {
+          filteredBranchOrder = filteredBranchOrder.filter(b => b.cityId === this.filter.cityId);
+        }
 
-        const emptyItem: SalesSummaryReportItem = {
-          serial: order.serial,
-          branchId: 0,
-          branchNumber: order.branchNumber,
-          branchName: realName, // ← هنا الحل
-          totalSales: 0,
-          totalReturns: 0,
-          netSales: 0,
-          invoiceCount: 0,
-          quantityCount: 0,
-          activityType: '',
-          noSales: true
-        };
+        // 4) Map للفروع اللي رجعت من الـ API
+        const existingBranches = new Map(apiItems.map(x => [x.branchNumber, x]));
+        const branchNamesMap = new Map(apiItems.map(x => [x.branchNumber, x.branchName]));
 
-        return emptyItem;
-      });
+        // 5) دمج الفروع + إضافة الفروع اللي مفيهاش يومية
+        this.items = filteredBranchOrder.map(order => {
+          const found = existingBranches.get(order.branchNumber);
 
-      // 🔥 4) ترتيب حسب المسلسل
-      this.items.sort((a, b) => a.serial - b.serial);
+          if (found) {
+            return {
+              ...found,
+              serial: order.serial,
+              noSales: false
+            };
+          }
 
-      // 🔥 5) تحديث الباجينيشن
-      this.currentPage = 1;
-      this.updatePagination();
-      this.loading = false;
-    },
-    error: err => {
-      console.error('Error loading report', err);
-      this.loading = false;
-    }
-  });
-}
+          const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`;
 
+          return {
+            serial: order.serial,
+            branchId: 0,
+            branchNumber: order.branchNumber,
+            branchName: realName,
+            totalSales: 0,
+            totalReturns: 0,
+            netSales: 0,
+            invoiceCount: 0,
+            quantityCount: 0,
+            activityType: '',
+            noSales: true
+          };
+        });
 
+        // 6) حساب المتوسطات
+        this.items = this.items.map(item => {
+          const invoiceCount = item.invoiceCount || 0;
 
+          return {
+            ...item,
+            avgInvoice: invoiceCount > 0 ? item.netSales / invoiceCount : 0,
+            avgPieces: invoiceCount > 0 ? item.quantityCount / invoiceCount : 0
+          };
+        });
+
+        // 7) ترتيب حسب المسلسل
+        this.items.sort((a, b) => a.serial - b.serial);
+
+        // 8) تحديث الباجينيشن
+        this.currentPage = 1;
+        this.updatePagination();
+        this.loading = false;
+      },
+      error: err => {
+        console.error('Error loading report', err);
+        this.loading = false;
+      }
+    });
+  }
 
   updatePagination() {
     this.totalPages = Math.ceil(this.items.length / this.pageSize);
@@ -178,30 +213,49 @@ loadReport() {
     }
   }
 
-getRowClass(row: any) {
-  const classes = [];
+  getInvoiceBadge(row: any) {
+    const isUp = (row.avgInvoice ?? 0) >= 100;
 
-  // 🔥 الصف اللي مفيهوش مبيعات
-if (row.noSales) {
-  classes.push('bg-orange-50', 'border-l-4', 'border-orange-400');
-  return classes;
-}
-  // باقي التنسيقات للفروع العادية
-  if (+row.activityType === 1) classes.push('bg-blue-50');
-  if (+row.activityType === 2) classes.push('bg-emerald-50');
+    return `
+      <span class="px-2 py-1 text-xs font-bold rounded-full animate-pulse
+        ${isUp ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+        ${isUp ? '▲' : '▼'}
+      </span>
+    `;
+  }
 
-  const maxSales = Math.max(...this.items.map(x => x.netSales));
-  if (row.netSales === maxSales) classes.push('bg-yellow-100');
+  getPiecesBadge(row: any) {
+    const isUp = (row.avgPieces ?? 0) >= 3;
 
-  const minSales = Math.min(...this.items.map(x => x.netSales));
-  if (row.netSales === minSales) classes.push('bg-red-100');
+    return `
+      <span class="px-2 py-1 text-xs font-bold rounded-full animate-pulse
+        ${isUp ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+        ${isUp ? '▲' : '▼'}
+      </span>
+    `;
+  }
 
-  const maxReturns = Math.max(...this.items.map(x => x.totalReturns));
-  if (row.totalReturns === maxReturns) classes.push('bg-rose-100');
+  getRowClass(row: any) {
+    if (row.noSales) {
+      return ['bg-orange-100', 'border-l-4', 'border-orange-500'];
+    }
 
-  return classes;
-}
+    const classes = [];
 
+    if (+row.activityType === 1) classes.push('bg-blue-50');
+    if (+row.activityType === 2) classes.push('bg-emerald-50');
+
+    const maxSales = Math.max(...this.items.map(x => x.netSales));
+    if (row.netSales === maxSales) classes.push('bg-yellow-100');
+
+    const minSales = Math.min(...this.items.map(x => x.netSales));
+    if (row.netSales === minSales) classes.push('bg-red-100');
+
+    const maxReturns = Math.max(...this.items.map(x => x.totalReturns));
+    if (row.totalReturns === maxReturns) classes.push('bg-rose-100');
+
+    return classes;
+  }
 
 
   printReport() {
@@ -215,6 +269,7 @@ if (row.noSales) {
     this.items.forEach(row => {
       tableRows += `
         <tr>
+          <td>${row.serial}</td>
           <td>${row.branchNumber}</td>
           <td>${row.branchName}</td>
           <td>${row.totalSales?.toFixed(2)}</td>
@@ -222,6 +277,8 @@ if (row.noSales) {
           <td>${row.netSales?.toFixed(2)}</td>
           <td>${row.invoiceCount}</td>
           <td>${row.quantityCount}</td>
+          <td>${(row.avgInvoice ?? 0).toFixed(2)} ${(row.avgInvoice ?? 0) >= 100 ? '▲' : '▼'}</td>
+          <td>${(row.avgPieces ?? 0).toFixed(2)} ${(row.avgPieces ?? 0) >= 3 ? '▲' : '▼'}</td>
           <td>${this.getActivityName(row.activityType)}</td>
         </tr>
       `;
@@ -237,14 +294,6 @@ if (row.noSales) {
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
             th { background: #eee; }
-
-            @media print {
-              table { page-break-after: auto; }
-              tr { page-break-inside: avoid; page-break-after: auto; }
-              td { page-break-inside: avoid; }
-              thead { display: table-header-group; }
-              tfoot { display: table-footer-group; }
-            }
           </style>
         </head>
         <body>
@@ -253,7 +302,7 @@ if (row.noSales) {
           <table>
             <thead>
               <tr>
-              <th>المسلسل</th>
+                <th>المسلسل</th>
                 <th>رقم الفرع</th>
                 <th>الفرع</th>
                 <th>إجمالي البيع</th>
@@ -261,6 +310,8 @@ if (row.noSales) {
                 <th>صافي البيع</th>
                 <th>عدد الفواتير</th>
                 <th>عدد القطع</th>
+                <th>متوسط الفاتورة</th>
+                <th>متوسط القطع</th>
                 <th>نوع النشاط</th>
               </tr>
             </thead>
@@ -281,14 +332,16 @@ if (row.noSales) {
     const worksheet = workbook.addWorksheet('Sales Summary');
 
     worksheet.addRow([
-       'المسلسل',
-       'رقم الفرع',
+      'المسلسل',
+      'رقم الفرع',
       'اسم الفرع',
       'إجمالي البيع',
       'المرتجعات',
       'صافي البيع',
       'عدد الفواتير',
       'عدد القطع',
+      'متوسط الفاتورة',
+      'متوسط القطع',
       'نوع النشاط'
     ]);
 
@@ -304,14 +357,16 @@ if (row.noSales) {
 
     this.items.forEach(row => {
       worksheet.addRow([
-         row.serial,
-         row.branchNumber,
+        row.serial,
+        row.branchNumber,
         row.branchName,
         row.totalSales,
         row.totalReturns,
         row.netSales,
         row.invoiceCount,
         row.quantityCount,
+        row.avgInvoice,
+        row.avgPieces,
         this.getActivityName(row.activityType)
       ]);
     });

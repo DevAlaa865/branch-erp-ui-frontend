@@ -18,4 +18,6 @@ export interface SalesSummaryReportItem {
   quantityCount: number;
   activityType: string;
   noSales?: boolean;
+  avgInvoice?: number;   // متوسط الفاتورة
+  avgPieces?: number;    // متوسط القطع
 }
