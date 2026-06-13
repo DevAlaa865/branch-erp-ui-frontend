@@ -7,6 +7,7 @@ export interface SalesSummaryReportFilter {
 }
 
 export interface SalesSummaryReportItem {
+ serial: number;
   branchId: number;
   branchNumber:number;
   branchName: string;
@@ -16,4 +17,5 @@ export interface SalesSummaryReportItem {
   invoiceCount: number;
   quantityCount: number;
   activityType: string;
+  noSales?: boolean;
 }
