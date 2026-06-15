@@ -52,7 +52,7 @@ export class ResultComponent implements OnInit {
       this.branchOrder = order as any[];
       this.allRegions = regions.data || regions;
       this.allCities = cities.data || cities;
-this.allBranches = Array.isArray(branches) ? branches : branches.data || branches.result || branches.items || [];
+    this.allBranches = Array.isArray(branches) ? branches : branches.data || branches.result || branches.items || [];
       this.initializeReport();
     });
   }

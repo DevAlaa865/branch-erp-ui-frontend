@@ -53,9 +53,10 @@ getChartData(filter: BranchDailyPerformanceReportFilterDto): Observable<any[]> {
 
 
   // 🔹 جلب المدن
-  getCities(): Observable<any[]> {
-    return this.http.get<any[]>(`${API_BASE_URL}/master/cities`);
-  }
+getCities(): Observable<any[]> {
+  return this.http.get<any[]>(`${API_BASE_URL}/master/cities`);
+}
+
 
   // 🔹 جلب الفروع حسب المدينة
   getBranchesByCity(cityId: number): Observable<any[]> {
