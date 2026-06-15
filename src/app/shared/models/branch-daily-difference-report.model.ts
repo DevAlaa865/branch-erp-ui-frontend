@@ -9,7 +9,7 @@ export interface BranchDailyDifferenceReport {
 }
 
 export interface BranchDailyDifferenceReportFilter {
-  cityId?: number | null;
+ cityIds?: number[];
   branchIds?: number[];
 
   branchNumber?: number | null;

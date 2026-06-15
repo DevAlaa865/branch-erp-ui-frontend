@@ -255,5 +255,10 @@ searchBranchesLocal(list: any[], term: string) {
 getBranchesByCity(cityId: number) {
   return this.http.get(`${this.baseUrl}/Branch/by-city/${cityId}`);
 }
-
+getBranchesByCities(cityIds: number[]) {
+  return this.http.post(
+    `${this.baseUrl}/Branch/by-cities`,
+    { cityIds }
+  );
+}
 }

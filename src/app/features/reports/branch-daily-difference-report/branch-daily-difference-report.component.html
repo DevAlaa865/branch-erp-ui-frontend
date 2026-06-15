@@ -95,12 +95,12 @@
             [items]="cities"
             bindLabel="cityName"
             bindValue="id"
-            placeholder="اختر المدينة"
-            [control]="form.get('cityId')"
-            [multiple]="false"
+            placeholder="اختر المدن"
+            [control]="form.get('cityIds')"
+            [multiple]="true"
             [searchable]="true"
             [clearable]="true"
-            [closeOnSelect]="true"
+            [closeOnSelect]="false"
             dropdownPosition="bottom"
             (selectionChange)="onCityChange(); resetReport()">
           </app-custom-select>

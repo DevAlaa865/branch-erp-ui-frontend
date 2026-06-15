@@ -60,7 +60,7 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
 
       branchMode: ['manual'],
 
-      cityId: [null],
+      cityIds: [[]],
       branchNumber: [null],
 
       reportType: ['difference'],
@@ -91,7 +91,7 @@ export class BranchDailyDifferenceReportComponent implements OnInit {
     this.form.patchValue({ branchMode: mode });
 
     if (mode === 'manual') {
-      this.form.patchValue({ cityId: null });
+      this.form.patchValue({ cityIds: []  });
       this.branches = [];
       this.branchIdsControl.setValue([]);
     }
@@ -202,28 +202,28 @@ selectDiff(type: 'allowed' | 'big' | 'smallIncrease' | 'bigIncrease'): void {
     });
   }
 
-  onCityChange(): void {
-    this.resetReport();
+onCityChange(): void {
+  this.resetReport();
 
-    const cityId = this.form.value.cityId;
+  const cityIds = this.form.value.cityIds;
 
-    if (!cityId) {
+  if (!cityIds || cityIds.length === 0) {
+    this.branches = [];
+    this.branchIdsControl.setValue([]);
+    return;
+  }
+
+  this.masterService.getBranchesByCities(cityIds).subscribe({
+    next: (res: any) => {
+      this.branches = res.data || res || [];
+      this.branchIdsControl.setValue([]);
+    },
+    error: () => {
       this.branches = [];
       this.branchIdsControl.setValue([]);
-      return;
     }
-
-    this.masterService.getBranchesByCity(cityId).subscribe({
-      next: (res: any) => {
-        this.branches = res.data || res || [];
-        this.branchIdsControl.setValue([]);
-      },
-      error: () => {
-        this.branches = [];
-        this.branchIdsControl.setValue([]);
-      }
-    });
-  }
+  });
+}
 
   selectAllBranches(): void {
     this.resetReport();
@@ -241,8 +241,8 @@ selectDiff(type: 'allowed' | 'big' | 'smallIncrease' | 'bigIncrease'): void {
     this.errorMessage = null;
     this.loading = true;
 
-    const filter = {
-      cityId: this.form.value.cityId,
+     const filter = {
+      cityIds: this.form.value.cityIds,
       branchIds: this.branchIdsControl.value || [],
       branchNumber: this.form.value.branchNumber,
 
