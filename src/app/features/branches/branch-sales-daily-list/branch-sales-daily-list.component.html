@@ -62,7 +62,7 @@
   </button>
 
   <!-- جدول النتائج -->
-  <table class="w-full border-collapse text-sm mt-6" *ngIf="results.length > 0">
+  <table class="w-full text-blue-800 border-collapse text-sm mt-6" *ngIf="results.length > 0">
     <thead>
       <tr class="bg-slate-100 text-slate-700">
         <th class="border p-2">التاريخ</th>
@@ -79,14 +79,14 @@
 
     <tbody>
       <tr *ngFor="let row of pagedResults" class="hover:bg-slate-50">
-        <td class="border p-2">{{ row.salesDate }}</td>
-        <td class="border p-2">{{ row.branchName }}</td>
-        <td class="border p-2">{{ row.cashAmount }}</td>
-        <td class="border p-2">{{ row.networkAmount }}</td>
-        <td class="border p-2">{{ row.creditAmount }}</td>
-        <td class="border p-2">{{ row.totalSales }}</td>
-        <td class="border p-2">{{ row.grandTotal }}</td>
-        <td class="border p-2">{{ row.difference }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.salesDate }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.branchName }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.cashAmount }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.networkAmount }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.creditAmount }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.totalSales }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.grandTotal }}</td>
+        <td class="border p-2 text-blue-800 font-bold">{{ row.difference }}</td>
 
         <td class="border p-2 text-center">
           <div class="flex justify-center gap-2">

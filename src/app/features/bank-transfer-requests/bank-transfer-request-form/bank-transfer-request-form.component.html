@@ -1,0 +1,313 @@
+<div class="min-h-screen bg-slate-50 p-6">
+
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="bg-white text-blue-700 rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+
+      <h1 class="text-2xl font-bold text-slate-800">
+        طلب تحويل مبلغ بنكي
+      </h1>
+
+      <p class="text-slate-500 mt-2">
+        يرجى تعبئة جميع البيانات المطلوبة قبل إرسال الطلب
+      </p>
+
+    </div>
+
+    <!-- Form -->
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      class="bg-white text-blue-700 rounded-2xl shadow-sm border border-slate-200 p-6">
+
+      <!-- بيانات الفرع والفاتورة -->
+      <div class="mb-8">
+
+        <h2 class="text-lg font-bold text-blue-700 mb-4 border-b pb-2">
+          بيانات الفرع والفاتورة
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              الفرع
+            </label>
+
+            <app-custom-select
+              [items]="branches"
+              bindLabel="branchName"
+              bindValue="id"
+              placeholder="اختر الفرع"
+              [control]="form.get('branchId')"
+              iconClass="fa fa-building text-blue-500 text-base"
+              errorMessage="الرجاء اختيار الفرع"
+              [searchable]="true"
+              [clearable]="false"
+              [dropdownPosition]="'bottom'">
+            </app-custom-select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              رقم الفاتورة
+            </label>
+
+            <input
+              type="text"
+              formControlName="invoiceNumber"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              مبلغ الفاتورة
+            </label>
+
+            <input
+              type="number"
+              formControlName="invoiceAmount"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- بيانات التحويل -->
+      <div class="mb-8">
+
+        <h2 class="text-lg font-bold text-green-700 mb-4 border-b pb-2">
+          بيانات التحويل
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              نوع التحويل
+            </label>
+
+            <select
+              formControlName="transferType"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+
+              <option [value]="1">
+                تحويل بنكي محلي
+              </option>
+
+              <option [value]="2">
+                تحويل بنكي دولي
+              </option>
+
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              مبلغ التحويل
+            </label>
+
+            <input
+              type="number"
+              formControlName="transferAmount"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- بيانات العميل -->
+      <div class="mb-8">
+
+        <h2 class="text-lg font-bold text-purple-700 mb-4 border-b pb-2">
+          بيانات العميل
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              اسم العميل
+            </label>
+
+            <input
+              type="text"
+              formControlName="customerName"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              رقم الجوال
+            </label>
+
+            <input
+              type="text"
+              formControlName="customerMobile"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- بيانات البنك -->
+      <div class="mb-8">
+
+        <h2 class="text-lg font-bold text-amber-700 mb-4 border-b pb-2">
+          بيانات البنك
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              اسم البنك
+            </label>
+
+            <input
+              type="text"
+              formControlName="bankName"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              رقم الآيبان
+            </label>
+
+            <input
+              type="text"
+              formControlName="iban"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- اعتماد مقدم الطلب -->
+      <div class="mb-8">
+
+        <h2 class="text-lg font-bold text-red-700 mb-4 border-b pb-2">
+          اعتماد مقدم الطلب
+        </h2>
+<!-- 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2">
+              اسم مقدم الطلب
+            </label>
+
+            <input
+              type="text"
+              formControlName="applicantName"
+              placeholder="أدخل اسم مقدم الطلب"
+              class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          </div>
+
+        </div> -->
+
+        <div class="mt-6">
+
+          <label class="block text-sm font-bold text-slate-700 mb-2">
+            التوقيع اليدوي
+          </label>
+
+          <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-4">
+
+            <canvas #signatureCanvas style="width: 100%; height: 200px;" class="bg-white rounded-xl cursor-crosshair"></canvas>
+
+          </div>
+
+          <div class="flex justify-between items-center mt-3">
+
+            <span class="text-sm text-slate-500">
+              قم بالتوقيع داخل المربع
+            </span>
+
+            <button
+              type="button"
+              (click)="clearSignature()"
+              class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white">
+
+              مسح التوقيع
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="mt-6 bg-slate-50 border rounded-xl p-4">
+
+          <div class="grid grid-cols-2 gap-4">
+
+            <div>
+
+          <!--     <div class="text-sm text-slate-500">
+                اسم مقدم الطلب
+              </div>
+
+              <div class="font-bold text-slate-800 mt-2">
+                {{ form.get('applicantName')?.value || '---' }}
+              </div> -->
+
+            </div>
+
+            <div class="text-left">
+
+              <div class="text-sm text-slate-500">
+                التوقيع
+              </div>
+
+              <div class="font-bold text-green-700 mt-2">
+                معتمد
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ملاحظات -->
+      <div class="mb-8">
+
+        <label class="block text-sm font-bold text-slate-700 mb-2">
+          ملاحظات
+        </label>
+
+        <textarea
+          rows="4"
+          formControlName="notes"
+          class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </textarea>
+
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end">
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 disabled:opacity-50">
+
+          {{ loading ? 'جاري الحفظ...' : 'حفظ الطلب' }}
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

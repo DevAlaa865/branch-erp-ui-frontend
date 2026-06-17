@@ -26,6 +26,10 @@
       <li *hasPermission="'Permissions.Manage'" [routerLink]="['general-management']" class="nav-link">الإدارة العامة</li>
       <li *hasPermission="'dashbord.dailysails'" [routerLink]="['dashboard']" class="nav-link">إدارة الفروع</li>
       <li *hasPermission="['Permissions.Manage', 'Sales.View']" [routerLink]="['/revenue-management/sales-summary-report-filters']" class="nav-link">ادارة المبيعات</li>
+      <li *hasPermission="['Permissions.Manage', 'Returns.View']" [routerLink]="['/bank-transfer-request/create']" class="nav-link">نموذج</li>
+      <li *hasPermission="['GeneralManagement.View']" [routerLink]="['/revenue-management/branch-daily-summary']" class="nav-link">يوميه مبيعات الفروع</li>
+      <li *hasPermission="['GeneralManagement.View']"  [routerLink]="['/revenue-management/branch-sales-daily-list']" class="nav-link">بحث اليوميه برقم الفرع</li>
+
     </nav>
 
     <!-- Divider -->

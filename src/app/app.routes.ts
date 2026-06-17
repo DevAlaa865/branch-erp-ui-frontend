@@ -200,6 +200,19 @@ export const routes: Routes = [
               import('./features/admin/authorization/role-permissions/role-permissions.component')
                 .then(m => m.RolePermissionsComponent)
           },
+          {
+          path: 'bank-transfer-request/create',
+          loadComponent: () =>
+            import('./features/bank-transfer-requests/bank-transfer-request-form/bank-transfer-request-form.component')
+              .then(m => m.BankTransferRequestFormComponent)
+        },
+        {
+        path: 'bank-transfer-request/list',
+        loadComponent: () =>
+          import('./features/bank-transfer-requests/bank-transfer-request-list/bank-transfer-request-list.component')
+            .then(m => m.BankTransferRequestListComponent)
+      },
+
           /////
      /*  {
       path: 'reports/branch-daily-summary',
