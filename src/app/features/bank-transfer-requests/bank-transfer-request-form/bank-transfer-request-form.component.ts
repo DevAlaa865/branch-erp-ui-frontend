@@ -161,13 +161,11 @@ save(): void {
   // حدث الـ validation
   this.form.updateValueAndValidity();
 
-  console.log(this.form.value);
-  console.log(this.form.valid);
 
   // بعد إضافة التوقيع افحص الفورم
   if (this.form.invalid) {
 
-    console.log(this.form.controls);
+
 
     this.form.markAllAsTouched();
 
@@ -191,6 +189,8 @@ save(): void {
         this.signaturePad.clear();
 
         this.loading = false;
+            this.router.navigate(['/bank-transfer-request/list']);
+
       },
       error: err => {
 

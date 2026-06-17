@@ -56,21 +56,25 @@ export class BankTransferRequestListComponent implements OnInit {
   // ============================
   // Forms
   // ============================
-  buildFilterForm(): void {
-    this.filterForm = this.fb.group({
-      requestNumber: [''],
-      branchId: [null],
-      invoiceNumber: [''],
-      customerName: [''],
-      customerMobile: [''],
-      iban: [''],
-      status: [null],
-      fromRequestDate: [null],
-      toRequestDate: [null],
-      fromTransferDate: [null],
-      toTransferDate: [null]
-    });
-  }
+buildFilterForm(): void {
+  const today = new Date();
+  const formattedDate = today.toISOString().split('T')[0]; // yyyy-MM-dd
+
+  this.filterForm = this.fb.group({
+    requestNumber: [''],
+    branchId: [null],
+    invoiceNumber: [''],
+    customerName: [''],
+    customerMobile: [''],
+    iban: [''],
+    status: [null],
+    fromRequestDate: [formattedDate],
+    toRequestDate: [formattedDate],
+    fromTransferDate: [formattedDate],
+    toTransferDate: [formattedDate]
+  });
+}
+
 
   buildStatusForm(): void {
     this.statusForm = this.fb.group({
