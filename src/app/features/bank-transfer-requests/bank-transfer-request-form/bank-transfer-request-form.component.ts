@@ -40,6 +40,8 @@ export class BankTransferRequestFormComponent
   loading = false;
   branches: any[] = [];
 
+  selectedFile: File | null = null;   // ⭐ الملف يتخزن مؤقتًا فقط
+
   @ViewChild('signatureCanvas')
   signatureCanvas!: ElementRef<HTMLCanvasElement>;
 
@@ -58,7 +60,6 @@ export class BankTransferRequestFormComponent
   }
 
   ngAfterViewInit(): void {
-    // ننتظر حتى يتم رسم الصفحة بالكامل
     setTimeout(() => {
       this.initializeSignaturePad();
     }, 100);
@@ -67,36 +68,35 @@ export class BankTransferRequestFormComponent
   // ============================
   // Signature Pad
   // ============================
-initializeSignaturePad(): void {
-  const canvas = this.signatureCanvas.nativeElement;
+  initializeSignaturePad(): void {
+    const canvas = this.signatureCanvas.nativeElement;
 
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
 
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
 
-      if (width > 0 && height > 0) {
-        canvas.width = width;
-        canvas.height = height;
+        if (width > 0 && height > 0) {
+          canvas.width = width;
+          canvas.height = height;
 
-        this.signaturePad = new SignaturePad(canvas, {
-          backgroundColor: '#ffffff',
-          penColor: '#000000',
-          minWidth: 1.2,
-          maxWidth: 2.5,
-          throttle: 0,
-          velocityFilterWeight: 0.7
-        });
+          this.signaturePad = new SignaturePad(canvas, {
+            backgroundColor: '#ffffff',
+            penColor: '#000000',
+            minWidth: 1.2,
+            maxWidth: 2.5,
+            throttle: 0,
+            velocityFilterWeight: 0.7
+          });
 
-        observer.disconnect(); // نوقف المراقبة بعد النجاح
+          observer.disconnect();
+        }
       }
-    }
-  });
+    });
 
-  observer.observe(canvas);
-}
-
+    observer.observe(canvas);
+  }
 
   clearSignature(): void {
     if (this.signaturePad) {
@@ -131,77 +131,101 @@ initializeSignaturePad(): void {
       bankName: ['', Validators.required],
       iban: ['', Validators.required],
       applicantSignature: ['', Validators.required],
-      notes: ['']
+      notes: [''],
+      attachmentPath: ['']   // ⭐ موجود لكن مش هنستخدمه قبل الحفظ
     });
+  }
+
+  // ============================
+  // File Select (بدون رفع)
+  // ============================
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0] ?? null;
   }
 
   // ============================
   // Save
   // ============================
-save(): void {
+  save(): void {
 
-  if (!this.signaturePad) {
-    alert('حدث خطأ في التوقيع');
-    return;
-  }
+    if (!this.signaturePad) {
+      alert('حدث خطأ في التوقيع');
+      return;
+    }
 
-  if (this.signaturePad.isEmpty()) {
-    alert('يرجى توقيع مقدم الطلب');
-    return;
-  }
+    if (this.signaturePad.isEmpty()) {
+      alert('يرجى توقيع مقدم الطلب');
+      return;
+    }
 
-  // حط التوقيع الأول
-  const signatureBase64 =
-    this.signaturePad.toDataURL('image/png');
+    const signatureBase64 =
+      this.signaturePad.toDataURL('image/png');
 
-  this.form.patchValue({
-    applicantSignature: signatureBase64
-  });
-
-  // حدث الـ validation
-  this.form.updateValueAndValidity();
-
-
-  // بعد إضافة التوقيع افحص الفورم
-  if (this.form.invalid) {
-
-
-
-    this.form.markAllAsTouched();
-
-    return;
-  }
-
-  this.loading = true;
-
-  this.service.create(this.form.value)
-    .subscribe({
-      next: () => {
-
-        alert('تم حفظ الطلب بنجاح');
-
-        this.form.reset();
-
-        this.form.patchValue({
-          transferType: 1
-        });
-
-        this.signaturePad.clear();
-
-        this.loading = false;
-            this.router.navigate(['/bank-transfer-request/list']);
-
-      },
-      error: err => {
-
-        console.error(err);
-
-        this.loading = false;
-
-        alert('حدث خطأ أثناء الحفظ');
-      }
+    this.form.patchValue({
+      applicantSignature: signatureBase64
     });
 
-}
+    this.form.updateValueAndValidity();
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+
+    // ⭐ 1) احفظ الطلب أولاً
+    this.service.create(this.form.value)
+      .subscribe({
+        next: (res: any) => {
+
+          const requestId = res.data?.id;
+
+          // ⭐ 2) لو مفيش ملف → خلص
+          if (!this.selectedFile) {
+            this.finishSuccess();
+            return;
+          }
+
+          // ⭐ 3) ارفع الملف بعد الحفظ
+          this.service.uploadAttachment(requestId, this.selectedFile)
+            .subscribe({
+              next: (uploadRes: any) => {
+
+                const path = uploadRes.path;
+
+                // ⭐ 4) حدّث الطلب بالـ path
+                this.service.updateAttachment(requestId, path)
+                  .subscribe({
+                    next: () => this.finishSuccess(),
+                    error: () => this.finishError()
+                  });
+
+              },
+              error: () => this.finishError()
+            });
+
+        },
+        error: () => this.finishError()
+      });
+
+  }
+
+  finishSuccess() {
+    alert('تم حفظ الطلب بنجاح');
+
+    this.form.reset();
+    this.form.patchValue({ transferType: 1 });
+    this.signaturePad.clear();
+    this.selectedFile = null;
+
+    this.loading = false;
+    this.router.navigate(['/bank-transfer-request/list']);
+  }
+
+  finishError() {
+    alert('حدث خطأ أثناء الحفظ');
+    this.loading = false;
+  }
 
 }

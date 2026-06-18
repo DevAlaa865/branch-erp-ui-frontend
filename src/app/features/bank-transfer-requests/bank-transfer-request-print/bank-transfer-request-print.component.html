@@ -1,0 +1,74 @@
+<div class="print-container text-blue-900 font-bold">
+
+  <!-- Header -->
+<header class="header">
+  <div class="header-row">
+    <div class="right">
+      <p class="request-no">رقم الطلب: {{request.requestNumber}}</p>
+    </div>
+
+    <div class="center">
+      <h2 class="document-title">تحويل مرتجع بنكي</h2>
+    </div>
+
+    <div class="left">
+      <h1 class="company-name">شركة سيزون</h1>
+    </div>
+  </div>
+</header>
+
+
+  <!-- بيانات الطلب -->
+  <section class="card">
+    <h3 class="card-title">بيانات الطلب</h3>
+    <div class="row mt-4"><span class="label">تاريخ الطلب</span><span class="value">{{request.requestDate | date:'dd/MM/yyyy HH:mm'}}</span></div>
+    <div class="row"><span class="label">الحالة</span><span class="value">{{request.status == 1 ? 'معلق' : request.status == 2 ? 'تم التحويل' : 'ملغي'}}</span></div>
+    <div class="row"><span class="label">مرجع التحويل</span><span class="value">{{request.transferReferenceNumber || '-'}}</span></div>
+  </section>
+
+  <!-- بيانات الفرع -->
+  <section class="card">
+    <h3 class="card-title">بيانات الفرع</h3>
+    <div class="row"><span class="label">اسم الفرع</span><span class="value">{{request.branchName}}</span></div>
+    <div class="row"><span class="label">رقم الفرع</span><span class="value">{{request.branchNumber}}</span></div>
+  </section>
+
+  <!-- بيانات العميل -->
+  <section class="card">
+    <h3 class="card-title">بيانات العميل</h3>
+    <div class="row"><span class="label">اسم العميل</span><span class="value">{{request.customerName}}</span></div>
+    <div class="row"><span class="label">رقم الجوال</span><span class="value">{{request.customerMobile}}</span></div>
+  </section>
+
+  <!-- بيانات الفاتورة -->
+  <section class="card">
+    <h3 class="card-title">بيانات الفاتورة</h3>
+    <div class="row"><span class="label">رقم الفاتورة</span><span class="value">{{request.invoiceNumber}}</span></div>
+    <div class="row"><span class="label">قيمة الفاتورة</span><span class="value">{{request.invoiceAmount}}</span></div>
+  </section>
+
+  <!-- بيانات التحويل البنكي -->
+  <section class="card">
+    <h3 class="card-title">بيانات التحويل البنكي</h3>
+    <div class="row"><span class="label">اسم البنك</span><span class="value">{{request.bankName}}</span></div>
+    <div class="row"><span class="label">IBAN</span><span class="value">{{request.iban}}</span></div>
+    <div class="row"><span class="label">مبلغ التحويل</span><span class="value">{{request.transferAmount}}</span></div>
+    <div class="row"><span class="label">تاريخ التحويل</span><span class="value">{{request.transferDate | date:'dd/MM/yyyy HH:mm'}}</span></div>
+  </section>
+
+
+
+  <!-- التوقيع -->
+  <div class="signature-box">
+    <p class="signature-title">توقيع مقدم الطلب</p>
+    <img *ngIf="request.applicantSignature" [src]="request.applicantSignature" alt="توقيع مقدم الطلب">
+  </div>
+
+  <!-- الاعتمادات -->
+  <footer class="footer-signatures">
+    <div><p>مقدم الطلب</p><div class="line"></div></div>
+    <div><p>الإدارة المالية</p><div class="line"></div></div>
+    <div><p>اعتماد التحويل</p><div class="line"></div></div>
+  </footer>
+
+</div>

@@ -212,6 +212,7 @@ export const routes: Routes = [
           import('./features/bank-transfer-requests/bank-transfer-request-list/bank-transfer-request-list.component')
             .then(m => m.BankTransferRequestListComponent)
       },
+     
 
           /////
      /*  {
@@ -535,7 +536,13 @@ export const routes: Routes = [
         ]
       }
     ]
+    
   },
-
+ {
+        path: 'bank-transfer-request/print/:id',
+        loadComponent: () =>
+          import('./features/bank-transfer-requests/bank-transfer-request-print/bank-transfer-request-print.component')
+            .then(m => m.BankTransferRequestPrintComponent)
+      },
   { path: '**', redirectTo: 'login' }
 ];

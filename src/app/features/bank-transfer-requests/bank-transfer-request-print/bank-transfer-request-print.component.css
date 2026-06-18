@@ -1,0 +1,214 @@
+@page {
+  size: A4;
+  margin: 10mm 8mm;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  direction: rtl;
+  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  color: #000;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.print-container {
+  width: 100%;
+  max-width: 190mm;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 6px;
+}
+
+.company-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.document-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.request-no {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Cards */
+.card {
+  border: 1px solid #000;
+  margin-bottom: 8px;
+  page-break-inside: avoid;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.card-title {
+  background: #f1f1f1;
+  padding: 6px 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  font-size: 14px;
+}
+
+.row {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 140px;
+  background: #fafafa;
+  padding: 6px 10px;
+  font-weight: bold;
+  border-left: 1px solid #ddd;
+}
+
+.value {
+  flex: 1;
+  padding: 6px 10px;
+  word-break: break-word;
+}
+
+/* Notes */
+.notes {
+  min-height: 40px;
+  padding: 10px;
+  line-height: 1.5;
+}
+
+/* Signature */
+.signature-box {
+  text-align: left;
+  margin-top: 10px;
+}
+
+.signature-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.signature-box img {
+  max-height: 50px;
+  max-width: 180px;
+  display: block;
+  margin-left: 0;
+}
+
+/* Footer Signatures */
+.footer-signatures {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  page-break-inside: avoid;
+}
+
+.footer-signatures > div {
+  width: 30%;
+  text-align: center;
+}
+
+.footer-signatures p {
+  margin-bottom: 15px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.line {
+  border-bottom: 1px solid #000;
+}
+
+/* Print */
+@media print {
+  html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-container {
+    max-width: 100%;
+    width: 100%;
+    zoom: 0.93;
+  }
+
+  .card,
+  .signature-box,
+  .footer-signatures {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100%;
+  }
+.header {
+  border-bottom: 2px solid #000;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.header {
+  border-bottom: 2px solid #000;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.right, .center, .left {
+  flex: 1;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.company-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.document-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #000;
+}
+
+.request-no {
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+}
+
+
+}

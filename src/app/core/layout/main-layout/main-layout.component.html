@@ -29,6 +29,7 @@
       <li *hasPermission="['Permissions.Manage', 'Returns.View']" [routerLink]="['/bank-transfer-request/create']" class="nav-link">نموذج</li>
       <li *hasPermission="['GeneralManagement.View']" [routerLink]="['/revenue-management/branch-daily-summary']" class="nav-link">يوميه مبيعات الفروع</li>
       <li *hasPermission="['GeneralManagement.View']"  [routerLink]="['/revenue-management/branch-sales-daily-list']" class="nav-link">بحث اليوميه برقم الفرع</li>
+      <li *hasPermission="['Permissions.Manage', 'Returns.View','Countries.Create']"  [routerLink]="['/bank-transfer-request/list']" class="nav-link">ادارة الطلبات البنكيه</li>
 
     </nav>
 

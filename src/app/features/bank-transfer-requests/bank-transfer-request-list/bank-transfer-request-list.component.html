@@ -5,193 +5,115 @@
     <!-- Header -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
       <h1 class="text-2xl font-bold text-slate-800">
-     طلبات التحويل البنكى للمرتجعات 
+        طلبات التحويل البنكى للمرتجعات
       </h1>
       <p class="text-slate-500 mt-2">
         يمكنك البحث في الطلبات وتحديث حالتها
       </p>
     </div>
 
-<!-- Filter -->
-<div class="bg-gradient-to-br from-slate-50 to-slate-100 text-blue-900 font-bold rounded-2xl shadow-md border border-slate-300 p-6 mb-6">
+    <!-- Filter -->
+    <div class="bg-gradient-to-br from-slate-50 to-slate-100 text-blue-900 font-bold rounded-2xl shadow-md border border-slate-300 p-6 mb-6">
 
-  <h2 class="text-lg font-bold text-indigo-700 mb-4 border-b pb-2">
-    البحث في الطلبات
-  </h2>
+      <h2 class="text-lg font-bold text-indigo-700 mb-4 border-b pb-2">
+        البحث في الطلبات
+      </h2>
 
-  <form
-    [formGroup]="filterForm"
-    (ngSubmit)="search()"
-    class="space-y-4">
+      <form [formGroup]="filterForm" (ngSubmit)="search()" class="space-y-4">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          رقم الطلب
-        </label>
-        <input
-          type="text"
-          formControlName="requestNumber"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">رقم الطلب</label>
+            <input type="text" formControlName="requestNumber"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          الفرع
-        </label>
-        <app-custom-select
-          [items]="branches"
-          bindLabel="branchName"
-          bindValue="id"
-          placeholder="كل الفروع"
-          [control]="filterForm.get('branchId')"
-          iconClass="fa fa-building text-indigo-500 text-base"
-          [searchable]="true"
-          [clearable]="true"
-          [dropdownPosition]="'bottom'">
-        </app-custom-select>
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">الفرع</label>
+            <app-custom-select
+              [items]="branches"
+              bindLabel="branchName"
+              bindValue="id"
+              placeholder="كل الفروع"
+              [control]="filterForm.get('branchId')"
+              iconClass="fa fa-building text-indigo-500 text-base"
+              [searchable]="true"
+              [clearable]="true"
+              [dropdownPosition]="'bottom'">
+            </app-custom-select>
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          رقم الفاتورة
-        </label>
-        <input
-          type="text"
-          formControlName="invoiceNumber"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">رقم الفاتورة</label>
+            <input type="text" formControlName="invoiceNumber"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          اسم العميل
-        </label>
-        <input
-          type="text"
-          formControlName="customerName"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">اسم العميل</label>
+            <input type="text" formControlName="customerName"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          جوال العميل
-        </label>
-        <input
-          type="text"
-          formControlName="customerMobile"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">جوال العميل</label>
+            <input type="text" formControlName="customerMobile"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-   <!--    <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          رقم الآيبان
-        </label>
-        <input
-          type="text"
-          formControlName="iban"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div> -->
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">الحالة</label>
+            <select formControlName="status"
+                    class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option [ngValue]="null">كل الحالات</option>
+              <option *ngFor="let s of statusOptions" [value]="s.id">{{ s.name }}</option>
+            </select>
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          الحالة
-        </label>
-        <select
-          formControlName="status"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          <option [ngValue]="null">كل الحالات</option>
-          <option *ngFor="let s of statusOptions" [value]="s.id">
-            {{ s.name }}
-          </option>
-        </select>
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">من تاريخ الطلب</label>
+            <input type="date" lang="en" formControlName="fromRequestDate"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-      <!-- التاريخ واضح ومفهوم -->
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          من تاريخ الطلب
-        </label>
-        <input
-          type="date"
-          lang="en"
-          formControlName="fromRequestDate"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+          <div>
+            <label class="block text-sm font-bold text-slate-700 mb-1">إلى تاريخ الطلب</label>
+            <input type="date" lang="en" formControlName="toRequestDate"
+                   class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
 
-      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          إلى تاريخ الطلب
-        </label>
-        <input
-          type="date"
-          lang="en"
-          formControlName="toRequestDate"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div>
+        </div>
 
- <!--      <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          من تاريخ التحويل
-        </label>
-        <input
-          type="date"
-          lang="en"
-          formControlName="fromTransferDate"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div> -->
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" (click)="resetFilter()"
+                  class="px-5 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-200">
+            مسح البحث
+          </button>
 
-<!--       <div>
-        <label class="block text-sm font-bold text-slate-700 mb-1">
-          إلى تاريخ التحويل
-        </label>
-        <input
-          type="date"
-          lang="en"
-          formControlName="toTransferDate"
-          class="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-      </div> -->
+          <button type="submit" [disabled]="loading"
+                  class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold disabled:opacity-50">
+            {{ loading ? 'جاري البحث...' : 'بحث' }}
+          </button>
+        </div>
+
+      </form>
 
     </div>
-
-    <div class="flex justify-end gap-3 pt-2">
-      <button
-        type="button"
-        (click)="resetFilter()"
-        class="px-5 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-200">
-        مسح البحث
-      </button>
-
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold disabled:opacity-50">
-        {{ loading ? 'جاري البحث...' : 'بحث' }}
-      </button>
-    </div>
-
-  </form>
-
-</div>
-
 
     <!-- List -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+    <div class="bg-white text-blue-900 font-bold rounded-2xl shadow-sm border border-slate-200 p-6">
 
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-slate-800">
-          نتائج البحث
-        </h2>
-        <span class="text-sm text-slate-500">
-          عدد الطلبات: {{ requests.length || 0 }}
-        </span>
+        <h2 class="text-lg font-bold text-slate-800">نتائج البحث</h2>
+        <span class="text-sm text-slate-500">عدد الطلبات: {{ requests.length || 0 }}</span>
       </div>
 
-<div class="overflow-x-auto">
+    <div class="overflow-x-auto">
   <table class="w-full text-blue-800 border-collapse text-sm mt-6">
     <thead>
-      <tr class="bg-slate-100 text-slate-700 ">
-        <th class="border p-2 text-center ">رقم الطلب</th>
+      <tr class="bg-slate-100 text-slate-700">
+        <th class="border p-2 text-center">رقم الطلب</th>
         <th class="border p-2 text-center">تاريخ الطلب</th>
         <th class="border p-2 text-center">الفرع</th>
         <th class="border p-2 text-center">رقم الفاتورة</th>
@@ -199,134 +121,444 @@
         <th class="border p-2 text-center">مبلغ التحويل</th>
         <th class="border p-2 text-center">الحالة</th>
         <th class="border p-2 text-center">مرجع التحويل</th>
+
+        <!-- ⭐⭐⭐ عمود المرفق الجديد ⭐⭐⭐ -->
+        <th class="border p-2 text-center">المرفق</th>
+
         <th class="border p-2 text-center">إجراءات</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngIf="!requests || requests.length === 0">
-        <td colspan="9" class="text-center py-6 text-slate-500">
+
+      <tr *ngIf="pagedRequests.length === 0">
+        <td colspan="10" class="text-center py-6 text-slate-500">
           لا توجد طلبات مطابقة لبيانات البحث
         </td>
       </tr>
 
-      <tr *ngFor="let r of requests" class="hover:bg-slate-50">
+      <tr *ngFor="let r of pagedRequests" class="hover:bg-slate-50">
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
-          {{ r.requestNumber }}
-        </td>
+        <td class="border p-2 text-right text-blue-900 font-bold">{{ r.requestNumber }}</td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
+        <td class="border p-2 text-right text-blue-900 font-bold">
           {{ r.requestDate | date:'yyyy/MM/dd HH:mm' }}
         </td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
-          {{ r.branchName }}
-        </td>
+        <td class="border p-2 text-right text-blue-900 font-bold">{{ r.branchName }}</td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
-          {{ r.invoiceNumber }}
-        </td>
+        <td class="border p-2 text-right text-blue-900 font-bold">{{ r.invoiceNumber }}</td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
-          {{ r.customerName }}
-        </td>
+        <td class="border p-2 text-right text-blue-900 font-bold">{{ r.customerName }}</td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
+        <td class="border p-2 text-right text-blue-900 font-bold">
           {{ r.transferAmount | number:'1.2-2' }}
         </td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
-          <span
-            class="px-3 py-1 rounded-full text-xs font-bold"
-            [ngClass]="{
-              'bg-yellow-100 text-yellow-700': r.status === 1,
-              'bg-green-100 text-green-700': r.status === 2,
-              'bg-red-100 text-red-700': r.status === 3
-            }">
+        <td class="border p-2 text-right text-blue-900 font-bold">
+          <span class="px-3 py-1 rounded-full text-xs font-bold"
+                [ngClass]="{
+                  'bg-yellow-100 text-yellow-700': r.status === 1,
+                  'bg-green-100 text-green-700': r.status === 2,
+                  'bg-red-100 text-red-700': r.status === 3
+                }">
             {{ r.status === 1 ? 'معلق' : r.status === 2 ? 'تم التحويل' : 'ملغي' }}
           </span>
         </td>
 
-        <td class="border p-2 text-blue-800 font-bold text-right">
+        <td class="border p-2 text-right text-blue-900 font-bold">
           {{ r.transferReferenceNumber || '---' }}
         </td>
 
-        <td class="border p-2 text-center">
-          <button
-            type="button"
-            (click)="openStatusModal(r)"
-            class="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs">
-            تغيير الحالة
-          </button>
+        <!-- ⭐⭐⭐ عمود المرفق ⭐⭐⭐ -->
+        <td class="border p-2 text-center text-blue-900">
+
+          <ng-container *ngIf="r.attachmentPath; else noFile">
+
+            <button
+              type="button"
+              (click)="openAttachment(r.attachmentPath)"
+              class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-bold 
+                     hover:bg-indigo-700 hover:scale-105 transition-all duration-200">
+              عرض
+            </button>
+
+            <button
+              type="button"
+              (click)="printAttachment(r.attachmentPath)"
+              class="px-3 py-1 rounded-lg bg-orange-600 text-white text-xs font-bold 
+                     hover:bg-orange-700 hover:scale-105 transition-all duration-200 ml-2">
+              طباعة
+            </button>
+
+          </ng-container>
+
+          <ng-template #noFile>
+            <span class="text-slate-400 text-xs">لا يوجد</span>
+          </ng-template>
+
+        </td>
+
+        <!-- الإجراءات -->
+        <td class="border p-2 text-center text-blue-900">
+          <div class="flex items-center justify-center gap-4">
+
+            <button
+              type="button"
+              *hasPermission="['Permissions.Manage', 'Countries.Create']"
+              
+              (click)="openStatusModal(r)"
+              class="px-3 py-1 rounded-lg bg-purple-600 text-white text-xs font-bold 
+                     hover:bg-purple-700 hover:scale-105 transition-all duration-200">
+              تغيير الحالة
+            </button>
+
+            <button
+              type="button"
+              (click)="openDetailsModal(r)"
+              class="px-3 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold 
+                     hover:bg-emerald-700 hover:scale-105 transition-all duration-200">
+              تفاصيل الطلب
+            </button>
+
+          </div>
         </td>
 
       </tr>
+
     </tbody>
   </table>
 </div>
 
 
+      <!-- Pagination -->
+      <div class="flex justify-center items-center gap-2 mt-6" *ngIf="totalPages >= 1">
 
+        <button (click)="goToPage(page - 1)"
+                [disabled]="page === 1"
+                class="px-3 py-1 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40">
+          السابق
+        </button>
+
+        <ng-container *ngFor="let p of [].constructor(totalPages); let i = index">
+          <button (click)="goToPage(i + 1)"
+                  [ngClass]="{
+                    'bg-blue-600 text-white': page === i + 1,
+                    'bg-white text-slate-700 border border-slate-300 hover:bg-slate-100': page !== i + 1
+                  }"
+                  class="px-3 py-1 rounded-lg">
+            {{ i + 1 }}
+          </button>
+        </ng-container>
+
+        <button (click)="goToPage(page + 1)"
+                [disabled]="page === totalPages"
+                class="px-3 py-1 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 disabled:opacity-40">
+          التالي
+        </button>
+
+      </div>
 
     </div>
 
-    <!-- Status Modal (بسيط) -->
-    <div
-      *ngIf="selectedRequest"
-      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <!-- Status Modal -->
+    <div *ngIf="selectedRequest"
+         class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-      <div class="bg-white text-blue-800 font-boldrounded-2xl shadow-lg w-full max-w-lg p-6">
+      <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg p-6">
 
         <h3 class="text-lg font-bold text-slate-800 mb-4">
           تغيير حالة الطلب: {{ selectedRequest.requestNumber }}
         </h3>
 
-        <form
-          [formGroup]="statusForm"
-          (ngSubmit)="saveStatus()"
-          class="space-y-4">
+        <form [formGroup]="statusForm" (ngSubmit)="saveStatus()" class="space-y-4">
 
           <div>
-            <label class="block text-sm font-bold text-slate-700 mb-1">
-              الحالة
-            </label>
-            <select
-              formControlName="status"
-              class="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-              <option *ngFor="let s of statusOptions" [value]="s.id">
-                {{ s.name }}
-              </option>
+            <label class="block text-sm font-bold text-slate-700 mb-1">الحالة</label>
+            <select formControlName="status"
+                    class="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option *ngFor="let s of statusOptions" [value]="s.id">{{ s.name }}</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-sm font-bold text-slate-700 mb-1">
-              رقم مرجع التحويل البنكي
-            </label>
-            <input
-              type="text"
-              formControlName="transferReferenceNumber"
-              class="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <label class="block text-sm font-bold text-slate-700 mb-1">رقم مرجع التحويل البنكي</label>
+            <input type="text" formControlName="transferReferenceNumber"
+                   class="w-full text-blue-900 font-bold border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none">
           </div>
 
           <div class="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              (click)="closeStatusModal()"
-              class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100">
+            <button type="button" (click)="closeStatusModal()"
+                    class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100">
               إلغاء
             </button>
 
-            <button
-              type="submit"
-              [disabled]="loading"
-              class="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold disabled:opacity-50">
+            <button type="submit" [disabled]="loading"
+                    class="px-5 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold disabled:opacity-50">
               {{ loading ? 'جاري الحفظ...' : 'حفظ' }}
             </button>
           </div>
 
         </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div *ngIf="detailsRequest"
+     class="fixed inset-0 bg-black/60 flex justify-center items-center z-50 p-4">
+
+  <div class="bg-white text-blue-900 font-bold rounded-xl shadow-2xl w-full max-w-5xl overflow-auto max-h-[95vh]">
+
+    <!-- Header -->
+    <div class="bg-slate-800 text-white p-6 flex justify-between items-center">
+
+      <div>
+        <h2 class="text-2xl font-bold">
+          نموذج طلب تحويل بنكي
+        </h2>
+
+        <p class="text-sm opacity-80">
+          Bank Transfer Request
+        </p>
+      </div>
+
+      <div class="flex gap-2">
+
+        <button
+        class="bg-green-600 text-white px-4 py-2 rounded"
+        (click)="openPrintPage()">
+        طباعة
+        </button>
+
+        <button
+          (click)="closeDetailsModal()"
+          class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded">
+          ✖ إغلاق
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="printArea" class="p-8">
+
+      <!-- بيانات أساسية -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          بيانات الطلب
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 p-4">
+
+          <div>
+            <span class="font-bold">رقم الطلب:</span>
+            {{detailsRequest.requestNumber}}
+          </div>
+
+          <div>
+            <span class="font-bold">تاريخ الطلب:</span>
+            {{detailsRequest.requestDate | date:'yyyy-MM-dd HH:mm'}}
+          </div>
+
+          <div>
+            <span class="font-bold">الحالة:</span>
+
+            <span *ngIf="detailsRequest.status == 1">
+              معلق
+            </span>
+
+            <span *ngIf="detailsRequest.status == 2">
+              تم التحويل
+            </span>
+
+            <span *ngIf="detailsRequest.status == 3">
+              ملغي
+            </span>
+
+          </div>
+
+          <div>
+            <span class="font-bold">رقم مرجع التحويل:</span>
+            {{detailsRequest.transferReferenceNumber || '-'}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- الفرع -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          بيانات الفرع
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 p-4">
+
+          <div>
+            <span class="font-bold">اسم الفرع:</span>
+            {{detailsRequest.branchName}}
+          </div>
+
+          <div>
+            <span class="font-bold">رقم الفرع:</span>
+            {{detailsRequest.branchNumber}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- العميل -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          بيانات العميل
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 p-4">
+
+          <div>
+            <span class="font-bold">اسم العميل:</span>
+            {{detailsRequest.customerName}}
+          </div>
+
+          <div>
+            <span class="font-bold">رقم الجوال:</span>
+            {{detailsRequest.customerMobile}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- الفاتورة -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          بيانات الفاتورة
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 p-4">
+
+          <div>
+            <span class="font-bold">رقم الفاتورة:</span>
+            {{detailsRequest.invoiceNumber}}
+          </div>
+
+          <div>
+            <span class="font-bold">قيمة الفاتورة:</span>
+            {{detailsRequest.invoiceAmount | number}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- التحويل -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          بيانات التحويل البنكي
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 p-4">
+
+          <div>
+            <span class="font-bold">اسم البنك:</span>
+            {{detailsRequest.bankName}}
+          </div>
+
+          <div>
+            <span class="font-bold">IBAN:</span>
+            {{detailsRequest.iban}}
+          </div>
+
+          <div>
+            <span class="font-bold">مبلغ التحويل:</span>
+            {{detailsRequest.transferAmount | number}}
+          </div>
+
+          <div>
+            <span class="font-bold">تاريخ التحويل:</span>
+            {{detailsRequest.transferDate | date:'yyyy-MM-dd HH:mm'}}
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ملاحظات -->
+
+      <div class="border rounded-lg mb-6">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          الملاحظات
+        </div>
+
+        <div class="p-4 min-h-[100px]">
+          {{detailsRequest.notes || 'لا توجد ملاحظات'}}
+        </div>
+
+      </div>
+
+      <!-- التوقيع -->
+
+      <div class="border rounded-lg">
+
+        <div class="bg-gray-100 p-3 font-bold">
+          توقيع مقدم الطلب
+        </div>
+
+        <div class="p-6 text-center">
+
+          <img
+            *ngIf="detailsRequest.applicantSignature"
+            [src]="detailsRequest.applicantSignature"
+            class="mx-auto h-32 border rounded">
+
+        </div>
+
+      </div>
+
+      <!-- التذييل -->
+
+      <div class="mt-10 grid grid-cols-3 text-center gap-8">
+
+        <div>
+          <div class="font-bold mb-12">
+            مقدم الطلب
+          </div>
+
+          <hr>
+        </div>
+
+        <div>
+          <div class="font-bold mb-12">
+            الإدارة المالية
+          </div>
+
+          <hr>
+        </div>
+
+        <div>
+          <div class="font-bold mb-12">
+            اعتماد التحويل
+          </div>
+
+          <hr>
+        </div>
 
       </div>
 

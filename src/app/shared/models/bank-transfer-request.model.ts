@@ -12,7 +12,7 @@ export interface BankTransferRequest {
   invoiceAmount: number;
 
   transferType: number;
-
+attachmentPath?: string;
   transferAmount: number;
 
   customerName: string;
@@ -40,7 +40,7 @@ export interface CreateBankTransferRequest {
 
   invoiceNumber: string;
   invoiceAmount: number;
-
+attachmentPath?: string;
   transferType: number;
 
   transferAmount: number;
@@ -60,7 +60,7 @@ export interface BankTransferRequestFilter {
   requestNumber?: string;
 
   branchId?: number;
-
+attachmentPath?: string;
   invoiceNumber?: string;
 
   customerName?: string;

@@ -48,4 +48,26 @@ export class BankTransferRequestService {
       dto
     );
   }
+
+  // ⭐⭐⭐ رفع الملف بعد الحفظ — مربوط بالـ requestId ⭐⭐⭐
+  uploadAttachment(requestId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(
+      `${this.baseUrl}/upload-attachment/${requestId}`,
+      formData
+    );
+  }
+
+  // ⭐⭐⭐ تحديث الطلب بالـ AttachmentPath ⭐⭐⭐
+  updateAttachment(requestId: number, attachmentPath: string): Observable<any> {
+    return this.http.put(
+      `${this.baseUrl}/update-attachment`,
+      {
+        requestId,
+        attachmentPath
+      }
+    );
+  }
 }
