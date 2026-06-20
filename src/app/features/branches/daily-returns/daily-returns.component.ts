@@ -4,11 +4,12 @@ import { MasterDataService } from '../../../services/master-data.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 
 @Component({
   selector: 'app-daily-returns',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CustomSelectComponent],
   templateUrl: './daily-returns.component.html',
   styleUrls: ['./daily-returns.component.css']
 })
@@ -25,11 +26,9 @@ export class DailyReturnsComponent implements OnInit {
   cities: any[] = [];
   branches: any[] = [];
 
-  // 🔥 الإجماليات
   totalAmount: number = 0;
   totalCount: number = 0;
 
-  // 🔥 الباجينيشن
   pageSize = 10;
   currentPage = 1;
   totalPages = 0;
@@ -41,82 +40,156 @@ export class DailyReturnsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.filterForm = this.fb.group({
-      fromDate: [new Date().toISOString().substring(0, 10)],
-      toDate: [new Date().toISOString().substring(0, 10)],
-      cityId: [null],
-      branchNumber: [null],
-      returnType: [0]
-    });
-
+    this.buildForm();
     this.loadCities();
-    this.loadReturns();
-
-    // 🔥 عند تغيير المدينة
-    this.filterForm.get('cityId')?.valueChanges.subscribe(cityId => {
-      // تصفير الفروع والفرع المختار
-      this.branches = [];
-      this.filterForm.patchValue({ branchNumber: null }, { emitEvent: false });
-
-      if (cityId) {
-        this.loadBranches(cityId);
-      }
-
-      // تحميل المرتجعات بعد تصفير الفلاتر
-      this.loadReturns();
-    });
-  }
-
-  loadCities() {
-    this.masterService.getCities().subscribe(res => {
-      this.cities = res.data;
-    });
-  }
-
-  loadBranches(cityId: number) {
-    this.masterService.getBranchesByCity(cityId).subscribe((res: any) => {
-      this.branches = res.data || res;
-    });
-  }
-
-  loadReturns(): void {
-    this.loading = true;
-    this.error = null;
-
-    const { fromDate, toDate, branchNumber, cityId, returnType } = this.filterForm.value;
-
-    this.returnsService
-      .getReturns(fromDate, toDate, undefined, branchNumber, cityId, returnType)
-      .subscribe({
-        next: (data) => {
-          this.returns = data.map(item => ({
-            ...item,
-            returnDate: item.returnDate.substring(0, 10)
-          }));
-
-          // 🔥 حساب الإجماليات
-          this.totalAmount = this.returns.reduce((sum, r) => sum + r.returnAmount, 0);
-          this.totalCount = this.returns.length;
-
-          // 🔥 حساب عدد الصفحات
-          this.totalPages = Math.ceil(this.returns.length / this.pageSize);
-          this.currentPage = 1;
-
-          this.loading = false;
-        },
-        error: () => {
-          this.error = 'حدث خطأ أثناء تحميل البيانات';
-          this.loading = false;
-        }
-      });
-  }
-
-  onFilterChange(): void {
-    this.loadReturns();
   }
 
   // ============================
-  // 🔥 الباجينيشن
+  // FORM
+  // ============================
+  buildForm(): void {
+    this.filterForm = this.fb.group({
+      fromDate: [new Date().toISOString().substring(0, 10)],
+      toDate: [new Date().toISOString().substring(0, 10)],
+
+      cityIds: [[]],
+      branchIds: [[]],
+      returnType: [0]
+    });
+
+    // فقط تحديث الفروع (بدون تحميل تقرير)
+    this.filterForm.get('cityIds')?.valueChanges.subscribe(cityIds => {
+
+      this.branches = [];
+      this.filterForm.patchValue({ branchIds: [] }, { emitEvent: false });
+
+      if (cityIds?.length) {
+        this.loadBranches(cityIds);
+      }
+    });
+  }
+
+  // ============================
+  // CITIES
+  // ============================
+  loadCities() {
+    this.masterService.getCities().subscribe(res => {
+      this.cities = res.data || [];
+    });
+  }
+
+  // ============================
+  // BRANCHES
+  // ============================
+  loadBranches(cityIds: number[]) {
+    this.masterService.getBranchesByCities(cityIds).subscribe((res: any) => {
+      this.branches = res.data || [];
+    });
+  }
+
+// ============================
+// 🔥 MAIN REPORT BUTTON
+// ============================
+loadReturns(): void {
+
+  this.loading = true;
+  this.error = null;
+
+  let {
+    fromDate,
+    toDate,
+    branchIds,
+    cityIds,
+    returnType
+  } = this.filterForm.value;
+
+  // لو مختارش فروع نعتبر كل الفروع الظاهرة مختارة
+  if ((!branchIds || branchIds.length === 0) && this.branches.length > 0) {
+    branchIds = this.branches.map(x => x.id);
+  }
+console.log('cityIds', cityIds);
+console.log('branchIds', branchIds);
+console.log('returnType', returnType);
+  this.returnsService.getReturns(
+    fromDate,
+    toDate,
+    undefined,
+    undefined,
+    cityIds,
+    branchIds,
+    returnType
+  )
+  .subscribe({
+    next: (data) => {
+    console.log('API RESULT', data);
+      this.returns = (data || []).map(item => ({
+        ...item,
+        returnDate: item.returnDate?.substring(0, 10)
+      }));
+console.log('returns=', this.returns);
+console.log('totalCount=', this.returns.length);
+console.log('pagedReturns=', this.pagedReturns);
+      this.totalAmount =
+        this.returns.reduce((sum, r) => sum + r.returnAmount, 0);
+
+      this.totalCount = this.returns.length;
+
+      this.totalPages =
+        Math.ceil(this.returns.length / this.pageSize);
+
+      this.currentPage = 1;
+
+      this.loading = false;
+    },
+    error: (err) => {
+          console.log('API ERROR', err);
+      this.error = 'حدث خطأ أثناء تحميل البيانات';
+      this.loading = false;
+    }
+  });
+}
+
+selectAllCities(): void {
+
+  const all = this.cities.map(c => c.id);
+
+  this.filterForm.patchValue({
+    cityIds: all
+  });
+
+  this.loadBranches(all);
+
+  setTimeout(() => {
+
+    const allBranches =
+      this.branches.map(b => b.id);
+
+    this.filterForm.patchValue({
+      branchIds: allBranches
+    });
+
+  }, 300);
+}
+
+  // ============================
+  // SELECT ALL BRANCHES
+  // ============================
+  selectAllBranches(): void {
+    const allIds = this.branches.map(b => b.id);
+
+    this.filterForm.patchValue({
+      branchIds: allIds
+    });
+  }
+
+  clearAllBranches(): void {
+    this.filterForm.patchValue({
+      branchIds: []
+    });
+  }
+
+  // ============================
+  // PAGINATION
   // ============================
   get pagedReturns(): BranchDailyReturn[] {
     const start = (this.currentPage - 1) * this.pageSize;
@@ -132,7 +205,7 @@ export class DailyReturnsComponent implements OnInit {
   }
 
   // ============================
-  // 🔥 التعديل
+  // EDIT
   // ============================
   openEditDialog(item: BranchDailyReturn): void {
     this.selectedReturn = { ...item };
@@ -165,9 +238,7 @@ export class DailyReturnsComponent implements OnInit {
           position: 'top-end',
           icon: 'success',
           title: 'تم تعديل المرتجع بنجاح',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
+          timer: 3000
         });
       },
       error: () => {
@@ -175,17 +246,15 @@ export class DailyReturnsComponent implements OnInit {
           toast: true,
           position: 'top-end',
           icon: 'error',
-          title: 'حدث خطأ أثناء حفظ التعديلات',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true
+          title: 'حدث خطأ أثناء الحفظ',
+          timer: 3000
         });
       }
     });
   }
 
   // ============================
-  // 🔥 تصدير Excel
+  // EXPORT
   // ============================
   exportToExcel(): void {
     const filter = this.filterForm.value;
@@ -195,10 +264,9 @@ export class DailyReturnsComponent implements OnInit {
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        const fileName = `DailyReturns_${filter.fromDate}_to_${filter.toDate}.xlsx`;
 
         a.href = url;
-        a.download = fileName;
+        a.download = `DailyReturns_${filter.fromDate}_to_${filter.toDate}.xlsx`;
         a.click();
 
         window.URL.revokeObjectURL(url);
@@ -206,25 +274,25 @@ export class DailyReturnsComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        alert('حدث خطأ أثناء تصدير ملف المرتجعات');
+        alert('حدث خطأ أثناء التصدير');
       }
     });
   }
-openChart(): void {
-  const filter = this.filterForm.value;
 
-  this.returnsService.getChartData(filter).subscribe({
-    next: (res) => {
-      const data = JSON.stringify(res.data);
-      const encoded = encodeURIComponent(data);
+  // ============================
+  // CHART
+  // ============================
+  openChart(): void {
+    const filter = this.filterForm.value;
 
-      // فتح صفحة الشارت
-      window.open(`/branches/daily-returns-chart?data=${encoded}`, "_blank");
-    },
-    error: () => {
-      alert("حدث خطأ أثناء تحميل بيانات الشارت");
-    }
-  });
-}
- 
+    this.returnsService.getChartData(filter).subscribe({
+      next: (res) => {
+        const data = encodeURIComponent(JSON.stringify(res.data));
+        window.open(`/branches/daily-returns-chart?data=${data}`, "_blank");
+      },
+      error: () => {
+        alert("حدث خطأ أثناء تحميل الشارت");
+      }
+    });
+  }
 }

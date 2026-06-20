@@ -1,112 +1,156 @@
-<div class="p-6 pb-24 bg-white rounded-2xl shadow border max-w-6xl mx-auto mt-6">
-  <h2 class="text-xl font-bold mb-4 text-slate-800">
-    قائمة المرتجعات اليومية
-  </h2>
+<form [formGroup]="filterForm" class="grid grid-cols-4 gap-4 items-start">
 
-  <!-- فلاتر -->
-  <form [formGroup]="filterForm" class="flex gap-4 mb-4 flex-wrap">
-    <div>
-      <label class="block text-sm font-medium text-slate-700 mb-1">من تاريخ</label>
-      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
-        <i class="fa fa-calendar text-blue-500 text-base"></i>
-        <input type="date"
-               formControlName="fromDate"
-               (change)="onFilterChange()"
-               class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
-      </div>
+  <!-- من تاريخ -->
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-slate-700 mb-1">
+      من تاريخ
+    </label>
+
+    <div
+      class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+
+      <i class="fa fa-calendar text-blue-500"></i>
+
+      <input
+        type="date"
+        formControlName="fromDate"
+        class="w-full bg-white text-slate-900 focus:outline-none">
     </div>
+  </div>
 
-    <div>
-      <label class="block text-sm font-medium text-slate-700 mb-1">إلى تاريخ</label>
-      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
-        <i class="fa fa-calendar text-blue-500 text-base"></i>
-        <input type="date"
-               formControlName="toDate"
-               (change)="onFilterChange()"
-               class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
-      </div>
+  <!-- إلى تاريخ -->
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-slate-700 mb-1">
+      إلى تاريخ
+    </label>
+
+    <div
+      class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white px-3 py-2 shadow-sm">
+
+      <i class="fa fa-calendar text-blue-500"></i>
+
+      <input
+        type="date"
+        formControlName="toDate"
+        class="w-full bg-white text-slate-900 focus:outline-none">
     </div>
+  </div>
 
-    <!-- المدينة -->
-    <div>
-      <label class="block text-sm font-medium text-slate-700 mb-1">المدينة</label>
-      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
-        <i class="fa fa-city text-blue-500 text-base"></i>
-        <select formControlName="cityId"
-                (change)="onFilterChange()"
-                class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
-          <option [ngValue]="null">كل المدن</option>
-          <option *ngFor="let c of cities" [value]="c.id">{{ c.cityName }}</option>
-        </select>
-      </div>
-    </div>
+  <!-- المدن -->
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-slate-700 mb-1">
+      المدن
+    </label>
 
-    <!-- الفرع -->
-    <div>
-      <label class="block text-sm font-medium text-slate-700 mb-1">الفرع</label>
-      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
-        <i class="fa fa-store text-blue-500 text-base"></i>
-        <select formControlName="branchNumber"
-                (change)="onFilterChange()"
-                class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
-          <option [ngValue]="null">كل الفروع</option>
-          <option *ngFor="let b of branches" [value]="b.branchNumber">
-            {{ b.branchNumber }} - {{ b.branchName }}
-          </option>
-        </select>
-      </div>
-    </div>
+    <app-custom-select
+      [items]="cities"
+      bindLabel="cityName"
+      bindValue="id"
+      placeholder="اختر المدن"
+      [control]="filterForm.get('cityIds')"
+      [multiple]="true"
+      [searchable]="true"
+      [clearable]="true"
+      [closeOnSelect]="false">
+    </app-custom-select>
 
-    <!-- نوع المرتجع -->
-    <div>
-      <label class="block text-sm font-medium text-slate-700 mb-1">نوع المرتجع</label>
-      <div class="flex items-center gap-2 rounded-lg border border-blue-200 bg-white/20 px-3 py-2 shadow-sm">
-        <i class="fa fa-exchange text-blue-500 text-base"></i>
-        <select formControlName="returnType"
-                (change)="onFilterChange()"
-                class="w-full bg-transparent text-base text-slate-800 focus:outline-none">
-          <option [value]="0">الكل</option>
-          <option [value]="1">كاش</option>
-          <option [value]="2">استبدال</option>
-          <option [value]="3">تابى</option>
-           <option [value]="4">تمارا</option>
-            <option [value]="5">تحويل بنكى</option>
-            <option [value]="6">ادخال خطأ</option>
-             <option [value]="7">اخرى</option>
-        </select>
-      </div>
-    </div>
-  </form>
-
-  <!-- 🔥 زرارين فوق الجدول -->
-  <div class="flex gap-4 mb-4 justify-end ">
-      <button
-      (click)="exportToExcel()"
-      [disabled]="loading"
-      class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <span *ngIf="!loading">📤 تصدير Excel</span>
-      <span *ngIf="loading" class="animate-pulse">⏳ جاري التصدير...</span>
+    <button
+      type="button"
+      class="text-xs text-blue-600 underline mt-1 text-right"
+      (click)="selectAllCities()">
+      اختيار كل المدن
     </button>
-
-<button
-  (click)="openChart()"
-  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg shadow"
->
-  📊 عرض الشارت
-</button>
   </div>
 
-  <!-- جدول -->
-  <div *ngIf="loading" class="text-center py-6 text-blue-600 font-semibold">
-    جارٍ تحميل البيانات...
+  <!-- الفروع -->
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-slate-700 mb-1">
+      الفروع
+    </label>
+
+    <app-custom-select
+      [items]="branches"
+      bindLabel="branchName"
+      bindValue="id"
+      placeholder="اختر الفروع"
+      [control]="filterForm.get('branchIds')"
+      [multiple]="true"
+      [searchable]="true"
+      [clearable]="true"
+      [closeOnSelect]="false">
+    </app-custom-select>
+
+    <button
+      type="button"
+      class="text-xs text-blue-600 underline mt-1 text-right"
+      (click)="selectAllBranches()">
+      اختيار كل الفروع
+    </button>
   </div>
 
-  <div *ngIf="error" class="text-center py-6 text-red-600 font-semibold">
-    {{ error }}
+  <!-- نوع المرتجع -->
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-slate-700 mb-1">
+      نوع المرتجع
+    </label>
+
+    <select
+      formControlName="returnType"
+      class="h-[42px] w-full border border-blue-200 rounded-lg px-3 py-2 bg-white text-slate-900 shadow-sm">
+
+      <option [value]="0">الكل</option>
+      <option [value]="1">كاش</option>
+      <option [value]="2">استبدال</option>
+      <option [value]="3">تابى</option>
+      <option [value]="4">تمارا</option>
+      <option [value]="5">تحويل بنكى</option>
+      <option [value]="6">ادخال خطأ</option>
+      <option [value]="7">اخرى</option>
+    </select>
   </div>
-<!-- 🔥 صندوق الإجماليات -->
-<div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
+
+</form>
+
+<!-- الأزرار -->
+<div class="flex justify-end gap-3 mt-5 mb-4">
+
+  <button
+    type="button"
+    (click)="loadReturns()"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow">
+    عرض التقرير
+  </button>
+
+  <button
+    type="button"
+    (click)="exportToExcel()"
+    [disabled]="loading"
+    class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow">
+    تصدير Excel
+  </button>
+
+  <button
+    type="button"
+    (click)="openChart()"
+    class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow">
+    📊 الشارت
+  </button>
+
+</div>
+<!-- LOADING -->
+<div *ngIf="loading" class="text-center py-6 text-blue-600 font-semibold">
+  جاري تحميل البيانات...
+</div>
+
+<!-- ERROR -->
+<div *ngIf="error" class="text-center py-6 text-red-600 font-semibold">
+  {{ error }}
+</div>
+
+<!-- TOTALS -->
+<div
+  *ngIf="!loading && !error"
+  class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4 shadow-sm flex items-center justify-between">
 
   <div class="text-slate-700 text-lg font-bold">
     إجمالي عدد المرتجعات:
@@ -115,167 +159,210 @@
 
   <div class="text-slate-700 text-lg font-bold">
     إجمالي قيمة المرتجعات:
-    <span class="text-emerald-700">{{ totalAmount | number:'1.2-2' }}</span> ريال
+    <span class="text-emerald-700">
+      {{ totalAmount | number:'1.2-2' }}
+    </span>
+    ريال
   </div>
 
 </div>
 
-  <table *ngIf="!loading && !error" class="w-full border-collapse text-sm">
-    <thead>
-      <tr class="bg-slate-100 text-slate-700">
-        <th class="border p-2">التاريخ</th>
-        <th class="border p-2">رقم الفرع</th>
-        <th class="border p-2">اسم الفرع</th>
-        <th class="border p-2">المبلغ</th>
-        <th class="border p-2">النوع</th>
-        <th class="border p-2">ملاحظات</th>
-        <th class="border p-2 text-center">تعديل</th>
-      </tr>
-    </thead>
+<!-- TABLE -->
+<table
+  *ngIf="!loading && !error"
+  class="w-full border-collapse text-sm border">
 
-    <tbody>
-      <tr *ngFor="let item of pagedReturns" class="hover:bg-slate-50">
-        <td class="border p-2">{{ item.returnDate | date:'yyyy-MM-dd' }}</td>
-        <td class="border p-2">{{ item.branchNumber }}</td>
-        <td class="border p-2">{{ item.branchName }}</td>
-        <td class="border p-2">{{ item.returnAmount | number:'1.2-2' }}</td>
-       <td class="border p-2">
+  <thead>
+    <tr class="bg-slate-100 text-slate-700">
+      <th class="border p-2">التاريخ</th>
+      <th class="border p-2">رقم الفرع</th>
+      <th class="border p-2">اسم الفرع</th>
+      <th class="border p-2">المبلغ</th>
+      <th class="border p-2">النوع</th>
+      <th class="border p-2">ملاحظات</th>
+      <th class="border p-2 text-center">تعديل</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let item of pagedReturns" class="hover:bg-slate-50">
+
+      <td class="border p-2 text-blue-900 font-bold">
+        {{ item.returnDate | date:'yyyy-MM-dd' }}
+      </td>
+
+      <td class="border p-2 text-blue-900 font-bold">
+        {{ item.branchNumber }}
+      </td>
+
+      <td class="border p-2 text-blue-900 font-bold">
+        {{ item.branchName }}
+      </td>
+
+      <td class="border p-2 text-blue-900 font-bold">
+        {{ item.returnAmount | number:'1.2-2' }}
+      </td>
+
+      <td class="border p-2 text-blue-900 font-bold">
         {{
           item.returnType === 1 ? 'كاش' :
           item.returnType === 2 ? 'استبدال' :
           item.returnType === 3 ? 'تابى' :
           item.returnType === 4 ? 'تمارا' :
           item.returnType === 5 ? 'تحويل بنكى' :
-          item.returnType === 6 ? 'ادخال خطا' :
+          item.returnType === 6 ? 'ادخال خطأ' :
           item.returnType === 7 ? 'اخرى' :
           'غير معروف'
         }}
       </td>
-        <td class="border p-2">{{ item.notes || '-' }}</td>
 
-        <td class="border p-2 text-center">
-          <button 
-            (click)="openEditDialog(item)"
-            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
-            تعديل
-          </button>
-        </td>
-      </tr>
-    </tbody>
+      <td class="border p-2 text-blue-900 font-bold">
+        {{ item.notes || '-' }}
+      </td>
 
+      <td class="border p-2 text-center text-blue-900 font-bold">
 
-  </table>
+        <button
+          type="button"
+          (click)="openEditDialog(item)"
+          class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
 
+          تعديل
 
-<!-- 🔢 الباجينيشن (ستايل تقرير الأداء اليومي المحترف) -->
-<div *ngIf="totalPages >= 1" class="flex justify-center items-center gap-6 mt-8 select-none">
+        </button>
 
-  <!-- زر السابق -->
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+<!-- PAGINATION -->
+<div *ngIf="totalPages > 1"
+     class="flex justify-center items-center gap-5 mt-8">
+
   <button
     (click)="previousPage()"
     [disabled]="currentPage === 1"
-    class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
-           border border-slate-300 bg-slate-100 text-slate-700
-           hover:bg-slate-200 hover:text-slate-900
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100"
-  >
-    <i class="fa fa-arrow-left text-slate-500"></i>
-    السابق
+    class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-lg
+           hover:bg-blue-700 transition-all duration-200
+           disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
+
+    ← السابق
   </button>
 
-  <!-- رقم الصفحة -->
-  <span class="text-lg font-bold text-slate-800">
-    صفحة {{ currentPage }} من {{ totalPages }}
-  </span>
+  <div
+    class="px-6 py-3 rounded-xl border border-blue-200 bg-blue-50
+           text-blue-800 font-extrabold shadow-sm">
 
-  <!-- زر التالي -->
+    صفحة {{ currentPage }} / {{ totalPages }}
+
+  </div>
+
   <button
     (click)="nextPage()"
     [disabled]="currentPage === totalPages"
-    class="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition
-           border border-slate-300 bg-slate-100 text-slate-700
-           hover:bg-slate-200 hover:text-slate-900
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-100"
-  >
-    التالي
-    <i class="fa fa-arrow-right text-slate-500"></i>
+    class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold shadow-lg
+           hover:bg-blue-700 transition-all duration-200
+           disabled:bg-slate-300 disabled:shadow-none disabled:cursor-not-allowed">
+
+    التالي →
   </button>
 
 </div>
+<div *ngIf="selectedReturn"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
-</div>
+  <div class="bg-white rounded-2xl shadow-xl p-6 w-[650px] max-h-[90vh] overflow-y-auto">
 
-<!-- نافذة تعديل المرتجع -->
-<div *ngIf="selectedReturn" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="bg-white rounded-2xl shadow-xl p-6 w-[650px] max-h-[90vh] overflow-y-auto border border-slate-200">
-
-    <h3 class="text-2xl font-bold mb-6 text-slate-800 text-center">
+    <h3 class="text-2xl font-bold mb-6 text-center">
       تعديل بيانات المرتجع
     </h3>
 
     <div class="grid grid-cols-2 gap-4">
 
-      <!-- الفرع -->
-      <div class="col-span-1">
-        <label class="block text-sm font-medium text-slate-700 mb-1">رقم الفرع</label>
-        <input type="number"
-               [(ngModel)]="selectedReturn.branchNumber"
-               class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+      <div>
+        <label class="block mb-1">رقم الفرع</label>
+
+        <input
+          type="number"
+          [(ngModel)]="selectedReturn.branchNumber"
+          class="border rounded-lg p-2 w-full">
       </div>
 
-      <!-- التاريخ -->
-      <div class="col-span-1">
-        <label class="block text-sm font-medium text-slate-700 mb-1">التاريخ</label>
-        <input type="date"
-               [(ngModel)]="selectedReturn.returnDate"
-               class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+      <div>
+        <label class="block mb-1">التاريخ</label>
+
+        <input
+          type="date"
+          [(ngModel)]="selectedReturn.returnDate"
+          class="border rounded-lg p-2 w-full">
       </div>
 
-      <!-- قيمة المرتجع -->
-      <div class="col-span-1">
-        <label class="block text-sm font-medium text-slate-700 mb-1">قيمة المرتجع</label>
-        <input type="number"
-               [(ngModel)]="selectedReturn.returnAmount"
-               class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200" />
+      <div>
+        <label class="block mb-1">قيمة المرتجع</label>
+
+        <input
+          type="number"
+          [(ngModel)]="selectedReturn.returnAmount"
+          class="border rounded-lg p-2 w-full">
       </div>
 
-      <!-- نوع المرتجع -->
-      <div class="col-span-1">
-        <label class="block text-sm font-medium text-slate-700 mb-1">نوع المرتجع</label>
-        <select [(ngModel)]="selectedReturn.returnType"
-                class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200">
+      <div>
+        <label class="block mb-1">نوع المرتجع</label>
+
+        <select
+          [(ngModel)]="selectedReturn.returnType"
+          class="border rounded-lg p-2 w-full">
+
           <option [value]="1">كاش</option>
           <option [value]="2">استبدال</option>
           <option [value]="3">تابى</option>
           <option [value]="4">تمارا</option>
-           <option [value]="5">تحويل بنكى</option>
-            <option [value]="6">ادخال خطأ</option>
-             <option [value]="7">اخرى</option>
+          <option [value]="5">تحويل بنكى</option>
+          <option [value]="6">ادخال خطأ</option>
+          <option [value]="7">اخرى</option>
+
         </select>
       </div>
 
-      <!-- الملاحظات -->
       <div class="col-span-2">
-        <label class="block text-sm font-medium text-slate-700 mb-1">ملاحظات</label>
-        <textarea [(ngModel)]="selectedReturn.notes"
-                  rows="4"
-                  class="border rounded-lg p-2 w-full text-sm focus:ring focus:ring-blue-200"></textarea>
+
+        <label class="block mb-1">ملاحظات</label>
+
+        <textarea
+          [(ngModel)]="selectedReturn.notes"
+          rows="4"
+          class="border rounded-lg p-2 w-full">
+        </textarea>
+
       </div>
 
     </div>
 
-    <!-- الأزرار -->
     <div class="flex justify-end gap-3 mt-6">
-      <button (click)="closeDialog()"
-              class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+
+      <button
+        (click)="closeDialog()"
+        class="bg-gray-500 text-white px-4 py-2 rounded-lg">
+
         إلغاء
+
       </button>
 
-      <button (click)="saveChanges()"
-              class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+      <button
+        (click)="saveChanges()"
+        class="bg-green-600 text-white px-4 py-2 rounded-lg">
+
         حفظ التعديلات
+
       </button>
+
     </div>
 
   </div>
+
 </div>
