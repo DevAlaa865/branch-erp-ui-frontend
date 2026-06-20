@@ -27,6 +27,7 @@
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "jwt-decode": "^4.0.0",
+    "ngx-image-cropper": "^9.1.6",
     "ngx-select-dropdown": "^3.3.2",
     "rxjs": "~7.8.0",
     "signature_pad": "^5.1.3",

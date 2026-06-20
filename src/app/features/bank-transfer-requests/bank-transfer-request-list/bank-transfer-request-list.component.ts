@@ -8,8 +8,9 @@ import {
 import { BankTransferRequestService } from '../../../services/bank-transfer-request.service';
 import { MasterDataService } from '../../../services/master-data.service';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
-
 import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+import { HttpClient } from '@angular/common/http';
+import { IMAGE_BASE_URL } from '../../../api.config';
 
 @Component({
   selector: 'app-bank-transfer-request-list',
@@ -19,6 +20,7 @@ import { HasPermissionDirective } from '../../../core/directives/has-permission.
     ReactiveFormsModule,
     CustomSelectComponent,
     HasPermissionDirective
+   
   ],
   templateUrl: './bank-transfer-request-list.component.html',
   styleUrls: ['./bank-transfer-request-list.component.css']
@@ -28,6 +30,8 @@ export class BankTransferRequestListComponent implements OnInit {
   filterForm!: FormGroup;
 
   loading = false;
+  
+
 
   branches: any[] = [];
 
@@ -53,7 +57,8 @@ export class BankTransferRequestListComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private service: BankTransferRequestService,
-    private branchService: MasterDataService
+    private branchService: MasterDataService,
+      private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -333,12 +338,129 @@ openAttachment(path: string): void {
 }
 
 
-printAttachment(path: string): void {
+/* printAttachment(path: string): void {
+
   if (!path) return;
 
-  const fullUrl = `https://alaaeng123-001-site1.rtempurl.com/${path}`;
-  const win = window.open(fullUrl, "_blank");
-  win?.print();
-}
+  const imageUrl =
+    `https://alaaeng123-001-site1.rtempurl.com/${path}`;
 
+  const printWindow = window.open('', '_blank');
+
+  if (!printWindow) return;
+
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>طباعة المرفق</title>
+
+        <style>
+          body{
+            margin:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+          }
+
+          img{
+            max-width:100%;
+            max-height:100vh;
+          }
+        </style>
+
+      </head>
+
+      <body>
+
+        <img id="img" src="${imageUrl}" />
+
+      </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+  const img =
+    printWindow.document.getElementById('img') as HTMLImageElement;
+
+  img.onload = () => {
+
+    setTimeout(() => {
+
+      printWindow.focus();
+
+      printWindow.print();
+
+    }, 500);
+
+  };
+
+} */
+printAttachment(path: string): void {
+
+  if (!path) return;
+
+const imageUrl =
+  `${IMAGE_BASE_URL}/${path}`;
+
+  const win = window.open('', '_blank');
+
+  if (!win) return;
+
+  win.document.write(`
+    <html>
+      <head>
+        <title>طباعة المرفق</title>
+
+        <style>
+
+          @page{
+            margin:0;
+            size:auto;
+          }
+
+          body{
+            margin:0;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#fff;
+          }
+
+          img{
+            width:100%;
+            height:auto;
+            display:block;
+          }
+
+        </style>
+      </head>
+
+      <body>
+        <img id="printImage" src="${imageUrl}">
+      </body>
+    </html>
+  `);
+
+  win.document.close();
+
+  const img =
+    win.document.getElementById('printImage') as HTMLImageElement;
+
+  img.onload = () => {
+
+    setTimeout(() => {
+
+      win.focus();
+
+      win.print();
+
+      win.close();
+
+    }, 700);
+
+  };
+
+}
 }

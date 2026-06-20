@@ -28,11 +28,11 @@
         </div>
       </div>
 
-      <!-- المدينة -->
+      <!-- المدينة (OLD + NEW) -->
       <div>
         <label class="block text-sm font-medium text-slate-700 mb-1">المدينة</label>
 
-        <app-custom-select
+ <!--        <app-custom-select
           [items]="cities"
           bindLabel="cityName"
           bindValue="id"
@@ -44,7 +44,25 @@
           [closeOnSelect]="true"
           dropdownPosition="bottom"
           (selectionChange)="loadBranches(form.value.cityId)">
-        </app-custom-select>
+        </app-custom-select> -->
+
+        <!-- 🔥 NEW: Multi Cities (بديل إضافي بدون كسر القديم) -->
+        <div class="mt-2">
+          <app-custom-select
+            [items]="cities"
+            bindLabel="cityName"
+            bindValue="id"
+            placeholder="اختر المدن (متعدد)"
+            [control]="form.get('cityIds')"
+            [multiple]="true"
+            [searchable]="true"
+            [clearable]="true"
+            [closeOnSelect]="false"
+            dropdownPosition="bottom"
+            (selectionChange)="loadBranchesByCities(form.value.cityIds)">
+          </app-custom-select>
+        </div>
+
       </div>
 
       <!-- الفروع -->
@@ -122,42 +140,38 @@
   <!-- جدول النتائج -->
   <div class="mt-6 overflow-x-auto" *ngIf="rows.length > 0">
 
-  <table class="w-full border-collapse text-sm" dir="rtl">
-  <thead>
-    <tr class="bg-slate-100 text-slate-700">
-      <th class="border p-2 text-center">رقم الفرع</th>
-      <th class="border p-2 text-center">اسم الفرع</th>
-      <th class="border p-2 text-center">التاريخ</th>
-      <th class="border p-2 text-center">نوع العجز</th>
-      <th class="border p-2 text-center">المبلغ</th>
-      <th class="border p-2 text-center">معتمد؟</th>
+    <table class="w-full border-collapse text-sm" dir="rtl">
+      <thead>
+        <tr class="bg-slate-100 text-slate-700">
+          <th class="border p-2 text-center">رقم الفرع</th>
+          <th class="border p-2 text-center">اسم الفرع</th>
+          <th class="border p-2 text-center">التاريخ</th>
+          <th class="border p-2 text-center">نوع العجز</th>
+          <th class="border p-2 text-center">المبلغ</th>
+          <th class="border p-2 text-center">معتمد؟</th>
+          <th class="border p-2 text-center">ملاحظات إدارة المرتجعات</th>
+        </tr>
+      </thead>
 
-      <!-- ⭐ عمود جديد -->
-      <th class="border p-2 text-center">ملاحظات إدارة المرتجعات</th>
-    </tr>
-  </thead>
+      <tbody>
+        <tr *ngFor="let row of pagedRows" class="hover:bg-slate-50">
+          <td class="border p-2 text-center text-blue-900 font-bold">{{ row.branchNumber }}</td>
+          <td class="border p-2 text-center text-blue-900 font-bold">{{ row.branchName }}</td>
+          <td class="border p-2 text-center text-blue-900 font-bold">{{ row.journalDate | date:'yyyy-MM-dd' }}</td>
+          <td class="border p-2 text-center text-blue-900 font-bold">{{ row.shortageTypeName }}</td>
+          <td class="border p-2 text-center text-blue-900 font-bold">{{ row.amount }}</td>
 
-  <tbody>
-    <tr *ngFor="let row of pagedRows" class="hover:bg-slate-50">
-      <td class="border p-2 text-center">{{ row.branchNumber }}</td>
-      <td class="border p-2 text-center">{{ row.branchName }}</td>
-      <td class="border p-2 text-center">{{ row.journalDate | date:'yyyy-MM-dd' }}</td>
-      <td class="border p-2 text-center">{{ row.shortageTypeName }}</td>
-      <td class="border p-2 text-center">{{ row.amount }}</td>
+          <td class="border p-2 text-center text-blue-900 font-bold">
+            <span *ngIf="row.isApproved" class="text-green-600 font-bold">✔ معتمد</span>
+            <span *ngIf="!row.isApproved" class="text-red-600 font-bold">✘ غير معتمد</span>
+          </td>
 
-      <td class="border p-2 text-center">
-        <span *ngIf="row.isApproved" class="text-green-600 font-bold">✔ معتمد</span>
-        <span *ngIf="!row.isApproved" class="text-red-600 font-bold">✘ غير معتمد</span>
-      </td>
-
-      <!-- ⭐ عرض ملاحظات إدارة المرتجعات -->
-      <td class="border p-2 text-center">
-        {{ row.returnNotes && row.returnNotes.trim() !== '' ? row.returnNotes : '-' }}
-      </td>
-    </tr>
-  </tbody>
-</table>
-
+          <td class="border p-2 text-center text-blue-900 font-bold">
+            {{ row.returnNotes && row.returnNotes.trim() !== '' ? row.returnNotes : '-' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
   </div>
 

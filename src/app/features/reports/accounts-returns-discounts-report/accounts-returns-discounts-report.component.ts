@@ -8,7 +8,7 @@ import { CustomSelectComponent } from '../../../shared/custom-select/custom-sele
 @Component({
   selector: 'app-accounts-returns-discounts-report',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
   templateUrl: './accounts-returns-discounts-report.component.html'
 })
 export class AccountsReturnsDiscountsReportComponent implements OnInit {
@@ -46,14 +46,26 @@ export class AccountsReturnsDiscountsReportComponent implements OnInit {
     this.form = this.fb.group({
       fromDate: [today, Validators.required],
       toDate: [today, Validators.required],
+
+      // 🔥 OLD (مسيبها زي ما هي)
       cityId: [null],
+
+      // 🔥 NEW (Multi Cities)
+      cityIds: [[]],
+
       branchIds: [[]],
       status: [0], // 0 = الكل
       shortageTypeId: [null]
     });
 
+    // 🔥 OLD LOGIC (سيبته زي ما هو)
     this.form.get('cityId')?.valueChanges.subscribe(cityId => {
       this.loadBranches(cityId);
+    });
+
+    // 🔥 NEW LOGIC (Multi Cities)
+    this.form.get('cityIds')?.valueChanges.subscribe(cityIds => {
+      this.loadBranchesByCities(cityIds || []);
     });
   }
 
@@ -64,12 +76,28 @@ export class AccountsReturnsDiscountsReportComponent implements OnInit {
     });
   }
 
+  // 🔥 OLD (Single City)
   loadBranches(cityId: number | null): void {
     this.branches = [];
     if (!cityId) return;
 
     this.masterDataService.getBranchesByCity(cityId).subscribe({
       next: (res: any) => this.branches = res.data || [],
+      error: () => this.branches = []
+    });
+  }
+
+  // 🔥 NEW (Multi Cities)
+  loadBranchesByCities(cityIds: number[]): void {
+    this.branches = [];
+    this.form.patchValue({ branchIds: [] });
+
+    if (!cityIds || cityIds.length === 0) return;
+
+    this.masterDataService.getBranchesByCities(cityIds).subscribe({
+      next: (res: any) => {
+        this.branches = res.data || [];
+      },
       error: () => this.branches = []
     });
   }
@@ -104,7 +132,13 @@ export class AccountsReturnsDiscountsReportComponent implements OnInit {
     const filter = {
       fromDate: this.form.value.fromDate,
       toDate: this.form.value.toDate,
+
+      // 🔥 OLD (لو الباك يستخدمه سيبناه)
       cityId: this.form.value.cityId || null,
+
+      // 🔥 NEW (Multi Cities)
+      cityIds: this.form.value.cityIds || [],
+
       branchIds: this.form.value.branchIds || [],
       status: this.form.value.status,
       shortageTypeId: this.form.value.shortageTypeId || null
