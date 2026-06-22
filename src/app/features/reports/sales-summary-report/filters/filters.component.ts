@@ -6,6 +6,7 @@ import { MasterDataService } from '../../../../services/master-data.service';
 import { FormsModule } from '@angular/forms';
 import { SalesSummaryReportFilter } from '../../../../shared/models/sales-summary-report.model';
 import { CustomSelectComponent } from '../../../../shared/custom-select/custom-select.component';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-filters',
@@ -24,18 +25,31 @@ export class FiltersComponent implements OnInit {
   filteredCities: any[] = [];
   filteredBranches: any[] = [];
 
+  // 🔥 معلومات المستخدم
+  isRegionManager = false;
+  isBranchUser = false;
+  userCityIds: number[] = [];
+  userBranchId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private masterData: MasterDataService,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
+
+    // قراءة نوع المستخدم والمدن والفرع من التوكن
+    this.isRegionManager = this.auth.isRegionManager();
+    this.userCityIds = this.auth.getCityIds();
+    this.userBranchId = this.auth.getBranchId();
+    this.isBranchUser = !!this.userBranchId;
+
     this.loadMasterData();
   }
 
-  // ✅ تنسيق التاريخ بدون UTC
   private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -50,7 +64,7 @@ export class FiltersComponent implements OnInit {
       fromDate: [this.formatDate(today), Validators.required],
       toDate: [this.formatDate(today), Validators.required],
       regionId: [null],
-      cityId: [null],
+      cityId: [[]],   // 🔥 Multi‑Select
       branchId: [null]
     });
 
@@ -59,6 +73,7 @@ export class FiltersComponent implements OnInit {
   }
 
   loadMasterData() {
+    // المناطق
     this.masterData.getAreas().subscribe(res => {
       if (res.success) {
         this.regions = res.data.map((r: any) => ({
@@ -68,6 +83,7 @@ export class FiltersComponent implements OnInit {
       }
     });
 
+    // المدن
     this.masterData.getCities().subscribe(res => {
       if (res.success) {
         this.cities = res.data.map((c: any) => ({
@@ -75,10 +91,23 @@ export class FiltersComponent implements OnInit {
           label: c.cityName,
           regionId: c.regionId
         }));
-        this.filteredCities = [...this.cities];
+
+        // مدير منطقة → مدنه فقط
+        if (this.isRegionManager) {
+          this.filteredCities = this.cities.filter(c => this.userCityIds.includes(c.id));
+        }
+        // مستخدم فرع → مدينة فرعه فقط
+        else if (this.isBranchUser && this.userBranchId) {
+          const branch = this.branches.find(b => b.id === this.userBranchId);
+          this.filteredCities = this.cities.filter(c => c.id === branch?.cityId);
+        }
+        else {
+          this.filteredCities = [...this.cities];
+        }
       }
     });
 
+    // الفروع
     this.masterData.getBranches().subscribe(res => {
       if (res.success) {
         this.branches = res.data.map((b: any) => ({
@@ -86,33 +115,46 @@ export class FiltersComponent implements OnInit {
           label: b.branchName,
           cityId: b.cityId
         }));
-        this.filteredBranches = [...this.branches];
+
+        // مستخدم فرع → فرعه فقط
+        if (this.isBranchUser && this.userBranchId) {
+          this.filteredBranches = this.branches.filter(b => b.id === this.userBranchId);
+          this.filterForm.patchValue({ branchId: this.userBranchId });
+        }
+        // مدير منطقة → فروع مدنه فقط
+        else if (this.isRegionManager) {
+          this.filteredBranches = this.branches.filter(b => this.userCityIds.includes(b.cityId));
+        }
+        else {
+          this.filteredBranches = [...this.branches];
+        }
       }
     });
   }
 
   onRegionChanged(regionId: number | null) {
+    if (this.isRegionManager || this.isBranchUser) return;
+
     if (!regionId) {
       this.filteredCities = [...this.cities];
       this.filteredBranches = [...this.branches];
-      this.filterForm.patchValue({ cityId: null, branchId: null }, { emitEvent: false });
+      this.filterForm.patchValue({ cityId: [], branchId: null }, { emitEvent: false });
       return;
     }
 
     this.filteredCities = this.cities.filter(c => c.regionId === regionId);
-    this.filterForm.patchValue({ cityId: null, branchId: null }, { emitEvent: false });
+    this.filterForm.patchValue({ cityId: [], branchId: null }, { emitEvent: false });
 
     const cityIds = this.filteredCities.map(c => c.id);
     this.filteredBranches = this.branches.filter(b => cityIds.includes(b.cityId));
   }
 
-  onCityChanged(cityId: number | null) {
-    if (!cityId) {
-      const regionId = this.filterForm.value.regionId;
+  onCityChanged(cityId: number[] | null) {
+    if (this.isBranchUser) return;
 
-      if (regionId) {
-        const regionCities = this.cities.filter(c => c.regionId === regionId).map(c => c.id);
-        this.filteredBranches = this.branches.filter(b => regionCities.includes(b.cityId));
+    if (!cityId || cityId.length === 0) {
+      if (this.isRegionManager) {
+        this.filteredBranches = this.branches.filter(b => this.userCityIds.includes(b.cityId));
       } else {
         this.filteredBranches = [...this.branches];
       }
@@ -121,37 +163,36 @@ export class FiltersComponent implements OnInit {
       return;
     }
 
-    this.filteredBranches = this.branches.filter(b => b.cityId === cityId);
+    // 🔥 Multi‑Select → فلترة الفروع حسب كل المدن المختارة
+    this.filteredBranches = this.branches.filter(b => cityId.includes(b.cityId));
     this.filterForm.patchValue({ branchId: null }, { emitEvent: false });
   }
 
-submit() {
-  if (this.filterForm.invalid) {
-    this.filterForm.markAllAsTouched();
-    return;
+  submit() {
+    if (this.filterForm.invalid) {
+      this.filterForm.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.filterForm.value;
+
+    const filter: SalesSummaryReportFilter = {
+      fromDate: raw.fromDate,
+      toDate: raw.toDate,
+      regionId: this.isRegionManager ? '' : (raw.regionId ?? ''),
+      cityId: Array.isArray(raw.cityId) ? raw.cityId.join(',') : '',
+      branchId: raw.branchId ?? ''
+    };
+
+    const query = new URLSearchParams({
+      fromDate: filter.fromDate,
+      toDate: filter.toDate,
+      regionId: filter.regionId?.toString() ?? '',
+      cityId: filter.cityId?.toString() ?? '',
+      branchId: filter.branchId?.toString() ?? ''
+    }).toString();
+
+    window.open(`/reports/sales-summary-report-result?${query}`, '_blank');
   }
-
-  const raw = this.filterForm.value;
-
-  const filter: SalesSummaryReportFilter = {
-    fromDate: raw.fromDate,
-    toDate: raw.toDate,
-    regionId: raw.regionId ?? '',
-    cityId: raw.cityId ?? '',
-    branchId: raw.branchId ?? ''
-  };
-
-  // تحويل الفلتر إلى Query String
-  const query = new URLSearchParams({
-    fromDate: filter.fromDate,
-    toDate: filter.toDate,
-    regionId: filter.regionId?.toString() ?? '',
-    cityId: filter.cityId?.toString() ?? '',
-    branchId: filter.branchId?.toString() ?? ''
-  }).toString();
-
-  // فتح صفحة جديدة
-  window.open(`/reports/sales-summary-report-result?${query}`, '_blank');
-}
 
 }

@@ -1,0 +1,145 @@
+<div class="report-container">
+
+  <h2 class="title">📅 تقرير التفاصيل اليومية للفرع</h2>
+
+  <!-- 🔥 الهيدر الجديد (اسم الفرع + التاريخ + الطباعة + التصدير) -->
+<!-- 🔥 هيدر احترافي للتقرير -->
+<div class="report-header" dir="rtl">
+  
+  <div class="header-right">
+    <div class="header-item">
+      <span class="label">📍 الفرع:</span>
+      <span class="value">{{ branchName }}</span>
+    </div>
+
+    <div class="header-item">
+      <span class="label">📅 الفترة:</span>
+      <span class="value">{{ fromDate }} → {{ toDate }}</span>
+    </div>
+  </div>
+
+  <div class="header-left">
+    <button class="header-btn print" (click)="printReport()">🖨️ طباعة</button>
+    <button class="header-btn excel" (click)="exportToExcel()">📥 Excel</button>
+  </div>
+
+</div>
+
+
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-box">
+    <div class="spinner"></div>
+    <p>جاري تحميل البيانات...</p>
+  </div>
+
+  <div *ngIf="!loading">
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <h4>إجمالي المبيعات</h4>
+        <p>{{ data.totalSales | number }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>إجمالي المرتجعات</h4>
+        <p>{{ data.totalReturns | number }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>صافي المبيعات</h4>
+        <p>{{ data.netSales | number }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>عدد الفواتير</h4>
+        <p>{{ data.invoiceCount }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>عدد القطع</h4>
+        <p>{{ data.quantityCount }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>متوسط الفاتورة</h4>
+        <p>{{ data.avgInvoice | number:'1.2-2' }}</p>
+      </div>
+
+      <div class="summary-card">
+        <h4>متوسط القطع</h4>
+        <p>{{ data.avgPieces | number:'1.2-2' }}</p>
+      </div>
+
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrapper">
+      <table class="styled-table" dir="rtl">
+        <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>إجمالي المبيعات</th>
+            <th>إجمالي المرتجعات</th>
+            <th>صافي المبيعات</th>
+            <th>عدد الفواتير</th>
+            <th>عدد القطع</th>
+            <th>متوسط الفاتورة</th>
+            <th>متوسط القطع</th>
+            <th>التفاصيل</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of pagedItems">
+            <td class="text-blue-900 font-bold">{{ item.salesDate | date:'yyyy/MM/dd' }}</td>
+            <td class="text-blue-900 font-bold">{{ item.totalSales | number }}</td>
+            <td class="text-blue-900 font-bold">{{ item.totalReturns | number }}</td>
+            <td class="text-blue-900 font-bold">{{ item.netSales | number }}</td>
+            <td class="text-blue-900 font-bold">{{ item.invoiceCount }}</td>
+            <td class="text-blue-900 font-bold">{{ item.quantityCount }}</td>
+            <td class="text-blue-900 font-bold">{{ item.avgInvoice | number:'1.2-2' }}</td>
+            <td class="text-blue-900 font-bold">{{ item.avgPieces | number:'1.2-2' }}</td>
+
+            <!-- زر التفاصيل -->
+            <td class="text-blue-900 font-bold">
+              <button class="details-btn"
+                (click)="openDailyJournal(item.salesDate)">
+                عرض اليومية
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination-container" dir="rtl">
+
+        <button 
+          class="pagination-btn" 
+          (click)="prevPage()" 
+          [disabled]="currentPage === 1">
+          السابق
+        </button>
+
+        <span class="pagination-info">
+          صفحة {{ currentPage }} من {{ totalPages }}
+        </span>
+
+        <button 
+          class="pagination-btn" 
+          (click)="nextPage()" 
+          [disabled]="currentPage * pageSize >= totalItems">
+          التالي
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

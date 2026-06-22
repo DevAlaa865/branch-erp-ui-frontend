@@ -1,146 +1,156 @@
-
 <div class="min-h-screen w-full bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
      style="background-image: url('assets/backgroundImage/logoBack.jpeg')">
-       <div class="max-w-xl mx-auto bg-gradient-to-br from-black via-gray-900 to-black backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl text-white">
-  <h2 class="text-xl font-bold mb-6">إضافة مستخدم جديد</h2>
 
-  <div class="space-y-4 ">
+  <div class="max-w-xl mx-auto bg-gradient-to-br from-black via-gray-900 to-black backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl text-white">
 
-    <!-- نوع المستخدم -->
-    <div>
-      <label class="block mb-1 text-sm  ">نوع المستخدم</label>
+    <h2 class="text-xl font-bold mb-6">إضافة مستخدم جديد</h2>
 
-      <div class="flex gap-4 text-sm">
-        <label class="flex items-center gap-1">
-          <input type="radio" [(ngModel)]="model.userType" (change)="onUserTypeChange()" [value]="1">
-          <span>مستخدم فرع</span>
-        </label>
+    <form [formGroup]="form" class="space-y-4">
 
-        <label class="flex items-center gap-1">
-          <input type="radio" [(ngModel)]="model.userType" (change)="onUserTypeChange()" [value]="2">
-          <span>مدير مدينة</span>
-        </label>
-
-        <label class="flex items-center gap-1">
-          <input type="radio" [(ngModel)]="model.userType" (change)="onUserTypeChange()" [value]="3">
-          <span>مستخدم مركزي</span>
-        </label>
-      </div>
-    </div>
-
-    <div>
-      <label class="block mb-1 text-sm">اسم الدخول</label>
-      <input [(ngModel)]="model.userName"
-             class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
-             type="text">
-    </div>
-
-    <div>
-      <label class="block mb-1 text-sm">الاسم الظاهر</label>
-      <input [(ngModel)]="model.displayName"
-             class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
-             type="text">
-    </div>
-
-    <div>
-      <label class="block mb-1 text-sm">البريد الإلكتروني</label>
-      <input [(ngModel)]="model.email"
-             class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
-             type="email">
-    </div>
-
-    <!-- اختيار الفرع -->
-    <div *ngIf="model.userType === 1">
-      <label class="block mb-1 text-sm">الفرع</label>
-
-      <select
-        [(ngModel)]="model.branchId"
-        class="w-full px-3 py-2 rounded-lg bg-blue-500/20 border border-white/30 focus:outline-none text-sm">
-        <option [ngValue]="null" disabled selected>اختر الفرع</option>
-        <option *ngFor="let b of branches" [ngValue]="b.id">
-          {{ b.branchName }}
-        </option>
-      </select>
-
-      <div *ngIf="branchError" class="mt-1 text-xs text-rose-300">
-        {{ branchError }}
-      </div>
-    </div>
-
-    <!-- اختيار المدينة -->
-    <div *ngIf="model.userType === 2">
-      <label class="block mb-1 text-sm">المدينة</label>
-
-      <select
-        [(ngModel)]="model.cityId"
-        class="w-full px-3 py-2 rounded-lg bg-blue-500/20 border border-white/30 focus:outline-none text-sm">
-        <option [ngValue]="null" disabled selected>اختر المدينة</option>
-        <option *ngFor="let c of cities" [ngValue]="c.id">
-          {{ c.cityName }}
-        </option>
-      </select>
-
-      <div *ngIf="cityError" class="mt-1 text-xs text-rose-300">
-        {{ cityError }}
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- نوع المستخدم -->
       <div>
-        <label class="block mb-1 text-sm">كلمة المرور</label>
-        <input [(ngModel)]="model.password"
-               class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
-               type="password">
+        <label class="block mb-1 text-sm">نوع المستخدم</label>
+
+        <div class="flex gap-4 text-sm">
+          <label class="flex items-center gap-1">
+            <input type="radio" formControlName="userType" (change)="onUserTypeChange()" [value]="1">
+            <span>مستخدم فرع</span>
+          </label>
+
+          <label class="flex items-center gap-1">
+            <input type="radio" formControlName="userType" (change)="onUserTypeChange()" [value]="2">
+            <span>مدير منطقة</span>
+          </label>
+
+          <label class="flex items-center gap-1">
+            <input type="radio" formControlName="userType" (change)="onUserTypeChange()" [value]="3">
+            <span>مستخدم مركزي</span>
+          </label>
+        </div>
       </div>
 
+      <!-- اسم الدخول -->
       <div>
-        <label class="block mb-1 text-sm">تأكيد كلمة المرور</label>
-        <input [(ngModel)]="model.confirmPassword"
+        <label class="block mb-1 text-sm">اسم الدخول</label>
+        <input formControlName="userName"
                class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
-               type="password">
+               type="text">
       </div>
-    </div>
 
-    <!-- الدور الوظيفي -->
-    <div>
-      <label class="block mb-1 text-sm">الدور الوظيفي</label>
-
-      <input
-        [(ngModel)]="roleSearch"
-        (input)="filterRoles()"
-        placeholder="ابحث عن دور..."
-        class="w-full mb-2 px-3 py-2 rounded-lg bg-white/10 border border-white/20 focus:outline-none text-sm"
-        type="text">
-
-      <select
-        [(ngModel)]="model.roleName"
-        class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none text-sm">
-        <option value="" disabled selected>اختر الدور الوظيفي</option>
-        <option *ngFor="let r of filteredRoles" [value]="r.name">
-          {{ r.name }}
-        </option>
-      </select>
-
-      <div *ngIf="roleError" class="mt-1 text-xs text-rose-300">
-        {{ roleError }}
+      <!-- الاسم الظاهر -->
+      <div>
+        <label class="block mb-1 text-sm">الاسم الظاهر</label>
+        <input formControlName="displayName"
+               class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
+               type="text">
       </div>
-    </div>
+
+      <!-- البريد الإلكتروني -->
+      <div>
+        <label class="block mb-1 text-sm">البريد الإلكتروني</label>
+        <input formControlName="email"
+               class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
+               type="email">
+      </div>
+
+      <!-- اختيار الفرع -->
+      <div *ngIf="form.value.userType === 1">
+        <label class="block mb-1 text-sm">الفرع</label>
+
+        <select
+          formControlName="branchId"
+          class="w-full px-3 py-2 rounded-lg bg-blue-500/20 border border-white/30 focus:outline-none text-sm">
+          <option [ngValue]="null" disabled selected>اختر الفرع</option>
+          <option *ngFor="let b of branches" [ngValue]="b.id">
+            {{ b.branchName }}
+          </option>
+        </select>
+
+        <div *ngIf="branchError" class="mt-1 text-xs text-rose-300">
+          {{ branchError }}
+        </div>
+      </div>
+
+      <!-- اختيار المدن (Multi Select) -->
+      <div *ngIf="form.value.userType === 2">
+        <label class="block mb-1 text-sm">المدن التابعة</label>
+
+        <app-custom-select
+          [items]="cities"
+          bindLabel="cityName"
+          bindValue="id"
+          placeholder="اختر المدن"
+          [control]="form.get('cityIds')"
+          [multiple]="true"
+          [searchable]="true"
+          [clearable]="true"
+          [closeOnSelect]="false"
+          dropdownPosition="bottom"
+          (selectionChange)="cityError = ''">
+        </app-custom-select>
+
+        <div *ngIf="cityError" class="mt-1 text-xs text-rose-300">
+          {{ cityError }}
+        </div>
+      </div>
+
+      <!-- كلمة المرور -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-1 text-sm">كلمة المرور</label>
+          <input formControlName="password"
+                 class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
+                 type="password">
+        </div>
+
+        <div>
+          <label class="block mb-1 text-sm">تأكيد كلمة المرور</label>
+          <input formControlName="confirmPassword"
+                 class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none"
+                 type="password">
+        </div>
+      </div>
+
+      <!-- الدور الوظيفي -->
+      <div>
+        <label class="block mb-1 text-sm">الدور الوظيفي</label>
+
+       <input
+      formControlName="roleSearch"
+      (input)="filterRoles()"
+      placeholder="ابحث عن دور..."
+      class="w-full mb-2 px-3 py-2 rounded-lg bg-white/10 border border-white/20 focus:outline-none text-sm"
+      type="text">
+
+        <select
+          formControlName="roleName"
+          class="w-full px-3 py-2 rounded-lg bg-white/20 border border-white/30 focus:outline-none text-sm">
+          <option value="" disabled selected>اختر الدور الوظيفي</option>
+          <option *ngFor="let r of filteredRoles" [value]="r.name">
+            {{ r.name }}
+          </option>
+        </select>
+
+        <div *ngIf="roleError" class="mt-1 text-xs text-rose-300">
+          {{ roleError }}
+        </div>
+      </div>
+
+      <button (click)="createUser()"
+              [disabled]="isSaving"
+              class="mt-6 w-full px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white font-semibold shadow-lg">
+        {{ isSaving ? 'جارٍ الإنشاء...' : 'إنشاء المستخدم' }}
+      </button>
+
+      <div class="mt-4 text-center text-sm"
+           [ngClass]="{
+             'text-emerald-300': message.startsWith('تم'),
+             'text-rose-300': message.startsWith('حدث')
+           }">
+        {{ message }}
+      </div>
+
+    </form>
 
   </div>
-
-  <button (click)="createUser()"
-          [disabled]="isSaving"
-          class="mt-6 w-full px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white font-semibold shadow-lg">
-    {{ isSaving ? 'جارٍ الإنشاء...' : 'إنشاء المستخدم' }}
-  </button>
-
-  <div class="mt-4 text-center text-sm"
-       [ngClass]="{
-         'text-emerald-300': message.startsWith('تم'),
-         'text-rose-300': message.startsWith('حدث')
-       }">
-    {{ message }}
-  </div>
-
-</div>
 </div>

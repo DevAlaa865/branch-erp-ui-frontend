@@ -1,34 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MasterDataService } from '../../../../services/master-data.service';
 import { API_BASE_URL } from '../../../../api.config';
+import { CustomSelectComponent } from '../../../../shared/custom-select/custom-select.component';
+
 @Component({
   selector: 'app-create-user',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
   templateUrl: './create-user.component.html',
   styleUrl: './create-user.component.css'
 })
 export class CreateUserComponent implements OnInit {
 
-  model = {
-    userName: '',
-    displayName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    roleName: '',
-
-    // 🔥 userType الآن رقم وليس نص
-    userType: 1,   // 1 = Branch, 2 = CityManager, 3 = Central
-
-    branchId: null as number | null,
-    cityId: null as number | null,
-    departmentId: null as number | null
-  };
+  form!: FormGroup;
 
   roles: { id: string; name: string }[] = [];
   filteredRoles: { id: string; name: string }[] = [];
@@ -43,34 +31,51 @@ export class CreateUserComponent implements OnInit {
   branchError = '';
   cityError = '';
 
-private baseUrl = API_BASE_URL;
+  private baseUrl = API_BASE_URL;
 
   constructor(
+    private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private masterData: MasterDataService
   ) {}
 
   ngOnInit(): void {
+    this.buildForm();
     this.loadRoles();
     this.loadBranches();
     this.loadCities();
   }
 
+  buildForm() {
+    this.form = this.fb.group({
+  userName: ['', Validators.required],
+  displayName: ['', Validators.required],
+  email: ['', Validators.required],
+  password: ['', Validators.required],
+  confirmPassword: ['', Validators.required],
+
+  roleName: ['', Validators.required],
+  roleSearch: [''],   // 🔥 أضف ده
+
+  userType: [1],
+  branchId: [null],
+  cityIds: [[]],
+  departmentId: [null]
+});
+
+  }
+
   loadBranches() {
     this.masterData.getBranches().subscribe({
-      next: (res: any) => {
-        this.branches = res.success ? res.data : [];
-      },
+      next: (res: any) => this.branches = res.success ? res.data : [],
       error: _ => this.branches = []
     });
   }
 
   loadCities() {
     this.masterData.getCities().subscribe({
-      next: (res: any) => {
-        this.cities = res.success ? res.data : [];
-      },
+      next: (res: any) => this.cities = res.success ? res.data : [],
       error: _ => this.cities = []
     });
   }
@@ -97,13 +102,18 @@ private baseUrl = API_BASE_URL;
   }
 
   onUserTypeChange() {
-    if (this.model.userType === 1) {
-      this.model.cityId = null;
-    } else if (this.model.userType === 2) {
-      this.model.branchId = null;
-    } else {
-      this.model.branchId = null;
-      this.model.cityId = null;
+    const type = this.form.value.userType;
+
+    if (type === 1) {
+      this.form.patchValue({ cityIds: [] });
+    }
+
+    if (type === 2) {
+      this.form.patchValue({ branchId: null });
+    }
+
+    if (type === 3) {
+      this.form.patchValue({ branchId: null, cityIds: [] });
     }
 
     this.branchError = '';
@@ -116,28 +126,29 @@ private baseUrl = API_BASE_URL;
     this.cityError = '';
     this.message = '';
 
-    if (!this.model.roleName) {
+    const v = this.form.value;
+
+    if (!v.roleName) {
       this.roleError = 'من فضلك اختر الدور الوظيفي';
       return false;
     }
 
-    if (this.model.userType === 1 && !this.model.branchId) {
+    if (v.userType === 1 && !v.branchId) {
       this.branchError = 'من فضلك اختر الفرع';
       return false;
     }
 
-    if (this.model.userType === 2 && !this.model.cityId) {
-      this.cityError = 'من فضلك اختر المدينة';
+    if (v.userType === 2 && (!v.cityIds || v.cityIds.length === 0)) {
+      this.cityError = 'من فضلك اختر مدينة واحدة على الأقل';
       return false;
     }
 
-    if (!this.model.userName || !this.model.displayName || !this.model.email ||
-        !this.model.password || !this.model.confirmPassword) {
+    if (!v.userName || !v.displayName || !v.email || !v.password || !v.confirmPassword) {
       this.message = 'من فضلك أكمل جميع الحقول المطلوبة';
       return false;
     }
 
-    if (this.model.password !== this.model.confirmPassword) {
+    if (v.password !== v.confirmPassword) {
       this.message = 'كلمتا المرور غير متطابقتين';
       return false;
     }
@@ -151,7 +162,7 @@ private baseUrl = API_BASE_URL;
     this.isSaving = true;
     this.message = '';
 
-    this.http.post<any>(`${this.baseUrl}/Auth/register`, this.model)
+    this.http.post<any>(`${this.baseUrl}/Auth/register`, this.form.value)
       .subscribe({
         next: res => {
           this.isSaving = false;

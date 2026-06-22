@@ -57,6 +57,9 @@ export class DailySalesInquiryComponent implements OnInit {
   userInfo: any;
   isBranchUser = false;
   branches: any[] = [];
+  
+  isRegionManager = false;
+  userCityIds: number[] = [];
 
   daily: any;
   showEmployeeColumn = false;
@@ -74,6 +77,8 @@ export class DailySalesInquiryComponent implements OnInit {
 
   // القيمة المختارة من الدروب داون
   selectedBranch: any = null;
+
+  disableBranchDropdown = false;
 
   constructor(
     private fb: FormBuilder,
@@ -106,6 +111,8 @@ export class DailySalesInquiryComponent implements OnInit {
     });
 
     this.userInfo = this.auth.getUserInfo();
+    this.isRegionManager = this.auth.isRegionManager();
+    this.userCityIds = this.auth.getCityIds();
 
     // ✔ فقط اللي معاه صلاحية إدارة المرتجعات / الخصومات / الأدمن يقدر يعدّل
     const editPermissions = [
@@ -136,7 +143,10 @@ export class DailySalesInquiryComponent implements OnInit {
 
       // ✔ لو جاي من إدارة المرتجعات أو السمرى
       if (branchIdFromQuery && dateFromQuery) {
-
+         // 🔥 اقفل الدروب داون فقط لو المستخدم مدير منطقة
+        if (this.isRegionManager) {
+          this.disableBranchDropdown = true;
+        }
         if (!this.isBranchUser) {
           this.form.patchValue({
             branchId: Number(branchIdFromQuery)
@@ -189,7 +199,16 @@ export class DailySalesInquiryComponent implements OnInit {
   loadBranches() {
     this.master.getBranches().subscribe({
       next: res => {
-        this.branches = res.data || [];
+     let branchesList = res.data || [];
+
+      // 🔥 لو مدير منطقة → فلترة الفروع حسب مدنه فقط
+      if (this.isRegionManager && this.userCityIds.length > 0) {
+        branchesList = branchesList.filter((b: any) =>
+          this.userCityIds.includes(b.cityId)
+        );
+      }
+
+      this.branches = branchesList;
       },
       error: err => {
         console.error(err);

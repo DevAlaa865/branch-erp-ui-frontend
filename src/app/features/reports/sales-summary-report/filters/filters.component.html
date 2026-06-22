@@ -1,12 +1,9 @@
-<!-- 🔵 كارت الفلاتر -->
 <div class="bg-slate-100 border border-slate-300 rounded-2xl p-6 shadow-md">
 
-  <!-- عنوان التقرير -->
   <h2 class="text-xl font-bold text-slate-800 mb-6">
     تقرير المبيعات للفروع
   </h2>
 
-  <!-- الفلاتر -->
   <form [formGroup]="filterForm"
         (ngSubmit)="submit()"
         class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end text-blue-800">
@@ -33,8 +30,8 @@
       </div>
     </div>
 
-    <!-- المنطقة -->
-    <div>
+    <!-- المنطقة (مخفي لمدير المنطقة + مستخدم الفرع) -->
+    <div *ngIf="!isRegionManager && !isBranchUser">
       <app-custom-select
         label="المنطقة"
         [items]="regions"
@@ -48,19 +45,20 @@
       </app-custom-select>
     </div>
 
-    <!-- المدينة -->
-    <div>
-      <app-custom-select
-        label="المدينة"
-        [items]="filteredCities"
-        bindLabel="label"
-        bindValue="id"
-        placeholder="اختر المدينة"
-        [control]="filterForm.get('cityId')"
-        [searchable]="true"
-        [clearable]="true"
-        dropdownPosition="bottom">
-      </app-custom-select>
+    <!-- المدينة (مخفي لمستخدم الفرع) -->
+    <div *ngIf="!isBranchUser">
+     <app-custom-select
+  label="المدينة"
+  [items]="filteredCities"
+  bindLabel="label"
+  bindValue="id"
+  placeholder="اختر المدينة"
+  [control]="filterForm.get('cityId')"
+  [multiple]="true"
+  [searchable]="true"
+  [clearable]="true"
+  dropdownPosition="bottom">
+</app-custom-select>
     </div>
 
     <!-- الفرع -->

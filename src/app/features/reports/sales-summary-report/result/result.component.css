@@ -10,3 +10,50 @@
   thead { display: table-header-group; }
   tfoot { display: table-footer-group; }
 }
+.ag-theme-alpine {
+  --ag-header-height: 50px;
+  --ag-header-background-color: #7193ee;
+  --ag-header-foreground-color: white;
+
+  --ag-odd-row-background-color: #f8fafc;
+
+  --ag-row-hover-color: #dbeafe;
+
+  --ag-border-color: #cbd5e1;
+
+  --ag-font-size: 18px;
+ 
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,.08);
+}
+
+.ag-header-cell-label {
+  justify-content: center;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.ag-floating-filter-body input {
+  text-align: center;
+  border-radius: 8px;
+  
+}
+.ag-header-cell-text {
+  color: #ffffff !important; /* 🔥 يخلي النص أبيض */
+  font-weight: 700;
+}
+
+.branch-link {
+  color: #1d4ed8;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.branch-link:hover {
+  color: #1e40af;
+}
+
+
+

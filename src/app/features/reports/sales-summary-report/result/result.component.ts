@@ -8,11 +8,23 @@ import { saveAs } from 'file-saver';
 import { HttpClient } from '@angular/common/http';
 import { API_BASE_URL } from '../../../../api.config';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
+
+import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule } from 'ag-grid-community';
+import 'ag-grid-enterprise';
+import { AgGridModule } from 'ag-grid-angular';
+
+// 🔥 تسجيل كل Modules المطلوبة
+ModuleRegistry.registerModules([
+  AllCommunityModule,
+
+]);
 
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,AgGridModule],
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css']
 })
@@ -24,23 +36,134 @@ export class ResultComponent implements OnInit {
   allBranches: any[] = [];
   allCities: any[] = [];
   allRegions: any[] = [];
-
+  showFilters = true; // 🔥 الحالة الافتراضية: ظاهرة
   items: SalesSummaryReportItem[] = [];
   pagedItems: SalesSummaryReportItem[] = [];
 
   filter!: SalesSummaryReportFilter;
+  gridApi: any;
+  filteredNetSales = 0;
+  filteredInvoices = 0;
+  filteredQty = 0;
+  filteredReturns = 0;
+  filteredAvgInvoice = 0;
+  filteredAvgPieces = 0;
 
   pageSize = 20;
   currentPage = 1;
   totalPages = 1;
 
+
+
+  // 🔥 صلاحيات المستخدم
+  isRegionManager = false;
+  userCityIds: number[] = [];
+
+  // ============================
+  // 🔥 ag-Grid
+  // ============================
+  columnDefs: any[] = [];
+  defaultColDef: any = {};
+
   constructor(
     private router: Router,
     private reportService: SalesSummaryReportService,
-    private http: HttpClient
+    private http: HttpClient,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
+
+    // 🔥 ag-Grid إعدادات
+    this.defaultColDef = {
+      sortable: true,
+      filter: true,
+      floatingFilter: true,
+      resizable: true,
+     
+    };
+
+this.columnDefs = [
+  {
+    headerName: 'المسلسل',
+    field: 'serial',
+    filter: 'agNumberColumnFilter',
+    floatingFilter: true,
+
+  },
+  {
+    headerName: 'رقم الفرع',
+    field: 'branchNumber',
+    filter: 'agNumberColumnFilter',
+    floatingFilter: true
+  },
+  /* {
+    headerName: 'اسم الفرع',
+    field: 'branchName',
+    filter: 'agTextColumnFilter',
+    floatingFilter: true
+  }, */
+{
+  headerName: 'الفرع',
+  field: 'branchName',
+  filter: 'agTextColumnFilter',
+  cellRenderer: (params: any) => {
+    return `
+      <a class="branch-link" data-branch-id="${params.data.branchId}">
+        ${params.value}
+      </a>
+    `;
+  }
+},
+{
+  headerName: 'المرتجعات',
+  field: 'totalReturns',
+  filter: 'agNumberColumnFilter',
+  floatingFilter: true,
+  valueFormatter: (p: any) => Number(p.value || 0).toFixed(2)
+},
+  {
+    headerName: 'المدينة',
+    field: 'cityName',
+    filter: 'agTextColumnFilter',
+    floatingFilter: true
+  },
+  {
+    headerName: 'صافي البيع',
+    field: 'netSales',
+    filter: 'agNumberColumnFilter',
+    floatingFilter: true
+  },
+
+  {
+    headerName: 'عدد الفواتير',
+    field: 'invoiceCount',
+    filter: 'agNumberColumnFilter',
+    floatingFilter: true
+  },
+  {
+    headerName: 'عدد القطع',
+    field: 'quantityCount',
+    filter: 'agNumberColumnFilter',
+    floatingFilter: true
+  },
+ {
+  headerName: 'متوسط الفاتورة',
+  field: 'avgInvoice',
+  filter: 'agNumberColumnFilter',
+  valueFormatter: (p: any) => Number(p.value || 0).toFixed(2)
+},
+{
+  headerName: 'متوسط القطع',
+  field: 'avgPieces',
+  filter: 'agNumberColumnFilter',
+  valueFormatter: (p: any) => Number(p.value || 0).toFixed(2)
+},
+];
+
+    // 🔥 قراءة صلاحيات المستخدم
+    this.isRegionManager = this.auth.isRegionManager();
+    this.userCityIds = this.auth.getCityIds();
 
     forkJoin({
       order: this.http.get('/assets/branch-order.json'),
@@ -52,7 +175,8 @@ export class ResultComponent implements OnInit {
       this.branchOrder = order as any[];
       this.allRegions = regions.data || regions;
       this.allCities = cities.data || cities;
-    this.allBranches = Array.isArray(branches) ? branches : branches.data || branches.result || branches.items || [];
+      this.allBranches = Array.isArray(branches) ? branches : branches.data || branches.result || branches.items || [];
+
       this.initializeReport();
     });
   }
@@ -94,7 +218,8 @@ export class ResultComponent implements OnInit {
           return {
             ...b,
             cityId: branchInfo?.cityId || null,
-            regionId: cityInfo?.regionId || null
+            regionId: cityInfo?.regionId || null,
+            cityName: cityInfo?.cityName || ''
           };
         });
 
@@ -110,11 +235,18 @@ export class ResultComponent implements OnInit {
           filteredBranchOrder = filteredBranchOrder.filter(b => b.cityId === this.filter.cityId);
         }
 
-        // 4) Map للفروع اللي رجعت من الـ API
+        // 🔥 4) فلترة إضافية لمدير المنطقة — مدنه فقط
+        if (this.isRegionManager && this.userCityIds.length > 0) {
+          filteredBranchOrder = filteredBranchOrder.filter(b =>
+            b.cityId && this.userCityIds.includes(b.cityId)
+          );
+        }
+
+        // 5) Map للفروع اللي رجعت من الـ API
         const existingBranches = new Map(apiItems.map(x => [x.branchNumber, x]));
         const branchNamesMap = new Map(apiItems.map(x => [x.branchNumber, x.branchName]));
 
-        // 5) دمج الفروع + إضافة الفروع اللي مفيهاش يومية
+        // 6) دمج الفروع + إضافة الفروع اللي مفيهاش يومية
         this.items = filteredBranchOrder.map(order => {
           const found = existingBranches.get(order.branchNumber);
 
@@ -122,6 +254,7 @@ export class ResultComponent implements OnInit {
             return {
               ...found,
               serial: order.serial,
+              cityName: order.cityName,
               noSales: false
             };
           }
@@ -133,17 +266,20 @@ export class ResultComponent implements OnInit {
             branchId: 0,
             branchNumber: order.branchNumber,
             branchName: realName,
+            cityName: order.cityName,
             totalSales: 0,
             totalReturns: 0,
             netSales: 0,
             invoiceCount: 0,
             quantityCount: 0,
             activityType: '',
-            noSales: true
+            noSales: true,
+            avgInvoice: 0,
+            avgPieces: 0
           };
         });
 
-        // 6) حساب المتوسطات
+        // 7) حساب المتوسطات
         this.items = this.items.map(item => {
           const invoiceCount = item.invoiceCount || 0;
 
@@ -154,12 +290,15 @@ export class ResultComponent implements OnInit {
           };
         });
 
-        // 7) ترتيب حسب المسلسل
+        // 8) ترتيب حسب المسلسل
         this.items.sort((a, b) => a.serial - b.serial);
 
-        // 8) تحديث الباجينيشن
+        // 9) تحديث الباجينيشن
         this.currentPage = 1;
         this.updatePagination();
+        setTimeout(() => {
+          this.calculateFilteredTotals();
+        }, 100);
         this.loading = false;
       },
       error: err => {
@@ -192,17 +331,41 @@ export class ResultComponent implements OnInit {
     }
   }
 
-  get totalNetSales(): number {
-    return this.items.reduce((sum, x) => sum + x.netSales, 0);
-  }
+  // 🔥 فتح اليومية
+/*   openDaily(row: SalesSummaryReportItem) {
+    if (!row.branchId || !this.filter?.toDate) return;
 
-  get totalInvoices(): number {
-    return this.items.reduce((sum, x) => sum + x.invoiceCount, 0);
-  }
+    this.router.navigate(
+      ['/revenue-management/daily-sales-inquiry'],
+      {
+        queryParams: {
+          branchId: row.branchId,
+          salesDate: this.filter.toDate
+        }
+      }
+    );
+  } */
+openDailyDetails(row: any) {
+  const url = this.router.serializeUrl(
+    this.router.createUrlTree(
+      ['/reports/branch-daily-details'],
+      {
+        queryParams: {
+          branchId: row.branchId,
+          fromDate: this.filter.fromDate,
+          toDate: this.filter.toDate,
+           branchName: row.branchName,
+        }
+      }
+    )
+  );
 
-  get totalQuantities(): number {
-    return this.items.reduce((sum, x) => sum + x.quantityCount, 0);
-  }
+  window.open(url, '_blank');
+}
+
+  // ============================
+  // 🔥 الدوال القديمة — رجعتها كما هي
+  // ============================
 
   getActivityName(type: any): string {
     const t = +type;
@@ -256,6 +419,20 @@ export class ResultComponent implements OnInit {
 
     return classes;
   }
+
+  get totalNetSales(): number {
+    return this.items.reduce((sum, x) => sum + x.netSales, 0);
+  }
+
+  get totalInvoices(): number {
+    return this.items.reduce((sum, x) => sum + x.invoiceCount, 0);
+  }
+
+  get totalQuantities(): number {
+    return this.items.reduce((sum, x) => sum + x.quantityCount, 0);
+  }
+
+
 
 
   printReport() {
@@ -327,6 +504,8 @@ export class ResultComponent implements OnInit {
     popup.print();
   }
 
+
+
   exportExcel() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sales Summary');
@@ -375,4 +554,58 @@ export class ResultComponent implements OnInit {
       saveAs(new Blob([buffer]), 'SalesSummaryReport.xlsx');
     });
   }
+/*   onGridReady(params: any) {
+  this.gridApi = params.api;
+  this.calculateFilteredTotals();
+} */
+onGridReady(params: any) {
+  this.gridApi = params.api;
+  this.calculateFilteredTotals();
+
+  // 🔥 التقاط الضغط على اللينك داخل الخلية
+  params.api.addEventListener('cellClicked', (event: any) => {
+    const target = event.event.target;
+
+    if (target.classList.contains('branch-link')) {
+      const row = event.data;
+      this.openDailyDetails(row);   // 🔥 نفس الفانكشن اللي الجدول القديم بيستخدمه
+    }
+  });
+}
+onFilterChanged() {
+  this.calculateFilteredTotals();
+}
+calculateFilteredTotals() {
+
+  let rows: any[] = [];
+
+  this.gridApi.forEachNodeAfterFilter((node: any) => {
+    rows.push(node.data);
+  });
+
+  this.filteredNetSales =
+      rows.reduce((s, x) => s + (x.netSales || 0), 0);
+
+  this.filteredReturns =
+      rows.reduce((s, x) => s + (x.totalReturns || 0), 0);
+
+  this.filteredInvoices =
+      rows.reduce((s, x) => s + (x.invoiceCount || 0), 0);
+
+  this.filteredQty =
+      rows.reduce((s, x) => s + (x.quantityCount || 0), 0);
+
+  this.filteredAvgInvoice =
+      this.filteredInvoices > 0
+      ? this.filteredNetSales / this.filteredInvoices
+      : 0;
+
+  this.filteredAvgPieces =
+      this.filteredInvoices > 0
+      ? this.filteredQty / this.filteredInvoices
+      : 0;
+}
+toggleFilters() {
+  this.showFilters = !this.showFilters;
+}
 }
