@@ -28,14 +28,13 @@
       <div class="p-4 border-b bg-gray-50 rounded-t-xl flex justify-between items-center mb-3">
         <h4 class="m-0 text-lg font-bold text-gray-700">نتائج تقرير يوميات الفروع</h4>
       </div>
-<div *ngIf="openedRows.length > 0" class="opened-counter">
-  <span class="opened-counter-icon">
-    <iconify-icon icon="solar:checklist-bold-duotone" width="16"></iconify-icon>
-  </span>
-  تم فتح {{ openedRows.length }} يوميات
-</div>
 
-
+      <div *ngIf="openedRows.length > 0" class="opened-counter">
+        <span class="opened-counter-icon">
+          <iconify-icon icon="solar:checklist-bold-duotone" width="16"></iconify-icon>
+        </span>
+        تم فتح {{ openedRows.length }} يوميات
+      </div>
 
       <div class="table-wrapper" dir="rtl">
         <table class="report-table">
@@ -44,10 +43,10 @@
             <tr>
               <th>رقم الفرع</th>
               <th>الفرع</th>
-              <th >نقدية</th>
-              <th >شبكة</th>
-              <th >آجل</th>
-              <th >إجمالي البيع</th>
+              <th>نقدية</th>
+              <th>شبكة</th>
+              <th>آجل</th>
+              <th>إجمالي البيع</th>
               <th>الإجمالي الكلي</th>
               <th>قيمة العجز</th>
 
@@ -55,23 +54,26 @@
 
               <th>الفرق</th>
               <th>تفاصيل</th>
+
+              <!-- ⭐ عمود التنبيه -->
+              <th>تنبيه</th>
             </tr>
           </thead>
 
           <tbody>
-           <tr
-              *ngFor="let row of pagedRows; trackBy: trackByBranch"
-              [ngClass]="{
-                'row-high-positive row-animated': row.difference > 30,
-                'row-high-negative row-animated': row.difference < -30,
-                'row-opened row-animated': openedRows.includes(row.branchId)
-              }"
-              class="border-b hover:bg-blue-50 transition"
-            >
+              <tr
+          *ngFor="let row of pagedRows; trackBy: trackByBranch"
+          [ngClass]="{
+            'row-high-positive row-animated': row.difference > 30,
+            'row-high-negative row-animated': row.difference < -30,
+            'row-opened row-animated': openedRows.includes(row.branchId),
+            'no-sales-row': row.totalSales === 0
+          }"
+          class="border-b hover:bg-blue-50 transition"
+        >
 
 
-
-             <td>{{ row.branchNumber }}</td>
+              <td>{{ row.branchNumber }}</td>
               <td>{{ row.branchName }}</td>
 
               <td>{{ row.cashAmount | number:'1.2-2' }}</td>
@@ -82,7 +84,7 @@
 
               <td>{{ row.totalShortageAmount | number:'1.2-2' }}</td>
 
-              <td  *ngFor="let st of shortageTypes" class="text-center">
+              <td *ngFor="let st of shortageTypes" class="text-center">
                 {{
                   (row.shortages | shortByType:(st?.id))?.amount || 0
                   | number:'1.2-2'
@@ -98,15 +100,20 @@
               </td>
 
               <td>
-              <button
-                class="eye-btn tooltip"
-                data-tip="عرض تفاصيل اليوميات"
-                (click)="openDailyDetails(row)"
-              >
-                <iconify-icon icon="solar:eye-bold-duotone" width="18"></iconify-icon>
-              </button>
+                <button
+                  class="eye-btn tooltip"
+                  data-tip="عرض تفاصيل اليوميات"
+                  (click)="openDailyDetails(row)"
+                >
+                  <iconify-icon icon="solar:eye-bold-duotone" width="18"></iconify-icon>
+                </button>
+              </td>
 
-
+              <!-- ⭐ تنبيه لا توجد مبيعات -->
+              <td class="text-center">
+                <span *ngIf="row.totalSales === 0" class="no-sales-text">
+                  لا توجد مبيعات
+                </span>
               </td>
 
             </tr>

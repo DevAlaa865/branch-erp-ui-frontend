@@ -217,3 +217,11 @@
 .report-table td {
   text-align: center !important;
 }
+.no-sales-row {
+  background-color: #fff3cd !important; /* أصفر فاتح */
+}
+
+.no-sales-text {
+  color: #d48806;
+  font-weight: bold;
+}

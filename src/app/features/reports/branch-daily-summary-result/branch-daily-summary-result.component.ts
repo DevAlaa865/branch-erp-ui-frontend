@@ -120,6 +120,7 @@ export class BranchDailySummaryResultComponent implements OnInit {
         }
 
         this.rows = res.data || [];
+        this.rows = this.rows.filter(r => r.branchNumber !== 8000);
 
         const map = new Map<number, string>();
 
@@ -284,31 +285,24 @@ exportToPdf(): void {
     'الإجمالي الكلي',
     'الفرق',
     'قيمة العجز',
-    ...this.shortageTypes.map(x => x.name)
+    ...this.shortageTypes.map(x => x.name),
+    'تنبيه'   // ⭐ تمت الإضافة
   ];
 
   const totalColumns = headers.length;
 
-  const pageWidth =
-    doc.internal.pageSize.getWidth() - 20;
-
-  const columnWidth =
-    pageWidth / totalColumns;
-
-  const colWidths =
-    Array(totalColumns).fill(columnWidth);
+  const pageWidth = doc.internal.pageSize.getWidth() - 20;
+  const columnWidth = pageWidth / totalColumns;
+  const colWidths = Array(totalColumns).fill(columnWidth);
 
   const drawHeader = () => {
-
     doc.setFont('Amiri');
-
     doc.setFontSize(14);
-  const title =
-  `تقرير يوميات الفروع المجمع (${this.filter.fromDate})`;
-  
+
+    const title = `تقرير يوميات الفروع المجمع (${this.filter.fromDate})`;
+
     doc.text(
       title,
-
       doc.internal.pageSize.getWidth() / 2,
       12,
       { align: 'center' }
@@ -317,32 +311,19 @@ exportToPdf(): void {
     let x = 10;
 
     headers.forEach((header, index) => {
-
       doc.setFillColor(41, 128, 185);
-      doc.rect(
-        x,
-        18,
-        colWidths[index],
-        14,
-        'F'
-      );
+      doc.rect(x, 18, colWidths[index], 14, 'F');
 
       doc.setTextColor(255);
       doc.setFontSize(7);
 
-      const lines = doc.splitTextToSize(
-        header,
-        colWidths[index] - 2
-      );
+      const lines = doc.splitTextToSize(header, colWidths[index] - 2);
 
       doc.text(
         lines,
         x + colWidths[index] / 2,
         23,
-        {
-          align: 'center',
-          baseline: 'middle'
-        } as any
+        { align: 'center', baseline: 'middle' } as any
       );
 
       x += colWidths[index];
@@ -352,7 +333,6 @@ exportToPdf(): void {
   };
 
   const body = this.rows.map(row => {
-
     const rowData: any[] = [
       row.branchNumber ?? '',
       row.branchName ?? '',
@@ -366,23 +346,18 @@ exportToPdf(): void {
     ];
 
     this.shortageTypes.forEach(st => {
-
-      const found = row.shortages?.find(
-        x => x.shortageTypeId === st.id
-      );
-
-      rowData.push(
-        (found?.amount ?? 0).toFixed(2)
-      );
+      const found = row.shortages?.find(x => x.shortageTypeId === st.id);
+      rowData.push((found?.amount ?? 0).toFixed(2));
     });
+
+    // ⭐ عمود التنبيه
+    rowData.push(row.totalSales === 0 ? 'لا توجد مبيعات' : '');
 
     return rowData;
   });
 
   const columnStyles: Record<number, any> = {};
-
   for (let i = 0; i < totalColumns; i++) {
-
     columnStyles[i] = {
       cellWidth: columnWidth,
       halign: 'center',
@@ -409,16 +384,20 @@ exportToPdf(): void {
 
     columnStyles,
 
-    margin: {
-      top: 35,
-      left: 10,
-      right: 10
-    },
-
+    margin: { top: 35, left: 10, right: 10 },
     tableWidth: 'auto',
 
     didParseCell: function (data) {
       data.cell.styles.font = 'Amiri';
+
+      // ⭐ تلوين الصف اللي مفيهوش مبيعات
+      if (data.row.index >= 0) {
+      const rawRow = data.row.raw as any[];
+     const totalSales = parseFloat(rawRow[5]);
+        if (totalSales === 0) {
+          data.cell.styles.fillColor = [255, 243, 205]; // أصفر فاتح
+        }
+      }
     },
 
     didDrawPage: () => {
@@ -428,5 +407,6 @@ exportToPdf(): void {
 
   doc.save('BranchDailySummary.pdf');
 }
+
   
 }
