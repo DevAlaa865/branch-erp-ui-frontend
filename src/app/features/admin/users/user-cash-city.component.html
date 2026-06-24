@@ -1,0 +1,46 @@
+<div class="card">
+  <div class="card-header">
+    ربط المستخدم بالمدن + تحديد دوره داخل نظام الصناديق
+  </div>
+
+  <div class="card-body space-y-4">
+
+    <!-- اختيار المستخدم -->
+    <app-custom-select
+      label="المستخدم"
+      [items]="users"
+      bindLabel="displayName"
+      bindValue="id"
+      [control]="form.controls['userId']"
+      (selectionChange)="onUserChange($event)">
+    </app-custom-select>
+
+    <!-- اختيار الدور -->
+    <app-custom-select
+      label="الدور داخل نظام الصناديق"
+      [items]="roleTypes"
+      bindLabel="name"
+      bindValue="id"
+      [control]="form.controls['roleType']">
+    </app-custom-select>
+
+    <!-- اختيار المدن -->
+    <app-custom-select
+      label="المدن التابعة للمستخدم"
+      [items]="cities"
+      bindLabel="cityName"
+      bindValue="id"
+      [multiple]="true"
+      [control]="form.controls['cityIds']">
+    </app-custom-select>
+
+    <button class="btn btn-primary mt-3" (click)="save()" [disabled]="loading">
+      حفظ
+    </button>
+
+    <div class="mt-2 text-success" *ngIf="message">
+      {{ message }}
+    </div>
+
+  </div>
+</div>

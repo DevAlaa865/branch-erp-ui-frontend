@@ -78,12 +78,13 @@ export const routes: Routes = [
             import('./features/reports/sales-summary-report/filters/filters.component')
               .then(m => m.FiltersComponent)
         },
-      {
-          path: 'reports/branch-daily-details',
-          loadComponent: () =>
-            import('./features/reports/sales-summary-report/branch-daily-details/branch-daily-details.component')
-              .then(m => m.BranchDailyDetailsComponent)
-        },
+       
+        {
+            path: 'reports/branch-daily-details',
+            loadComponent: () =>
+              import('./features/reports/sales-summary-report/branch-daily-details/branch-daily-details.component')
+                .then(m => m.BranchDailyDetailsComponent)
+          },
           {
             path: 'reports/sales-summary-report-result',
             loadComponent: () =>
@@ -152,6 +153,12 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./features/admin/users/list/users-list/users-list.component')
                 .then(m => m.UsersListComponent)
+         },
+          {
+          path: 'general-management/admin/users/user-cash-city',
+          loadComponent: () =>
+            import('./features/admin/users/user-cash-city.component')
+              .then(m => m.UserCashCityComponent)
          },
          {
             path: 'general-management/countries',

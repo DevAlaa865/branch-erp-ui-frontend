@@ -199,114 +199,129 @@ this.columnDefs = [
       cityId: params.get('cityId') ? Number(params.get('cityId')) : null,
       branchId: params.get('branchId') ? Number(params.get('branchId')) : null
     };
-
     this.loadReport();
   }
 
-  loadReport() {
-    this.loading = true;
+loadReport() {
+  this.loading = true;
 
-    this.reportService.getReport(this.filter).subscribe({
-      next: res => {
-        const apiItems = res.data || [];
+  this.reportService.getReport(this.filter).subscribe({
+    next: res => {
 
-        // 1) دمج بيانات الفروع مع المدن والمناطق
-        const enrichedBranchOrder = this.branchOrder.map(b => {
-          const branchInfo = this.allBranches.find(x => x.branchNumber === b.branchNumber);
-          const cityInfo = this.allCities.find(c => c.id === branchInfo?.cityId);
+      const apiItems = res.data || [];
 
-          return {
-            ...b,
-            cityId: branchInfo?.cityId || null,
-            regionId: cityInfo?.regionId || null,
-            cityName: cityInfo?.cityName || ''
-          };
-        });
+      // 🔥 1) قبل دمج الفروع — هل الفرع 618 موجود في allBranches؟
+      console.log(
+        "Branch 618 in allBranches:",
+        this.allBranches.find(x => x.branchNumber == 618)
+      );
 
-        // 2) فلترة حسب المنطقة
-        let filteredBranchOrder = enrichedBranchOrder;
+  
 
-        if (this.filter.regionId) {
-          filteredBranchOrder = filteredBranchOrder.filter(b => b.regionId === this.filter.regionId);
-        }
+      // 2) دمج بيانات الفروع مع المدن والمناطق
+      const enrichedBranchOrder = this.branchOrder.map(b => {
+        const branchInfo = this.allBranches.find(x => x.branchNumber == b.branchNumber);
+        const cityInfo = this.allCities.find(c => c.id === branchInfo?.cityId);
 
-        // 3) فلترة حسب المدينة
-        if (this.filter.cityId) {
-          filteredBranchOrder = filteredBranchOrder.filter(b => b.cityId === this.filter.cityId);
-        }
+        return {
+          ...b,
+          cityId: branchInfo?.cityId || null,
+          regionId: cityInfo?.regionId || null,
+          cityName: cityInfo?.cityName || ''
+        };
+      });
 
-        // 🔥 4) فلترة إضافية لمدير المنطقة — مدنه فقط
-        if (this.isRegionManager && this.userCityIds.length > 0) {
-          filteredBranchOrder = filteredBranchOrder.filter(b =>
-            b.cityId && this.userCityIds.includes(b.cityId)
-          );
-        }
+   
 
-        // 5) Map للفروع اللي رجعت من الـ API
-        const existingBranches = new Map(apiItems.map(x => [x.branchNumber, x]));
-        const branchNamesMap = new Map(apiItems.map(x => [x.branchNumber, x.branchName]));
+      // 3) فلترة حسب المنطقة
+      let filteredBranchOrder = enrichedBranchOrder;
 
-        // 6) دمج الفروع + إضافة الفروع اللي مفيهاش يومية
-        this.items = filteredBranchOrder.map(order => {
-          const found = existingBranches.get(order.branchNumber);
-
-          if (found) {
-            return {
-              ...found,
-              serial: order.serial,
-              cityName: order.cityName,
-              noSales: false
-            };
-          }
-
-          const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`;
-
-          return {
-            serial: order.serial,
-            branchId: 0,
-            branchNumber: order.branchNumber,
-            branchName: realName,
-            cityName: order.cityName,
-            totalSales: 0,
-            totalReturns: 0,
-            netSales: 0,
-            invoiceCount: 0,
-            quantityCount: 0,
-            activityType: '',
-            noSales: true,
-            avgInvoice: 0,
-            avgPieces: 0
-          };
-        });
-
-        // 7) حساب المتوسطات
-        this.items = this.items.map(item => {
-          const invoiceCount = item.invoiceCount || 0;
-
-          return {
-            ...item,
-            avgInvoice: invoiceCount > 0 ? item.netSales / invoiceCount : 0,
-            avgPieces: invoiceCount > 0 ? item.quantityCount / invoiceCount : 0
-          };
-        });
-
-        // 8) ترتيب حسب المسلسل
-        this.items.sort((a, b) => a.serial - b.serial);
-
-        // 9) تحديث الباجينيشن
-        this.currentPage = 1;
-        this.updatePagination();
-        setTimeout(() => {
-          this.calculateFilteredTotals();
-        }, 100);
-        this.loading = false;
-      },
-      error: err => {
-        console.error('Error loading report', err);
-        this.loading = false;
+      if (this.filter.regionId) {
+        filteredBranchOrder = filteredBranchOrder.filter(b => b.regionId === this.filter.regionId);
       }
-    });
-  }
+
+      // 4) فلترة حسب المدينة
+      if (this.filter.cityId) {
+        filteredBranchOrder = filteredBranchOrder.filter(b => b.cityId === this.filter.cityId);
+      }
+
+      // 5) فلترة مدير المنطقة
+      if (this.isRegionManager && this.userCityIds.length > 0) {
+        filteredBranchOrder = filteredBranchOrder.filter(b =>
+          b.cityId && this.userCityIds.includes(b.cityId)
+        );
+      }
+
+    
+
+      // 6) Map للفروع اللي رجعت من الـ API
+      const existingBranches = new Map(apiItems.map(x => [x.branchNumber, x]));
+      const branchNamesMap = new Map(apiItems.map(x => [x.branchNumber, x.branchName]));
+
+      // 7) دمج الفروع + إضافة الفروع اللي مفيهاش يومية
+      this.items = filteredBranchOrder.map(order => {
+        const found = existingBranches.get(order.branchNumber);
+
+        if (found) {
+          return {
+            ...found,
+            serial: order.serial,
+            cityName: order.cityName,
+            noSales: false
+          };
+        }
+
+        const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`;
+
+        return {
+          serial: order.serial,
+          branchId: 0,
+          branchNumber: order.branchNumber,
+          branchName: realName,
+          cityName: order.cityName,
+          totalSales: 0,
+          totalReturns: 0,
+          netSales: 0,
+          invoiceCount: 0,
+          quantityCount: 0,
+          activityType: '',
+          noSales: true,
+          avgInvoice: 0,
+          avgPieces: 0
+        };
+      });
+
+      // 8) حساب المتوسطات
+      this.items = this.items.map(item => {
+        const invoiceCount = item.invoiceCount || 0;
+
+        return {
+          ...item,
+          avgInvoice: invoiceCount > 0 ? item.netSales / invoiceCount : 0,
+          avgPieces: invoiceCount > 0 ? item.quantityCount / invoiceCount : 0
+        };
+      });
+
+      // 9) ترتيب حسب المسلسل
+      this.items.sort((a, b) => a.serial - b.serial);
+
+      // 10) تحديث الباجينيشن
+      this.currentPage = 1;
+      this.updatePagination();
+
+      setTimeout(() => {
+        this.calculateFilteredTotals();
+      }, 100);
+
+      this.loading = false;
+    },
+    error: err => {
+      console.error('Error loading report', err);
+      this.loading = false;
+    }
+  });
+}
+
 
   updatePagination() {
     this.totalPages = Math.ceil(this.items.length / this.pageSize);

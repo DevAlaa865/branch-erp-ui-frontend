@@ -429,6 +429,20 @@ if (!dataEntryName) {
   });
   return;
 }
+// ⭐ للايمكن الحفظ بسبب تعدى العجز المسموح به
+
+if ( this.form.get('difference')?.value?.trim()<= -35) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'error',
+    title: `لا يمكن الحفظ! العجز يتعدى الحد المسموح به`,
+    showConfirmButton: false,
+    timer: 5000,
+    timerProgressBar: true
+  });
+  return; // إيقاف عملية الحفظ فوراً
+}
 
 // ⭐ لازم يكون اسمين على الأقل
 const parts = dataEntryName.split(/\s+/);
