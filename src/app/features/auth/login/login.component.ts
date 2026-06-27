@@ -44,7 +44,18 @@ export class LoginComponent {
       console.log('TOKEN', localStorage.getItem('token')); */
 
       const perms = this.auth.getPermissions();
+     
 
+      // 🔥 هنا الشرط الجديد
+      const isExpired = this.checkExpiry();
+
+      // لو منتهي وأيضًا المستخدم مش Admin → امنعه
+      if (isExpired && !perms.includes('Permissions.Manage')) {
+        this.errorMessage = 'لا يمكن تشغيل البرنامج — انتهت مدة التجربة';
+        return;
+      }
+   
+      
      /*  console.log('PERMISSIONS', perms); */
   this.isLoading = false;
 
@@ -67,5 +78,17 @@ loginError: string | null = null;
 
 togglePasswordVisibility() {
   this.isPasswordVisible = !this.isPasswordVisible;
+}
+checkExpiry(): boolean {
+  const expiry = localStorage.getItem('expiryDate');
+
+  // لو مفيش تاريخ أصلاً → اعتبر البرنامج شغال
+  if (!expiry) return false;
+
+  const expiryDate = new Date(expiry);
+  const today = new Date();
+
+  // لو اليوم أكبر من تاريخ الانتهاء → منتهي
+  return today > expiryDate;
 }
 }

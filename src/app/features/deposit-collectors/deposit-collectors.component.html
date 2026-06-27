@@ -1,0 +1,142 @@
+<div class="p-6">
+
+  <!-- عنوان -->
+  <h2 class="text-2xl font-bold text-slate-800 mb-6">
+    إدارة مسؤولي الإيداع
+  </h2>
+
+  <!-- بطاقة الفورم -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8 border border-slate-200">
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- المستخدم -->
+        <div>
+          <app-custom-select
+            label="المستخدم"
+            [items]="users"
+            bindLabel="displayName"
+            bindValue="id"
+            [control]="form.controls['userId']">
+          </app-custom-select>
+        </div>
+
+        <!-- المدينة -->
+        <div>
+          <app-custom-select
+            label="المدينة"
+            [items]="cities"
+            bindLabel="cityName"
+            bindValue="id"
+            [control]="form.controls['cityId']">
+          </app-custom-select>
+        </div>
+
+        <!-- المنطقة -->
+        <div>
+          <app-custom-select
+            label="المنطقة"
+            [items]="regions"
+            bindLabel="regionName"
+            bindValue="id"
+            [control]="form.controls['regionId']">
+          </app-custom-select>
+        </div>
+
+        <!-- الحالة -->
+        <div class="flex items-center gap-2 mt-2">
+          <input
+            type="checkbox"
+            formControlName="isActive"
+            class="w-4 h-4 text-blue-600 border-gray-300 rounded">
+          <span class="text-slate-700 text-sm">نشط</span>
+        </div>
+
+      </div>
+
+      <div class="mt-6 flex items-center gap-3">
+        <button
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition text-sm"
+          [disabled]="loading">
+          {{ isEdit ? 'تعديل مسؤول الإيداع' : 'إضافة مسؤول إيداع' }}
+        </button>
+
+        <button
+          type="button"
+          class="text-slate-600 text-sm underline"
+          (click)="resetForm()">
+          تفريغ النموذج
+        </button>
+
+        <span class="text-green-600 text-sm font-medium">{{ message }}</span>
+      </div>
+
+    </form>
+
+  </div>
+
+  <!-- جدول مسؤولي الإيداع -->
+  <div class="bg-white rounded-xl shadow-md p-6 border border-slate-200">
+
+    <h3 class="text-xl font-semibold text-slate-800 mb-4">
+      قائمة مسؤولي الإيداع
+    </h3>
+
+    <div class="overflow-auto">
+      <table class="w-full border-collapse min-w-[700px]">
+        <thead>
+          <tr class="bg-slate-100 text-slate-700 text-xs">
+            <th class="p-3 border">المستخدم</th>
+            <th class="p-3 border">رقم الجوال</th>
+            <th class="p-3 border">المدينة</th>
+            <th class="p-3 border">المنطقة</th>
+            <th class="p-3 border">الحالة</th>
+            <th class="p-3 border">إجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of collectors" class="text-sm hover:bg-slate-50">
+
+            <td class="p-3 border">{{ item.userName }}</td>
+            <td class="p-3 border">{{ item.phoneNumber }}</td>
+            <td class="p-3 border">{{ item.cityName }}</td>
+            <td class="p-3 border">{{ item.regionName }}</td>
+
+            <td class="p-3 border">
+              <span
+                class="px-3 py-1 rounded-full text-white text-xs"
+                [class.bg-green-600]="item.isActive"
+                [class.bg-red-600]="!item.isActive">
+                {{ item.isActive ? 'نشط' : 'غير نشط' }}
+              </span>
+            </td>
+
+            <td class="p-3 border">
+              <div class="flex gap-2">
+
+                <button
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+                  (click)="edit(item)">
+                  تعديل
+                </button>
+
+                <button
+                  class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs"
+                  (click)="toggleActive(item)">
+                  {{ item.isActive ? 'تعطيل' : 'تفعيل' }}
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>

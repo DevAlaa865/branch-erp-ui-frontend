@@ -142,6 +142,30 @@ export const routes: Routes = [
               .then(m => m.AccountControlIssuesReportComponent )
         }, 
         {
+          path: 'cash-management',
+          loadComponent: () =>
+            import('./pages/cash-management/cash-management.component')
+              .then(m => m.CashManagementComponent)
+        },
+         {
+            path: 'cash-management/cash/cash-box',
+            loadComponent: () =>
+              import('./features/cash/cash-box.component')
+                .then(m => m.CashBoxComponent)
+          },
+         {
+          path: 'cash-management/deposit-collectors',
+          loadComponent: () =>
+            import('./features/deposit-collectors/deposit-collectors.component')
+              .then(m => m.DepositCollectorsComponent)
+        },
+        {
+            path: 'cash-management/petty-holder',
+            loadComponent: () =>
+              import('./features/petty-holder/petty-holder.component')
+                .then(m => m.PettyHolderComponent)
+          },
+        {
         path: 'general-management',
         loadComponent: () =>
           import('./pages/general-management/general-management.component')
@@ -160,6 +184,7 @@ export const routes: Routes = [
             import('./features/admin/users/user-cash-city.component')
               .then(m => m.UserCashCityComponent)
          },
+         
          {
             path: 'general-management/countries',
             canActivate: [permissionGuard('Countries.View')],

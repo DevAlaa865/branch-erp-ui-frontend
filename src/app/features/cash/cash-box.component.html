@@ -1,0 +1,127 @@
+<div class="p-6">
+
+  <!-- عنوان الصفحة -->
+  <h2 class="text-2xl font-bold text-slate-800 mb-6">
+    إدارة الصناديق
+  </h2>
+
+  <!-- بطاقة الفورم -->
+  <div class="bg-white rounded-xl shadow-md p-6 mb-8 border border-slate-200">
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- اسم الصندوق -->
+        <div>
+          <label class="block text-slate-700 mb-1">اسم الصندوق</label>
+          <input
+            type="text"
+            formControlName="name"
+            class="w-full border border-slate-300  text-blue-900 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          >
+        </div>
+
+        <!-- الرصيد الافتتاحي -->
+        <div>
+          <label class="block text-slate-700 mb-1">الرصيد الافتتاحي</label>
+          <input
+            type="number"
+            formControlName="openingBalance"
+            class="w-full border border-slate-300 text-blue-900 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+          >
+        </div>
+
+        <!-- مسؤول الإيداع -->
+        <div>
+          <app-custom-select
+            label="مسؤول الإيداع"
+            [items]="depositCollectors"
+            bindLabel="displayName"
+            bindValue="id"
+            [control]="form.controls['depositCollectorId']">
+          </app-custom-select>
+        </div>
+
+        <!-- صاحب العهدة -->
+        <div>
+          <app-custom-select
+            label="صاحب العهدة"
+            [items]="pettyHolders"
+            bindLabel="displayName"
+            bindValue="id"
+            [control]="form.controls['pettyHolderId']">
+          </app-custom-select>
+        </div>
+
+      </div>
+
+      <button
+        class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition"
+        [disabled]="loading">
+        {{ isEdit ? 'تعديل الصندوق' : 'إنشاء صندوق' }}
+      </button>
+
+      <p class="text-green-600 mt-3 font-medium">{{ message }}</p>
+
+    </form>
+
+  </div>
+
+  <!-- جدول الصناديق -->
+  <div class="bg-white rounded-xl shadow-md p-6 border border-slate-200">
+
+    <h3 class="text-xl font-semibold text-slate-800 mb-4">قائمة الصناديق</h3>
+
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-slate-100 text-slate-700 text-sm">
+          <th class="p-3 border">الاسم</th>
+          <th class="p-3 border">الرصيد الحالي</th>
+          <th class="p-3 border">مسؤول الإيداع</th>
+          <th class="p-3 border">صاحب العهدة</th>
+          <th class="p-3 border">الحالة</th>
+          <th class="p-3 border">إجراءات</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let box of cashBoxes" class="text-sm hover:bg-slate-50">
+
+          <td class="p-3 border text-blue-900">{{ box.name }}</td>
+          <td class="p-3 border text-blue-900">{{ box.currentBalance }}</td>
+          <td class="p-3 border text-blue-900">{{ box.depositCollectorName }}</td>
+          <td class="p-3 border text-blue-900">{{ box.pettyHolderName }}</td>
+
+          <td class="p-3 border">
+            <span
+              class="px-3 py-1 text-blue-900 rounded-full text-white text-xs"
+              [class.bg-green-600]="box.isActive"
+              [class.bg-red-600]="!box.isActive">
+              {{ box.isActive ? 'نشط' : 'غير نشط' }}
+            </span>
+          </td>
+
+          <td class="p-3 border text-blue-900 flex gap-2">
+
+            <button
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"
+              (click)="edit(box)">
+              تعديل
+            </button>
+
+            <button
+              class="bg-yellow-500 text-blue-900 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs"
+              (click)="toggleActive(box)">
+              {{ box.isActive ? 'تعطيل' : 'تفعيل' }}
+            </button>
+
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

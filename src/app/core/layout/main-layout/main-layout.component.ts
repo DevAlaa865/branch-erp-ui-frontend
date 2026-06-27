@@ -18,13 +18,15 @@ export class MainLayoutComponent  {
   branchName: string | null = null;
   roles: string[] = [];
   currentYear = new Date().getFullYear();
-
   isSidebarOpen = false;
   isMobile = false;
 
   constructor(public auth: AuthService, private router: Router) {}
 
+    isExpired = false;
+
 ngOnInit() {
+     this.checkStatus();
      this.userName = this.auth.getUserName();
      
 const rawBranch = this.auth.getBranchName();
@@ -38,6 +40,40 @@ this.branchName = rawBranch ? this.fixArabic(rawBranch) : null;
     this.isSidebarOpen = true;
   }
 }
+
+checkStatus() {
+    const expiry = localStorage.getItem('expiryDate');
+
+    if (!expiry) {
+      this.isExpired = false;
+      return;
+    }
+
+    const expiryDate = new Date(expiry);
+    const today = new Date();
+
+    this.isExpired = today > expiryDate;
+  }
+
+  toggleExpiry() {
+    if (this.isExpired) {
+      // 🔵 تفعيل البرنامج: نخلي التاريخ بعد أسبوع مثلاً
+      const future = new Date();
+      future.setDate(future.getDate() + 7); // 7 أيام
+      localStorage.setItem('expiryDate', future.toISOString());
+    } else {
+      // 🔴 إيقاف البرنامج: نخلي التاريخ امبارح
+      const past = new Date();
+      past.setDate(past.getDate() - 1);
+      localStorage.setItem('expiryDate', past.toISOString());
+    }
+
+    this.checkStatus();
+  }
+
+
+
+
 fixArabic(text: string) {
   try {
     return decodeURIComponent(escape(text));
@@ -101,4 +137,5 @@ fixArabic(text: string) {
     this.auth.logout();
     this.router.navigate(['/login']);
   }
+
 }
