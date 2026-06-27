@@ -19,5 +19,6 @@ export interface SalesSummaryReportItem {
   activityType: string;
   noSales?: boolean;
   avgInvoice?: number;   // متوسط الفاتورة
-  avgPieces?: number;    // متوسط القطع
+  avgPieces?: number;      // متوسط القطع
+cityName?: string;
 }

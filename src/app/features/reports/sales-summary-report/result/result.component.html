@@ -141,6 +141,7 @@
           <th class="p-3 border-b border-slate-400 text-center">المسلسل</th>
           <th class="p-3 border-b border-slate-400 text-center">رقم الفرع</th>
           <th class="p-3 border-b border-slate-400 text-center">الفرع</th>
+         <th class="p-3 border-b border-slate-400 text-center">المدينه</th>
           <th class="p-3 border-b border-slate-400 text-center">إجمالي البيع</th>
           <th class="p-3 border-b border-slate-400 text-center">المرتجعات</th>
           <th class="p-3 border-b border-slate-400 text-center">صافي البيع</th>
@@ -165,12 +166,12 @@
               {{ row.branchName }}
             </a>
 
-            <span *ngIf="row.noSales"
-              class="ml-2 px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-full border border-gray-300">
-              ⚠️ لا يوجد يومية مبيعات
-            </span>
-          </td>
-
+           <span *ngIf="row.noSales"
+          class="ml-2 px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-100 rounded-full border border-gray-300">
+          ⚠️ لا توجد يومية مبيعات لهذا الفرع: <strong>{{ row.branchName }}</strong>
+        </span>
+        
+          <td class="p-3 text-center text-blue-900 font-bold"> {{ row.cityName }}</td>
           <td class="p-3 text-center text-blue-900 font-bold">{{ row.totalSales | number:'1.0-2' }}</td>
           <td class="p-3 text-center text-blue-900 font-bold">{{ row.totalReturns | number:'1.0-2' }}</td>
           <td class="p-3 text-center text-blue-900 font-bold">{{ row.netSales | number:'1.0-2' }}</td>

@@ -128,6 +128,13 @@ this.columnDefs = [
     filter: 'agTextColumnFilter',
     floatingFilter: true
   },
+   {
+      headerName: 'نوع النشاط',
+  field: 'activityType',
+  filter: 'agTextColumnFilter',
+  floatingFilter: true,
+  valueGetter: (params: any) => this.getActivityName(params.data.activityType)
+  },
   {
     headerName: 'صافي البيع',
     field: 'netSales',
@@ -147,6 +154,7 @@ this.columnDefs = [
     filter: 'agNumberColumnFilter',
     floatingFilter: true
   },
+   
  {
   headerName: 'متوسط الفاتورة',
   field: 'avgInvoice',
@@ -271,8 +279,12 @@ loadReport() {
           };
         }
 
-        const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`;
+     /*    const realName = branchNamesMap.get(order.branchNumber) || `فرع ${order.branchNumber}`; */
+          const branchInfo = this.allBranches.find(
+            x => x.branchNumber === order.branchNumber
+          );
 
+          const realName = branchInfo?.branchName ?? `فرع ${order.branchNumber}`;
         return {
           serial: order.serial,
           branchId: 0,
@@ -287,7 +299,8 @@ loadReport() {
           activityType: '',
           noSales: true,
           avgInvoice: 0,
-          avgPieces: 0
+          avgPieces: 0,
+    
         };
       });
 
