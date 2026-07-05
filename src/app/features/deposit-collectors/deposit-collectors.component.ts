@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomSelectComponent } from '../../shared/custom-select/custom-select.component';
-import { DepositCollectorService } from '../../services/deposit-collector.service';
+import { DepositCollectorService } from '../../services/Expenses/deposit-collector.service';
 import { MasterDataService } from '../../services/master-data.service';
-import { UserCashCityService } from '../../services/user-cash-city.service';
+import { UserCashCityService } from '../../services/Expenses/user-cash-city.service';
 
 @Component({
   selector: 'app-deposit-collectors',
@@ -41,11 +41,12 @@ export class DepositCollectorsComponent implements OnInit {
     this.loadRegions();
   }
 
+  // 🔥 الفورم بعد التعديل
   buildForm() {
     this.form = this.fb.group({
       id: [0],
       userId: [''],
-      cityId: [null],
+      cityIds: [[]],     // 🔥 Multi-select
       regionId: [null],
       isActive: [true]
     });
@@ -75,12 +76,13 @@ export class DepositCollectorsComponent implements OnInit {
     });
   }
 
+  // 🔥 تحميل بيانات التعديل
   edit(item: any) {
     this.isEdit = true;
     this.form.patchValue({
       id: item.id,
       userId: item.userId,
-      cityId: item.cityId,
+      cityIds: item.cityIds,   // 🔥 Multi-select
       regionId: item.regionId,
       isActive: item.isActive
     });
@@ -92,7 +94,7 @@ export class DepositCollectorsComponent implements OnInit {
     this.form.reset({
       id: 0,
       userId: '',
-      cityId: null,
+      cityIds: [],      // 🔥 reset
       regionId: null,
       isActive: true
     });
@@ -134,8 +136,9 @@ export class DepositCollectorsComponent implements OnInit {
   }
 
   toggleActive(item: any) {
-    const action = item.isActive ? this.depositService.deactivate(item.id)
-                                 : this.depositService.activate(item.id);
+    const action = item.isActive
+      ? this.depositService.deactivate(item.id)
+      : this.depositService.activate(item.id);
 
     action.subscribe(() => {
       this.loadCollectors();

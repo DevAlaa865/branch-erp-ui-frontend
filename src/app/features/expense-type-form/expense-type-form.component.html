@@ -1,0 +1,57 @@
+<div class="bg-white shadow-lg rounded-xl p-6 max-w-2xl mx-auto">
+
+  <h2 class="text-2xl font-bold text-slate-700 mb-6">
+    {{ isEdit ? 'تعديل نوع مصروف' : 'إضافة نوع مصروف' }}
+  </h2>
+
+  <form (ngSubmit)="save()" class="space-y-5">
+
+    <!-- Name -->
+    <div>
+      <label class="block mb-1 font-medium text-slate-700">الاسم</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-slate-300 rounded-lg text-blue-800 focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="model.name"
+        name="name"
+        required>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label class="block mb-1 font-medium text-slate-700">الوصف</label>
+      <textarea
+        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="model.description"
+        name="description"></textarea>
+    </div>
+
+    <!-- Category -->
+    <div>
+      <label class="block mb-1 font-medium text-slate-700">التصنيف</label>
+      <select
+        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        [(ngModel)]="model.category"
+        name="category">
+
+        <option [value]="1">مصروف عام</option>
+        <option [value]="2">تشغيل</option>
+        <option [value]="3">رواتب</option>
+        <option [value]="4">مرتجعات</option>
+        <option [value]="5">عهدة لموظف</option>
+        <option [value]="6">مصروفات صاحب عهدة</option>
+        <option [value]="7">تحويل بين مسؤولي الإيداع</option>
+        <option [value]="8">تسوية</option>
+
+      </select>
+    </div>
+
+    <!-- Save Button -->
+    <button
+      class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition w-full">
+      حفظ
+    </button>
+
+  </form>
+
+</div>

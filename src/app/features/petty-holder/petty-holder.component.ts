@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomSelectComponent } from '../../shared/custom-select/custom-select.component';
-import { PettyHolderService } from '../../services/petty-holder.service';
+import { PettyHolderService } from '../../services/Expenses/petty-holder.service';
 import { MasterDataService } from '../../services/master-data.service';
-import { UserCashCityService } from '../../services/user-cash-city.service';
+import { UserCashCityService } from '../../services/Expenses/user-cash-city.service';
 
 @Component({
   selector: 'app-petty-holder',
@@ -47,7 +47,7 @@ export class PettyHolderComponent implements OnInit {
       name: [''],
       phoneNumber: [''],
       userId: [''],
-      cityId: [null],
+      cityIds: [[]],     // 🔥 Multi-select
       regionId: [null],
       isActive: [true]
     });
@@ -84,7 +84,7 @@ export class PettyHolderComponent implements OnInit {
       name: item.name,
       phoneNumber: item.phoneNumber,
       userId: item.userId,
-      cityId: item.cityId,
+      cityIds: item.cityIds,   // 🔥 تحميل المدن
       regionId: item.regionId,
       isActive: item.isActive
     });
@@ -98,7 +98,7 @@ export class PettyHolderComponent implements OnInit {
       name: '',
       phoneNumber: '',
       userId: '',
-      cityId: null,
+      cityIds: [],      // 🔥 reset
       regionId: null,
       isActive: true
     });
@@ -127,7 +127,7 @@ export class PettyHolderComponent implements OnInit {
       this.pettyService.create(body).subscribe({
         next: () => {
           this.loading = false;
-          this.message = 'تم إضافة صاحب العهد بنجاح';
+          this.message = 'تم إضافة صاحب العهدة بنجاح';
           this.loadPettyHolders();
           this.resetForm();
         },

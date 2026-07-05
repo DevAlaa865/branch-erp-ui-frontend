@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomSelectComponent } from '../../shared/custom-select/custom-select.component';
-import { CashBoxService } from '../../services/cash-box.service';
-import { UserCashCityService } from '../../services/user-cash-city.service';
-import { DepositCollectorService } from '../../services/deposit-collector.service';
-import { PettyHolderService } from '../../services/petty-holder.service';
+import { CashBoxService } from '../../services/Expenses/cash-box.service';
+
+import { DepositCollectorService } from '../../services/Expenses/deposit-collector.service';
+import { PettyHolderService } from '../../services/Expenses/petty-holder.service';
+import { UserCashCityService } from '../../services/Expenses/user-cash-city.service';
 
 @Component({
   selector: 'app-cash-box',

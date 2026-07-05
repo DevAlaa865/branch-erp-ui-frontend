@@ -1,0 +1,187 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+  <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6">
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2">
+      إنشاء سند صرف
+    </h2>
+
+    <!-- ملخص مسؤول الإيداع -->
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-right">
+
+        <div>
+          <div class="text-gray-600 font-semibold">إجمالي المبالغ المسلّمة</div>
+          <div class="text-xl font-bold text-blue-700">
+            {{ totalDeliveredToDepositResponsible | number }}
+          </div>
+        </div>
+
+        <div>
+          <div class="text-gray-600 font-semibold">إجمالي المصروف</div>
+          <div class="text-xl font-bold text-red-700">
+            {{ totalSpentByDepositResponsible | number }}
+          </div>
+        </div>
+
+        <div>
+          <div class="text-gray-600 font-semibold">الباقي في عهدته</div>
+          <div class="text-xl font-bold text-green-700">
+            {{ remainingAmount | number }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- الهيدر -->
+    <form [formGroup]="form" class="bg-gray-100 p-4 rounded-lg mb-6">
+      <div class="flex flex-col md:flex-row md:justify-between gap-4">
+
+        <div>
+          <label class="block text-gray-700 font-semibold">التاريخ</label>
+          <input
+            type="date"
+            formControlName="voucherDate"
+            class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold ing-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold">ملاحظات مسؤول الإيداع</label>
+          <textarea
+            formControlName="description"
+            class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold cus:ring-2 focus:ring-blue-500 focus:outline-none"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold">الإجمالي الكلي للسند</label>
+          <div class="text-xl font-bold text-green-700">
+            {{ totalAmount | number }}
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+    <!-- السطور -->
+    <div class="border-t pt-4">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">السطور</h3>
+
+      <button
+        (click)="addLine()"
+        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg mb-4 transition"
+      >
+        + إضافة سطر
+      </button>
+
+      <div
+        *ngFor="let lineGroup of getLineGroups(); let i = index"
+        [formGroup]="lineGroup"
+        class="border rounded-lg p-4 mb-4 bg-gray-50"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <!-- نوع المصروف -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-1">نوع المصروف</label>
+
+            <app-custom-select
+              class="w-full bg-transparent"
+              [items]="expenseTypes"
+              bindLabel="name"
+              bindValue="id"
+              [control]="lineGroup.controls['expenseTypeId']">
+            </app-custom-select>
+          </div>
+
+          <!-- المبلغ -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-1">المبلغ</label>
+            <input
+              type="number"
+              formControlName="amount"
+              class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold ing-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
+
+          <!-- الفرع -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-1">الفرع</label>
+
+            <app-custom-select
+              class="w-full bg-transparent"
+              [items]="branches"
+              bindLabel="branchName"
+              bindValue="id"
+              [control]="lineGroup.controls['branchId']">
+            </app-custom-select>
+          </div>
+
+          <!-- صاحب العهدة -->
+          <div *ngIf="isPettyExpense(lineGroup)">
+            <label class="block text-gray-700 font-semibold mb-1">صاحب العهدة</label>
+
+            <app-custom-select
+              class="w-full bg-transparent"
+              [items]="pettyHolders"
+              bindLabel="name"
+              bindValue="id"
+              [control]="lineGroup.controls['pettyHolderId']">
+            </app-custom-select>
+          </div>
+
+          <!-- الوصف -->
+          <div class="md:col-span-2">
+            <label class="block text-gray-700 font-semibold mb-1">الوصف</label>
+            <textarea
+              formControlName="description"
+              class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <!-- المرفقات -->
+          <div class="md:col-span-2">
+            <label class="block text-gray-700 font-semibold mb-1">المرفقات</label>
+
+            <input
+              type="file"
+              (change)="uploadAttachment($event, lineGroup)"
+              class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+
+            <div class="flex flex-wrap gap-3 mt-3">
+              <a
+                *ngFor="let url of getAttachmentUrls(lineGroup)"
+                [href]="url"
+                target="_blank"
+                class="text-blue-600 underline"
+              >
+                {{ url.split('/').pop() }}
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="flex flex-wrap gap-4 mt-6 justify-center md:justify-start">
+      <button
+        (click)="save(false)"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition"
+      >
+        حفظ كمسودة
+      </button>
+
+      <button
+        (click)="save(true)"
+        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition"
+      >
+        إرسال للاعتماد
+      </button>
+    </div>
+
+  </div>
+</div>

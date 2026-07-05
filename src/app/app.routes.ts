@@ -165,12 +165,81 @@ export const routes: Routes = [
               import('./features/petty-holder/petty-holder.component')
                 .then(m => m.PettyHolderComponent)
           },
+          {
+          path: 'cash-management/manual-posting',
+          loadComponent: () =>
+            import('./features/manual-posting/manual-posting.component')
+              .then(m => m.ManualPostingComponent)
+        },
         {
+          path: 'cash-management/posting-history',
+          loadComponent: () =>
+            import('./features/posting-history/posting-history.component')
+              .then(m => m.PostingHistoryComponent)
+        },
+        {
+          path: 'cash-management/posting-details/:id',
+          loadComponent: () =>
+            import('./features/posting-details/posting-details.component')
+              .then(m => m.PostingDetailsComponent)
+        },
+         {
+        path: 'cash-management/expenses/expense-type',
+        loadComponent: () =>
+          import('./features/expense-type-list/expense-type-list.component')
+            .then(m => m.ExpenseTypeListComponent)
+      },
+        {
+          path: 'cash-management/expenses/expense-type/create',
+          loadComponent: () =>
+            import('./features/expense-type-form/expense-type-form.component')
+              .then(m => m.ExpenseTypeFormComponent)
+        },
+        {
+          path: 'cash-management/expenses/expense-type/edit/:id',
+          loadComponent: () =>
+            import('./features/expense-type-form/expense-type-form.component')
+              .then(m => m.ExpenseTypeFormComponent)
+        },
+                // 📌 شاشة القائمة (List)
+        {
+          path: 'cash-management/expenses/expense-voucher',
+          loadComponent: () =>
+            import('./features/expense-vouchers/expense-voucher-list/expense-voucher-list.component')
+              .then(m => m.ExpenseVoucherListComponent)
+        },
+
+        // 📌 شاشة الإنشاء (Create)
+        {
+          path: 'cash-management/expenses/expense-voucher/create',
+          loadComponent: () =>
+            import('./features/expense-vouchers/expense-voucher-form/expense-voucher-form.component')
+              .then(m => m.ExpenseVoucherFormComponent)
+        },
+
+        // 📌 شاشة التفاصيل (Details)
+        {
+          path: 'cash-management/expenses/expense-voucher/details/:id',
+          loadComponent: () =>
+            import('./features/expense-vouchers/expense-voucher-details/expense-voucher-details.component')
+              .then(m => m.ExpenseVoucherDetailsComponent)
+        },
+
+        // 📌 شاشة اعتماد السطر (Line Approval)
+        {
+          path: 'cash-management/expenses/expense-voucher/approve-line/:lineId',
+          loadComponent: () =>
+            import('./features/expense-vouchers/expense-voucher-line-approval/expense-voucher-line-approval.component')
+              .then(m => m.ExpenseVoucherLineApprovalComponent)
+        },
+         {
         path: 'general-management',
         loadComponent: () =>
           import('./pages/general-management/general-management.component')
             .then(m => m.GeneralManagementComponent)
         },
+      
+
 
         {
             path: 'general-management/users',
@@ -178,6 +247,13 @@ export const routes: Routes = [
               import('./features/admin/users/list/users-list/users-list.component')
                 .then(m => m.UsersListComponent)
          },
+          {
+          path: 'general-management/cash-posting',
+          loadComponent: () =>
+            import('./features/cash-posting/cash-posting.component')
+              .then(m => m.PostingComponent)
+        },
+        
           {
           path: 'general-management/admin/users/user-cash-city',
           loadComponent: () =>

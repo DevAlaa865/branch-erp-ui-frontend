@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
-import { UserCashCityService } from '../../../services/user-cash-city.service';
+import { UserCashCityService } from '../../../services/Expenses/user-cash-city.service';
+
 
 @Component({
   selector: 'app-user-cash-city',

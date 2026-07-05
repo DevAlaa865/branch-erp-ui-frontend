@@ -17,7 +17,7 @@
   </div>
   <!-- مسؤلى الايداع-->
   <div
-    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    class="group p-6 bg-yellow-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
     [routerLink]="['deposit-collectors']">
     <div class="flex items-center gap-4">
       <div
@@ -30,9 +30,26 @@
       </div>
     </div>
   </div>
+
+    <!--ترحيل نقديه الفروع للصناديق يدوى-->
+    <div
+    class="group p-6 bg-yellow-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['manual-posting']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold"> ترحيل نقديه الفروع للصناديق يدوي </h3>
+
+        <p class="text-sm opacity-90">إضافة وتعديل وحذف</p>
+      </div>
+    </div>
+  </div>
   <!-- اصحاب العهد-->
   <div
-    class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
     [routerLink]="['petty-holder']">
     <div class="flex items-center gap-4">
       <div
@@ -41,6 +58,52 @@
       </div>
       <div>
         <h3 class="text-xl font-bold">اصحاب العهد</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل وحذف</p>
+      </div>
+    </div>
+  </div>
+  <!-- تاريخ الترحيل للنقديه الى الصناديق-->
+  <div
+    class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['posting-history']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">تاريخ الترحيل للنقديه الى الصناديق</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل وحذف</p>
+      </div>
+    </div>
+  </div>
+   <!-- بنود المصاريف -->
+  <div
+    class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['expenses/expense-type']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">بنود المصاريف</h3>
+        <p class="text-sm opacity-90">إضافة وتعديل وحذف</p>
+      </div>
+    </div>
+  </div>
+
+     <!-- سند صرف  -->
+  <div
+    class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    [routerLink]="['expenses/expense-voucher']">
+    <div class="flex items-center gap-4">
+      <div
+        class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-3xl group-hover:scale-110 transition">
+        👤
+      </div>
+      <div>
+        <h3 class="text-xl font-bold">سند صرف </h3>
         <p class="text-sm opacity-90">إضافة وتعديل وحذف</p>
       </div>
     </div>

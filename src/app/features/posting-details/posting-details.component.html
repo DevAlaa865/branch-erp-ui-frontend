@@ -1,0 +1,126 @@
+<div class="p-6 space-y-6">
+
+  <!-- العنوان -->
+  <h1 class="text-3xl font-extrabold text-gray-900 tracking-wide">
+    تفاصيل الترحيل
+  </h1>
+
+  <!-- البطاقة الرئيسية -->
+  <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-200">
+
+    <!-- صف التاريخين -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="flex items-center space-x-3">
+        <span class="text-blue-600 text-xl">📅</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">تاريخ اليوميات:</strong>
+          {{ details.date }}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <span class="text-green-600 text-xl">⏱️</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">تاريخ الترحيل الفعلي:</strong>
+          {{ details.postedAt }}
+        </p>
+      </div>
+
+    </div>
+
+    <hr class="my-6 border-gray-300">
+
+    <!-- بيانات الصندوق ومسؤول الإيداع -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="flex items-center space-x-3">
+        <span class="text-indigo-600 text-xl">💼</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">الصندوق:</strong>
+          {{ details.cashBoxName }}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <span class="text-purple-600 text-xl">👤</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">مسؤول الإيداع:</strong>
+          {{ details.collectorName }}
+        </p>
+      </div>
+
+    </div>
+
+    <hr class="my-6 border-gray-300">
+
+    <!-- بيانات الفرع والمدينة -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="flex items-center space-x-3">
+        <span class="text-orange-600 text-xl">🏬</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">الفرع:</strong>
+          {{ details.branchName }}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <span class="text-red-600 text-xl">📍</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">المدينة:</strong>
+          {{ details.cityName }}
+        </p>
+      </div>
+
+    </div>
+
+    <hr class="my-6 border-gray-300">
+
+    <!-- المبلغ والوصف -->
+    <div class="space-y-4">
+
+      <div class="flex items-center space-x-3">
+        <span class="text-green-700 text-xl">💰</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">المبلغ:</strong>
+          {{ details.amount | number }}
+        </p>
+      </div>
+
+      <div class="flex items-start space-x-3">
+        <span class="text-gray-600 text-xl">📝</span>
+        <p class="text-gray-700 text-lg leading-relaxed">
+          <strong class="text-gray-900">الوصف:</strong>
+          {{ details.description }}
+        </p>
+      </div>
+
+    </div>
+
+    <hr class="my-6 border-gray-300">
+
+    <!-- نوع الحركة والاتجاه -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <div class="flex items-center space-x-3">
+        <span class="text-blue-700 text-xl">🔄</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">نوع الحركة:</strong>
+          {{ details.type }}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <span class="text-teal-700 text-xl">➡️</span>
+        <p class="text-gray-700 text-lg">
+          <strong class="text-gray-900">الاتجاه:</strong>
+          {{ details.direction }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
