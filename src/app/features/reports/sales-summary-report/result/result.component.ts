@@ -303,7 +303,8 @@ loadReport() {
     
         };
       });
-
+// 🔥 إخفاء الفرع رقم 610 (الرياض مول)
+this.items = this.items.filter(x => x.branchNumber !== 610)
       // 8) حساب المتوسطات
       this.items = this.items.map(item => {
         const invoiceCount = item.invoiceCount || 0;

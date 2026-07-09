@@ -261,6 +261,8 @@ onCityChange(): void {
     this.reportService.getReport(filter).subscribe({
       next: (res: any) => {
         this.report = res.data || res || [];
+          // 🔥 إخفاء الفرع 610 (الرياض مول)
+        this.report = this.report.filter(r => ![610, 8000].includes(r.branchNumber));
         this.totalPages = Math.ceil(this.report.length / this.pageSize);
         this.currentPage = 1;
         this.loaded = true;

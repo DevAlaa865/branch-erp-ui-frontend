@@ -66,13 +66,13 @@
 
     <!-- السطور -->
     <div class="border-t pt-4">
-      <h3 class="text-lg font-bold text-gray-800 mb-4">السطور</h3>
+      <h3 class="text-lg font-bold text-gray-800 mb-4">المصاريف</h3>
 
       <button
         (click)="addLine()"
         class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg mb-4 transition"
       >
-        + إضافة سطر
+        + إضافة مصروف
       </button>
 
       <div
@@ -83,7 +83,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           <!-- نوع المصروف -->
-          <div>
+          <div class="text-blue-900 font-bold">
             <label class="block text-gray-700 font-semibold mb-1">نوع المصروف</label>
 
             <app-custom-select
@@ -94,6 +94,19 @@
               [control]="lineGroup.controls['expenseTypeId']">
             </app-custom-select>
           </div>
+             <!-- صاحب العهدة -->
+         <div class="text-blue-900 font-bold" *ngIf="isPettyCategory(getExpenseCategory(i))">
+        <label class="block text-gray-700 font-semibold mb-1">صاحب العهدة</label>
+
+        <app-custom-select
+          class="w-full bg-transparent"
+          [items]="pettyHolders"
+          bindLabel="name"
+          bindValue="id"
+          [control]="lineGroup.controls['pettyHolderId']">
+        </app-custom-select>
+      </div>
+
 
           <!-- المبلغ -->
           <div>
@@ -105,31 +118,20 @@
             />
           </div>
 
-          <!-- الفرع -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-1">الفرع</label>
+          <!-- الفرع (يختفي لو المصروف عهدة) -->
+       <div class="text-blue-900 font-bold" *ngIf="!isPettyCategory(getExpenseCategory(i))">
+        <label class="block text-gray-700 font-semibold mb-1">الفرع</label>
 
-            <app-custom-select
-              class="w-full bg-transparent"
-              [items]="branches"
-              bindLabel="branchName"
-              bindValue="id"
-              [control]="lineGroup.controls['branchId']">
-            </app-custom-select>
-          </div>
+        <app-custom-select
+          class="w-full bg-transparent"
+          [items]="branches"
+          bindLabel="branchName"
+          bindValue="id"
+          [control]="lineGroup.controls['branchId']">
+        </app-custom-select>
+      </div>
 
-          <!-- صاحب العهدة -->
-          <div *ngIf="isPettyExpense(lineGroup)">
-            <label class="block text-gray-700 font-semibold mb-1">صاحب العهدة</label>
-
-            <app-custom-select
-              class="w-full bg-transparent"
-              [items]="pettyHolders"
-              bindLabel="name"
-              bindValue="id"
-              [control]="lineGroup.controls['pettyHolderId']">
-            </app-custom-select>
-          </div>
+        
 
           <!-- الوصف -->
           <div class="md:col-span-2">
@@ -168,19 +170,20 @@
 
     <!-- الأزرار -->
     <div class="flex flex-wrap gap-4 mt-6 justify-center md:justify-start">
-      <button
+       <button
+        (click)="save(true)"
+        class="bg-blue-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg transition"
+      >
+        إرسال للاعتماد
+      </button>
+    <!--   <button
         (click)="save(false)"
         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition"
       >
         حفظ كمسودة
-      </button>
+      </button> -->
 
-      <button
-        (click)="save(true)"
-        class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg transition"
-      >
-        إرسال للاعتماد
-      </button>
+
     </div>
 
   </div>

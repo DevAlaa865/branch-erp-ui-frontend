@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseTypeService } from '../../services/Expenses/expense-type.service';
-import { ExpenseType } from '../../shared/models/expense-type.model';
+import { ExpenseCategory, ExpenseType } from '../../shared/models/expense-type.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -14,12 +14,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class ExpenseTypeFormComponent implements OnInit {
 
+   ExpenseCategory = ExpenseCategory;  // ← مهم جدًا
+
   model: ExpenseType = {
     id: 0,
     name: '',
     description: '',
     isActive: true,
-    category: 1
+    category: ExpenseCategory.GeneralExpense
   };
 
   isEdit = false;
@@ -38,15 +40,20 @@ export class ExpenseTypeFormComponent implements OnInit {
     }
   }
 
-  save() {
-    if (this.isEdit) {
-      this.service.update(this.model).subscribe(() => {
-        this.router.navigate(['cash-management/expenses/expense-type']);
-      });
-    } else {
-      this.service.create(this.model).subscribe(() => {
-        this.router.navigate(['cash-management/expenses/expense-type']);
-      });
-    }
+save() {
+
+  // 🔥 أهم خطوة
+  this.model.category = Number(this.model.category);
+
+  if (this.isEdit) {
+    this.service.update(this.model).subscribe(() => {
+      this.router.navigate(['cash-management/expenses/expense-type']);
+    });
+  } else {
+    this.service.create(this.model).subscribe(() => {
+      this.router.navigate(['cash-management/expenses/expense-type']);
+    });
   }
+}
+
 }

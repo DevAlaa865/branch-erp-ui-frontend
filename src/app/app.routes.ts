@@ -226,12 +226,12 @@ export const routes: Routes = [
         },
 
         // 📌 شاشة اعتماد السطر (Line Approval)
-        {
-          path: 'cash-management/expenses/expense-voucher/approve-line/:lineId',
-          loadComponent: () =>
-            import('./features/expense-vouchers/expense-voucher-line-approval/expense-voucher-line-approval.component')
-              .then(m => m.ExpenseVoucherLineApprovalComponent)
-        },
+       {
+        path: 'cash-management/expenses/expense-voucher/approve/:voucherId',
+        loadComponent: () =>
+          import('./features/expense-vouchers/expense-voucher-line-approval/expense-voucher-line-approval.component')
+            .then(m => m.ExpenseVoucherLineApprovalComponent)
+      },
          {
         path: 'general-management',
         loadComponent: () =>

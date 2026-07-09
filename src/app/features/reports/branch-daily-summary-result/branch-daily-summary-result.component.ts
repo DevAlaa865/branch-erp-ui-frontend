@@ -120,7 +120,8 @@ export class BranchDailySummaryResultComponent implements OnInit {
         }
 
         this.rows = res.data || [];
-        this.rows = this.rows.filter(r => r.branchNumber !== 8000);
+       // 🔥 إخفاء الفرع 8000 + الفرع 610 (الرياض مول)
+       this.rows = this.rows.filter(r => ![8000, 610].includes(r.branchNumber));
 
         const map = new Map<number, string>();
 
@@ -264,6 +265,8 @@ openDailyDetails(row: BranchDailySummaryRow) {
 
 exportToPdf(): void {
   if (!this.rows || this.rows.length === 0) return;
+    // 🔥 إخفاء الفرع 610 من التصدير
+  const rows = this.rows.filter(r => r.branchNumber !== 610);
 
   const doc = new jsPDF('l', 'mm', 'a4');
 
@@ -332,7 +335,7 @@ exportToPdf(): void {
     doc.setTextColor(0);
   };
 
-  const body = this.rows.map(row => {
+  const body = rows.map(row => {
     const rowData: any[] = [
       row.branchNumber ?? '',
       row.branchName ?? '',

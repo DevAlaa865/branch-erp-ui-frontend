@@ -73,6 +73,22 @@ export class AuthService {
     const role = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
     return Array.isArray(role) ? role : role ? [role] : [];
   }
+getUserRole(): number {
+  const payload = this.getTokenPayload();
+  if (!payload) return 0;
+
+  const role = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+  // لو الدور جاي نص من الـ API نحوله لرقم Enum
+  switch (role) {
+    case "GeneralManager": return 1;
+    case "HRManager": return 2;
+    case "BankingExpensesManager": return 3;
+    case "VehiclesManager": return 4;
+    case "Accountant": return 5;
+    default: return 0;
+  }
+}
 
   // ============================
   // 🔥 Permissions
@@ -161,5 +177,13 @@ getUserName(): string | null {
   if (!payload) return localStorage.getItem('userName');
 
   return payload["unique_name"] || localStorage.getItem('userName');
+}
+getUserId(): string | null {
+  const payload = this.getTokenPayload();
+  return payload ? payload["sub"] : null;
+}
+
+isAdmin(): boolean {
+  return this.getRoles().includes("Admin");
 }
 }

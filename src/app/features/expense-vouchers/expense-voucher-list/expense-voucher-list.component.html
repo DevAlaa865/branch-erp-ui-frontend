@@ -1,51 +1,382 @@
-<div class="container mx-auto p-4">
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-6">
 
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold">سندات الصرف</h2>
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">سندات الصرف</h2>
 
+      <button
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm md:text-base transition"
+        (click)="createNew()">
+        + سند صرف جديد
+      </button>
+    </div>
+
+    <!-- 🔥 اختيار نوع العرض -->
+    <div class="bg-gray-100 p-4 rounded-lg mb-6 flex flex-wrap gap-6 items-center">
+
+      <!-- عرض السندات -->
+<label class="flex items-center gap-2 text-sm md:text-base font-semibold text-gray-700">
+  <input type="radio" [(ngModel)]="resultType" value="1" (change)="onResultTypeChange()">
+  <span>عرض السندات</span>
+</label>
+
+<!-- عرض البنود -->
+<label class="flex items-center gap-2 text-sm md:text-base font-semibold text-gray-700">
+  <input type="radio" [(ngModel)]="resultType" value="2" (change)="onResultTypeChange()">
+  <span>عرض البنود</span>
+</label>
+
+
+    </div>
+<div class="bg-white p-4 rounded-lg shadow mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  <!-- تاريخ محدد -->
+ <label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showExactDate" (change)="toggleExactDate()">
+  تاريخ محدد
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showBetweenDates" (change)="toggleBetweenDates()">
+  بين تاريخين
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showDepositCollector" (change)="toggleDepositCollector()">
+  مسؤول الإيداع
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showExpenseType" (change)="toggleExpenseType()">
+  بند الصرف
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showPettyHolder" (change)="togglePettyHolder()">
+  صاحب العهدة
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showApproval" (change)="toggleApproval()">
+  حالة الاعتماد + الدور
+</label>
+
+<label class="flex items-center gap-2 text-gray-700 font-semibold">
+  <input type="checkbox" [(ngModel)]="showAccounting" (change)="toggleAccounting()">
+  الإدخال المحاسبي
+</label>
+
+
+</div>
+
+    <!-- 🔥 الفلاتر -->
+   <form [formGroup]="form" class="bg-gray-100 p-4 rounded-lg mb-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+
+
+  <!-- بند الصرف -->
+  <div *ngIf="showExpenseType">
+    <app-custom-select
+      label="بند الصرف"
+      [items]="expenseTypes"
+      bindLabel="name"
+      bindValue="id"
+      [control]="form.controls['expenseTypeId']">
+    </app-custom-select>
+  </div>
+
+  <!-- صاحب العهدة -->
+  <div *ngIf="showPettyHolder">
+    <app-custom-select
+      label="صاحب العهدة"
+      [items]="pettyHolders"
+      bindLabel="name"
+      bindValue="id"
+      [control]="form.controls['pettyHolderUserId']">
+    </app-custom-select>
+  </div>
+
+  <!-- مسؤول الإيداع -->
+  <div *ngIf="showDepositCollector">
+    <app-custom-select
+      label="مسؤول الإيداع"
+      [items]="depositCollectors"
+      bindLabel="userName"
+      bindValue="id"
+      [control]="form.controls['depositCollectorUserId']">
+    </app-custom-select>
+  </div>
+
+  <!-- تاريخ محدد -->
+  <div *ngIf="showExactDate">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">تاريخ محدد</label>
+    <input type="date" formControlName="voucherDate"
+           class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+  </div>
+
+  <!-- من تاريخ -->
+  <div *ngIf="showBetweenDates">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">من تاريخ</label>
+    <input type="date" formControlName="fromDate"
+           class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+  </div>
+
+  <!-- إلى تاريخ -->
+  <div *ngIf="showBetweenDates">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">إلى تاريخ</label>
+    <input type="date" formControlName="toDate"
+           class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+  </div>
+
+  <!-- دور الاعتماد -->
+  <div *ngIf="showApproval">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">الدور</label>
+
+    <select formControlName="approvalRole"
+            class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <option [ngValue]="1">المدير العام- سامى</option>
+      <option [ngValue]="2">مدير HR -نايل</option>
+      <option [ngValue]="3">المصاريف البنكيه- نزار</option>
+      <option [ngValue]="4">السياارت- فيصل</option>
+      <option [ngValue]="5">المبيعات- تارجت عبد الوهاب</option>
+      <option [ngValue]="null">كل الأدوار</option>
+    </select>
+  </div>
+
+  <!-- حالة الاعتماد -->
+  <div *ngIf="showApproval">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">حالة الاعتماد</label>
+
+    <select formControlName="isApprovedByRole"
+            class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <option [ngValue]="null">الكل</option>
+      <option [ngValue]="true">معتمد</option>
+      <option [ngValue]="false">غير معتمد</option>
+    </select>
+  </div>
+
+  <!-- الإدخال المحاسبي -->
+  <div *ngIf="showAccounting">
+    <label class="block mb-1 text-sm font-semibold text-gray-700">الإدخال المحاسبي</label>
+
+    <select formControlName="isAccounted"
+            class="w-full border rounded-lg px-3 py-2 text-blue-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      <option  [ngValue]="null">الكل</option>
+      <option  [ngValue]="true">تم الإدخال</option>
+      <option  [ngValue]="false">لم يتم الإدخال</option>
+    </select>
+  </div>
+
+  <!-- ملاحظة الدور -->
+  <div *ngIf="approvalNoteVisible" class="col-span-1 md:col-span-3 text-red-600 font-semibold">
+    يجب اختيار الدور أولًا ثم اختيار حالة الاعتماد لظهور النتائج بشكل صحيح.
+  </div>
+
+  <!-- زر الفلترة -->
+  <div class="col-span-1 md:col-span-3 text-right mt-2">
     <button
-      class="bg-blue-600 text-white px-4 py-2 rounded"
-      (click)="createNew()">
-      + سند صرف جديد
+      (click)="loadData()"
+      class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow text-sm md:text-base transition">
+     عرض سندات الصرف
     </button>
   </div>
 
-  <div *ngIf="loading" class="text-center py-10">
-    <div class="loader"></div>
+</form>
+
+
+<!-- Loading -->
+<div *ngIf="loading" class="text-center py-10">
+  <div class="loader mx-auto"></div>
+</div>
+
+<!-- No Data -->
+<div *ngIf="!loading && (!pagedData || pagedData.length === 0)"
+     class="text-center py-10 text-gray-600 text-sm md:text-base">
+  لا توجد بيانات.
+</div>
+
+<!-- 🔵 جدول السندات (تم تصحيح شروط الحالات والأمان) -->
+
+<table *ngIf="resultType == 1 && pagedData && pagedData.length > 0"
+       class="w-full text-blue-800 border-collapse text-xs md:text-sm mt-6">
+
+  <thead>
+    <tr class="bg-slate-100 text-slate-700">
+      <th class="border p-2 text-center">رقم السند</th>
+      <th class="border p-2 text-center">التاريخ</th>
+      <th class="border p-2 text-center">المبلغ</th>
+      <th class="border p-2 text-center">الإجراءات</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let v of pagedData" class="hover:bg-slate-50">
+
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ v?.voucherNumber }}
+      </td>
+
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ v?.voucherDate | date:'yyyy/MM/dd' }}
+      </td>
+
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ v?.totalAmount | number:'1.2-2' }}
+      </td>
+
+      <td class="border p-2 text-center text-blue-800">
+        <div class="flex flex-wrap justify-center gap-2">
+
+          <button
+            (click)="openDetails(v)"
+            class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs md:text-sm">
+            تفاصيل
+          </button>
+
+          <button
+            (click)="editVoucher(v.id)"
+            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
+            تعديل
+          </button>
+
+          <button
+            (click)="approveVoucher(v.id)"
+            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs md:text-sm">
+            اعتماد
+          </button>
+
+        </div>
+      </td>
+
+    </tr>
+  </tbody>
+
+</table>
+
+<!-- 🔵 جدول البنود (تم حماية الحقول بـ ?. لضمان عدم انهيار الصفحة) -->
+<!-- 🔵 جدول البنود (منسق بالكامل مثل جدول السندات) -->
+<table *ngIf="resultType == 2 && pagedData && pagedData.length > 0"
+       class="w-full text-blue-800 border-collapse text-xs md:text-sm mt-6">
+
+  <thead>
+    <tr class="bg-slate-100 text-slate-700">
+      <th class="border p-2 text-center">رقم السند</th>
+      <th class="border p-2 text-center">التاريخ</th>
+      <th class="border p-2 text-center">البند</th>
+      <th class="border p-2 text-center">المبلغ</th>
+      <th class="border p-2 text-center">الفرع</th>
+      <th class="border p-2 text-center">صاحب العهدة</th>
+      <th class="border p-2 text-center">الإدخال المحاسبي</th>
+      <th class="border p-2 text-center">الاعتماد</th>
+      <th class="border p-2 text-center">الإجراءات</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let l of pagedData" class="hover:bg-slate-50">
+
+      <!-- رقم السند -->
+ <td class="border p-2 text-center font-bold text-blue-800">
+  {{ l?.expenseVoucherId || 'غير متوفر' }}
+</td>
+
+      <!-- التاريخ -->
+<td class="border p-2 text-center font-bold text-blue-800">
+  {{ l?.voucherDate | date:'yyyy/MM/dd' }}
+</td>
+
+      <!-- اسم البند -->
+<td class="border p-2 text-center font-bold text-blue-800">
+  {{ l?.expenseType?.name || 'غير متوفر' }}
+</td>
+
+      <!-- المبلغ -->
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ l?.amount | number:'1.2-2' }}
+      </td>
+
+      <!-- الفرع -->
+<td class="border p-2 text-center text-blue-800">
+  {{ l?.branch?.branchName || '—' }}
+</td>
+
+      <!-- صاحب العهدة -->
+<td class="border p-2 text-center text-blue-800">
+  {{ l?.pettyHolder?.name || '—' }}
+</td>
+
+      <!-- الإدخال المحاسبي -->
+      <td class="border p-2 text-center text-blue-800">
+        <span
+          class="px-2 py-1 rounded text-xs md:text-sm"
+          [ngClass]="l?.isAccounted ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
+
+          {{ l?.isAccounted ? 'تم الإدخال' : 'لم يتم الإدخال' }}
+
+        </span>
+      </td>
+
+      <!-- الاعتماد -->
+      <td class="border p-2 text-center text-blue-800">
+
+        <span
+          *ngIf="l?.approvals?.length > 0"
+          class="bg-green-500 text-white px-2 py-1 rounded text-xs">
+
+          معتمد
+
+        </span>
+
+        <span
+          *ngIf="!l?.approvals || l.approvals.length === 0"
+          class="bg-red-500 text-white px-2 py-1 rounded text-xs">
+
+          غير معتمد
+
+        </span>
+
+      </td>
+
+      <!-- الإجراءات -->
+      <td class="border p-2 text-center text-blue-800">
+        <div class="flex flex-wrap justify-center gap-2">
+
+          <button
+            (click)="openDetails(l.expenseVoucher)"
+            class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs md:text-sm">
+            تفاصيل
+          </button>
+
+          <button
+            (click)="editVoucher(l.expenseVoucher.id)"
+            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
+            تعديل
+          </button>
+
+     <button
+  (click)="approveVoucherFromLine(l.expenseVoucherId)"
+  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs md:text-sm">
+  اعتماد
+</button>
+
+
+        </div>
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+
+<!-- Pagination -->
+<div *ngIf="pagedData && pagedData.length > 0" class="flex flex-col md:flex-row justify-between items-center p-4 bg-slate-100 mt-2 border rounded-lg gap-2">
+  <button class="px-3 py-1 bg-slate-300 rounded text-sm" [disabled]="page === 1" (click)="prevPage()">السابق</button>
+  <span class="font-semibold text-blue-700 text-sm">صفحة {{ page }} من {{ totalPages }}</span>
+  <button class="px-3 py-1 bg-slate-300 rounded text-sm" [disabled]="page === totalPages" (click)="nextPage()">التالي</button>
+</div>
+
   </div>
-
-  <div *ngIf="!loading && vouchers.length === 0" class="text-center py-10">
-    لا توجد سندات صرف.
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-    <div
-      *ngFor="let v of vouchers"
-      class="border rounded p-4 shadow hover:shadow-lg transition cursor-pointer"
-      (click)="openDetails(v.id)"
-    >
-      <div class="font-bold text-lg mb-2">
-        رقم السند: {{ v.voucherNumber }}
-      </div>
-
-      <div class="text-sm text-gray-600 mb-1">
-        التاريخ: {{ v.voucherDate | date:'yyyy/MM/dd' }}
-      </div>
-
-      <div class="text-sm text-gray-600 mb-1">
-        المبلغ: {{ v.totalAmount | number }}
-      </div>
-
-      <div class="text-sm text-gray-600 mb-1">
-        الحالة: {{ v.status }}
-      </div>
-
-      <div class="text-sm text-gray-600">
-        المصدر: {{ v.source === 0 ? 'مسؤول إيداع' : 'تسوية عهدة' }}
-      </div>
-    </div>
-
-  </div>
-
 </div>

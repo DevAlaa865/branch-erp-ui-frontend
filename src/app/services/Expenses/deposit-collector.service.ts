@@ -39,4 +39,9 @@ export class DepositCollectorService {
   deactivate(id: number): Observable<void> {
     return this.http.patch<void>(`${this.baseUrl}/${id}/deactivate`, {});
   }
+getMyCashBox(userId: string) {
+  return this.http.get<number>(
+    `${this.baseUrl}/my-cashbox/${userId}`
+  );
+}
 }

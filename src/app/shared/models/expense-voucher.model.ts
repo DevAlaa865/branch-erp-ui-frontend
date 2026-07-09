@@ -3,18 +3,28 @@
 // ============================================================
 
 export enum ExpenseVoucherSource {
-  DepositResponsible = 0,
-  PettySettlement = 1
+  DepositCollector = 1,
+  PettySettlement = 2
+  
 }
 
 export enum ExpenseApprovalRole {
-  Manager = 0,
-  HR = 1,
-  Accountant = 2,
-  FinanceManager = 3,
-  GeneralManager = 4
+  GeneralManager = 1,        // سامي
+  HRManager = 2,             // مدير الـ HR
+  BankingExpensesManager = 3,// نزار
+  VehiclesManager = 4,       // فيصل
+   SalesCommissionManager = 5, // مدير المبيعات - العمولات
+  Accountant = 6,            // الحسابات
+
 }
 
+
+
+export enum UserType {
+  DepositCollector = 1,
+  PettyHolder = 2,
+  Central = 3
+}
 // ============================================================
 // Attachments
 // ============================================================
@@ -61,6 +71,10 @@ export interface ExpenseVoucherLine {
 
   attachments: ExpenseVoucherLineAttachment[];
   approvals: ExpenseVoucherLineApproval[];
+   // 🔥 الإدخال المحاسبي
+  isAccounted: boolean;
+  accountedByUserId?: string | null;
+  accountedDate?: string | null;
 }
 
 // ============================================================

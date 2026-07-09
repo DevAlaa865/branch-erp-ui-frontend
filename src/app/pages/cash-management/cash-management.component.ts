@@ -6,7 +6,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-cash-management',
   standalone: true,
-  imports: [CommonModule, RouterModule,RouterOutlet],
+  imports: [CommonModule, RouterModule,RouterOutlet,HasPermissionDirective],
   templateUrl: './cash-management.component.html',
   styleUrl: './cash-management.component.css'
 })

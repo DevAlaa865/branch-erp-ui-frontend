@@ -56,4 +56,11 @@ export class ExpenseVoucherDetailsComponent implements OnInit {
   approveLine(lineId: number) {
     this.router.navigate(['/expense-vouchers', lineId, 'approve-line']);
   }
+  getSourceName(src: number): string {
+  switch (src) {
+    case 1: return 'مسؤول إيداع';
+    case 2: return 'تسوية عهدة';
+    default: return 'غير معروف';
+  }
+}
 }

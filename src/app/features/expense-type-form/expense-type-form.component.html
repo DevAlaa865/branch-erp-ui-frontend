@@ -34,14 +34,14 @@
         [(ngModel)]="model.category"
         name="category">
 
-        <option [value]="1">مصروف عام</option>
-        <option [value]="2">تشغيل</option>
-        <option [value]="3">رواتب</option>
-        <option [value]="4">مرتجعات</option>
-        <option [value]="5">عهدة لموظف</option>
-        <option [value]="6">مصروفات صاحب عهدة</option>
-        <option [value]="7">تحويل بين مسؤولي الإيداع</option>
-        <option [value]="8">تسوية</option>
+        <option [value]="ExpenseCategory.GeneralExpense">مصروف عام</option>
+        <option [value]="ExpenseCategory.OperationalExpense">تشغيل</option>
+        <option [value]="ExpenseCategory.Salary">رواتب</option>
+        <option [value]="ExpenseCategory.Refund">مرتجعات</option>
+        <option [value]="ExpenseCategory.PettyAssignment">عهدة لموظف</option>
+        <option [value]="ExpenseCategory.PettyHolderExpense">مصروفات صاحب عهدة</option>
+        <option [value]="ExpenseCategory.CollectorTransfer">تحويل بين مسؤولي الإيداع</option>
+        <option [value]="ExpenseCategory.Adjustment">تسوية</option>
 
       </select>
     </div>

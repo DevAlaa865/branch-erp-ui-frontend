@@ -111,9 +111,16 @@ export class ExpenseVoucherService {
     return this.http.post(`${this.approvalUrl}/approve-line`, dto);
   }
 
-  getDepositSummary(): Observable<{ totalDelivered: number; totalSpent: number }> {
+getDepositSummary(userId: string) {
   return this.http.get<{ totalDelivered: number; totalSpent: number }>(
-    `${this.voucherUrl}/summary`
+    `${this.voucherUrl}/summary/${userId}`
+  );
+}
+filter(dto: any) {
+    console.log("DTO =", dto);
+  return this.http.post(
+    `${this.voucherUrl}/filter`,
+    dto
   );
 }
 
