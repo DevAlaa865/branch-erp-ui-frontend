@@ -231,6 +231,7 @@
 
           <!-- تفاصيل -->
           <button
+           *hasPermission="['Permissions.Manage']"
             (click)="openDetails(v)"
             class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs md:text-sm">
             تفاصيل
@@ -238,6 +239,7 @@
 
           <!-- تعديل -->
           <button
+           *hasPermission="['Permissions.Manage']"
             (click)="editVoucher(v.id)"
             class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
             تعديل
@@ -259,99 +261,80 @@
 </table>
 
 
+<div   *ngIf="resultType == 2 && pagedData && pagedData.length > 0"
+  class="w-full overflow-x-auto mt-6"
+  dir="ltr">
 
-<!-- 🔵 جدول البنود (تم حماية الحقول بـ ?. لضمان عدم انهيار الصفحة) -->
-<!-- 🔵 جدول البنود (منسق بالكامل مثل جدول السندات) -->
-<table *ngIf="resultType == 2 && pagedData && pagedData.length > 0"
-       class="w-full text-blue-800 border-collapse text-xs md:text-sm mt-6">
+  <table
+   class="min-w-[1100px] w-full text-blue-800 border-collapse text-xs md:text-sm"
+dir="rtl">
 
-  <thead>
-    <tr class="bg-slate-100 text-slate-700">
-      <th class="border p-2 text-center">رقم السند</th>
-      <th class="border p-2 text-center">التاريخ</th>
-      <th class="border p-2 text-center">البند</th>
-      <th class="border p-2 text-center">المبلغ</th>
-      <th class="border p-2 text-center">الفرع</th>
-      <th class="border p-2 text-center">صاحب العهدة</th>
-      <th class="border p-2 text-center">الإدخال المحاسبي</th>
-      <th class="border p-2 text-center">الاعتماد</th>
-      <th class="border p-2 text-center">الإجراءات</th>
-    </tr>
-  </thead>
+    <thead>
+      <tr class="bg-slate-100 text-slate-700">
+       <!--  <th class="border p-2 text-center whitespace-nowrap">رقم السند</th> -->
+        <th class="border p-2 text-center whitespace-nowrap">التاريخ</th>
+        <th class="border p-2 text-center whitespace-nowrap">البند</th>
+        <th class="border p-2 text-center whitespace-nowrap">المبلغ</th>
+        <th class="border p-2 text-center whitespace-nowrap">الفرع</th>
+        <th class="border p-2 text-center whitespace-nowrap">صاحب العهدة</th>
+        <th class="border p-2 text-center whitespace-nowrap">الإدخال المحاسبي</th>
+        <th class="border p-2 text-center whitespace-nowrap">الاعتماد</th>
+      </tr>
+    </thead>
 
-  <tbody>
+    <tbody>
+      <tr *ngFor="let l of pagedData" class="hover:bg-slate-50">
 
-    <tr *ngFor="let l of pagedData" class="hover:bg-slate-50">
+      <!--   <td class="border p-2 text-center font-bold text-blue-800 whitespace-nowrap">
+          {{ l?.expenseVoucherId }}
+        </td> -->
 
-      <td class="border p-2 text-center font-bold text-blue-800">
-        {{ l?.expenseVoucherId || 'غير متوفر' }}
-      </td>
+        <td class="border p-2 text-center font-bold text-blue-800 whitespace-nowrap">
+          {{ l?.voucherDate | date:'yyyy/MM/dd' }}
+        </td>
 
-      <td class="border p-2 text-center font-bold text-blue-800">
-        {{ l?.voucherDate | date:'yyyy/MM/dd' }}
-      </td>
+        <td class="border p-2 text-center font-bold text-blue-800 whitespace-nowrap">
+          {{ l?.expenseType?.name }}
+        </td>
 
-      <td class="border p-2 text-center font-bold text-blue-800">
-        {{ l?.expenseType?.name || 'غير متوفر' }}
-      </td>
+        <td class="border p-2 text-center font-bold text-blue-800 whitespace-nowrap">
+          {{ l?.amount | number:'1.2-2' }}
+        </td>
 
-      <td class="border p-2 text-center font-bold text-blue-800">
-        {{ l?.amount | number:'1.2-2' }}
-      </td>
+        <td class="border p-2 text-center text-blue-800 whitespace-nowrap">
+          {{ l?.branch?.branchName }}
+        </td>
 
-      <td class="border p-2 text-center text-blue-800">
-        {{ l?.branch?.branchName || '—' }}
-      </td>
+        <td class="border p-2 text-center text-blue-800 whitespace-nowrap">
+          {{ l?.pettyHolder?.name }}
+        </td>
 
-      <td class="border p-2 text-center text-blue-800">
-        {{ l?.pettyHolder?.name || '—' }}
-      </td>
+        <td class="border p-2 text-center whitespace-nowrap">
+          <span
+            class="inline-block px-2 py-1 rounded text-xs md:text-sm"
+            [ngClass]="l?.isAccounted ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
+            {{ l?.isAccounted ? 'تم الإدخال' : 'لم يتم الإدخال' }}
+          </span>
+        </td>
 
-      <td class="border p-2 text-center text-blue-800">
-        <span
-          class="px-2 py-1 rounded text-xs md:text-sm"
-          [ngClass]="l?.isAccounted ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
-          {{ l?.isAccounted ? 'تم الإدخال' : 'لم يتم الإدخال' }}
-        </span>
-      </td>
-
-      <!-- اعتماد -->
-      <td class="border p-2 text-center text-blue-800">
-        <button
-          [disabled]="!canApprove(currentUserRole)"
-          (click)="approveVoucherFromLine(l.expenseVoucherId)"
-          [ngClass]="canApprove(currentUserRole)
-            ? 'bg-green-600 hover:bg-green-700 text-white'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
-          class="px-3 py-1 rounded text-xs md:text-sm transition">
-          اعتماد
-        </button>
-      </td>
-
-      <!-- الإجراءات -->
-      <td class="border p-2 text-center text-blue-800">
-        <div class="flex flex-wrap justify-center gap-2">
-
+        <td class="border p-2 text-center whitespace-nowrap">
           <button
-            (click)="openDetails(l.expenseVoucher)"
-            class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs md:text-sm">
-            تفاصيل
+            (click)="approveVoucherFromLine(l.expenseVoucherId)"
+            class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs md:text-sm transition">
+            اعتماد
           </button>
+        </td>
 
-          <button
-            (click)="editVoucher(l.expenseVoucher.id)"
-            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
-            تعديل
-          </button>
+      </tr>
+    </tbody>
 
-        </div>
-      </td>
+  </table>
 
-    </tr>
+</div>
 
-  </tbody>
 
-</table>
+
+
 
 
 

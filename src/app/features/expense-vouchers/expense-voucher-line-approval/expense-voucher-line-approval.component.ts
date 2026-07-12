@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { ExpenseVoucherService } from '../../../services/Expenses/expense-voucher.service';
@@ -42,7 +42,7 @@ export class ExpenseVoucherLineApprovalComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
+    public router: Router,
     private service: ExpenseVoucherService,
     private auth: AuthService
   ) {}
@@ -131,4 +131,8 @@ export class ExpenseVoucherLineApprovalComponent implements OnInit {
       this.router.navigate(['/cash-management/expenses/expense-voucher']);
     }, 1500);
   }
+  goBack() {
+  this.router.navigate(['/cash-management/expenses/expense-voucher']);
+}
+
 }

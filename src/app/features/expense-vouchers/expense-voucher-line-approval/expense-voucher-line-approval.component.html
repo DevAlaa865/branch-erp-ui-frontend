@@ -26,7 +26,23 @@
           <div class="text-lg font-bold text-green-700">{{ voucher.totalAmount | number }}</div>
         </div>
       </div>
+<!-- عنوان البنود + زر الرجوع -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
 
+  <!-- العنوان -->
+  <h3 class="text-xl md:text-2xl font-bold text-gray-800">
+    بنود الصرف المعتمدة وغير المعتمدة من الإدارة
+  </h3>
+
+  <!-- زر الرجوع -->
+  <button
+    (click)="router.navigate(['/cash-management/expenses/expense-voucher'])"
+    class="mt-3 md:mt-0 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm md:text-base transition"
+  >
+    الرجوع للصفحة الرئيسية
+  </button>
+
+</div>
       <!-- البنود -->
       <h3 class="text-lg font-bold text-gray-800 mb-3">بنود السند</h3>
 
