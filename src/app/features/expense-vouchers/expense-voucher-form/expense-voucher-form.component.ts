@@ -23,11 +23,12 @@ import { MasterDataService } from '../../../services/master-data.service';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 import { AuthService } from '../../../services/auth.service';
 import { DepositCollectorService } from '../../../services/Expenses/deposit-collector.service';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
 
 @Component({
   selector: 'app-expense-voucher-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent,HasPermissionDirective],
   templateUrl: './expense-voucher-form.component.html',
 })
 export class ExpenseVoucherFormComponent implements OnInit {

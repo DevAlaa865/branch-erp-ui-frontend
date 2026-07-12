@@ -35,8 +35,9 @@
 
     <!--ترحيل نقديه الفروع للصناديق يدوى-->
     <div
+      *hasPermission="['Permissions.Manage','submit.voucher']"
     class="group p-6 bg-yellow-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-     *hasPermission="['Permissions.Manage','create.Voucher']"
+   
     [routerLink]="['manual-posting']">
     <div class="flex items-center gap-4">
       <div
@@ -101,8 +102,9 @@
 
 <!-- سند صرف  -->
 <div
+ *hasPermission="['Permissions.Manage','submit.voucher']"
   class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-   *hasPermission="['Permissions.Manage','create.Voucher']"
+        
   [routerLink]="['/cash-management/expenses/expense-voucher/create']">
   <div class="flex items-center gap-4">
     <div
