@@ -30,6 +30,16 @@ export class ExpenseVoucherLineApprovalComponent implements OnInit {
 
   loading = true;
 
+  // ⭐ الأدوار حسب الـ Enum في الباك
+  approvalRoles = [
+    { id: 1, name: 'المدير العام - سامي' },
+    { id: 2, name: 'مدير الـ HR - نايل' },
+    { id: 3, name: 'مدير المصاريف البنكية - نزار' },
+    { id: 4, name: 'مدير السيارات - فيصل' },
+    { id: 5, name: 'مدير المبيعات - عبد الوهاب' },
+    { id: 6, name: 'الحسابات - المحاسب' }
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -38,6 +48,7 @@ export class ExpenseVoucherLineApprovalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Current User Role:', this.currentUserRole);
     this.voucherId = Number(this.route.snapshot.paramMap.get('voucherId'));
     this.currentUserRole = this.auth.getUserRole();
     this.loadVoucher();
@@ -54,40 +65,26 @@ export class ExpenseVoucherLineApprovalComponent implements OnInit {
     });
   }
 
-  // هل اليوزر له صلاحية اعتماد هذا الدور؟
-  canApprove(role: number): boolean {
-    return this.currentUserRole === role || this.auth.isAdmin?.();
+  // ⭐ هل اليوزر له صلاحية اعتماد هذا الدور؟
+  canApprove(roleId: number): boolean {
+    return this.currentUserRole === roleId || this.auth.isAdmin?.();
   }
 
-  // اسم الدور للعرض
-getRoleName(role: number): string {
-  switch (role) {
-    case 1: return 'المدير العام - سامي';
-    case 2: return 'مدير الـ HR - نايل';
-    case 3: return 'مدير المصاريف البنكية - نزار';
-    case 4: return 'مدير السيارات - فيصل';
-    case 5: return 'مدير المبيعات - عبد الوهاب';
-    case 6: return 'الحسابات - المحاسب';
-    default: return 'غير معروف';
-  }
-}
-
-
-  // هل تم اعتماد هذا الدور؟
-  isApproved(line: any, role: number): boolean {
-    return !!line.approvals?.find((a: any) => a.role === role);
+  // ⭐ هل تم اعتماد هذا الدور؟
+  isApproved(line: any, roleId: number): boolean {
+    return !!line.approvals?.find((a: any) => a.role === roleId);
   }
 
-  // الحصول على بيانات الاعتماد
-  getApproval(line: any, role: number) {
-    return line.approvals?.find((a: any) => a.role === role) ?? null;
+  // ⭐ الحصول على بيانات الاعتماد
+  getApproval(line: any, roleId: number) {
+    return line.approvals?.find((a: any) => a.role === roleId) ?? null;
   }
 
-  // اعتماد خانة معينة مباشرة
-  approveLineRole(lineId: number, role: number) {
+  // ⭐ اعتماد بند معين مباشرة
+  approveLineRole(lineId: number, roleId: number) {
     const dto = {
       lineId,
-      role,
+      role: roleId,
       approvedByUserId: this.auth.getUserId() ?? '',
       notes: this.notes
     };
@@ -100,7 +97,7 @@ getRoleName(role: number): string {
     });
   }
 
-  // فتح مودال اعتماد بند كامل
+  // ⭐ فتح مودال اعتماد بند كامل
   openLineApproval(lineId: number) {
     this.selectedLineId = lineId;
     this.role = this.currentUserRole;
@@ -126,7 +123,7 @@ getRoleName(role: number): string {
     });
   }
 
-  // 🔥 الرسالة + الرجوع للقائمة
+  // ⭐ الرسالة + الرجوع للقائمة
   showSuccessAndRedirect() {
     alert('✔ تم اعتماد السند بنجاح\nسيتم الرجوع لقائمة سندات الصرف');
 

@@ -30,7 +30,7 @@
       <li *hasPermission="['GeneralManagement.View']" [routerLink]="['/revenue-management/branch-daily-summary']" class="nav-link">يوميه مبيعات الفروع</li>
       <li *hasPermission="['GeneralManagement.View']"  [routerLink]="['/revenue-management/branch-sales-daily-list']" class="nav-link">بحث اليوميه برقم الفرع</li>
       <li *hasPermission="['Permissions.Manage', 'Returns.View','Countries.Create']"  [routerLink]="['/bank-transfer-request/list']" class="nav-link">ادارة الطلبات البنكيه</li>
-      <li *hasPermission="['Permissions.Manage','DepositColect.view']"  [routerLink]="['cash-management']" class="nav-link">ادارة الصناديق</li>
+      <li *hasPermission="['Permissions.Manage','DepositColect.view','Discounts.View']"  [routerLink]="['cash-management']" class="nav-link">ادارة الصناديق</li>
       <li *hasPermission="['Permissions.Manage']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
       <li>
         

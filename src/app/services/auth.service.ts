@@ -74,19 +74,42 @@ export class AuthService {
     return Array.isArray(role) ? role : role ? [role] : [];
   }
 getUserRole(): number {
+
   const payload = this.getTokenPayload();
   if (!payload) return 0;
 
-  const role = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+  console.log('TOKEN PAYLOAD:', payload);
 
-  // لو الدور جاي نص من الـ API نحوله لرقم Enum
-  switch (role) {
-    case "GeneralManager": return 1;
-    case "HRManager": return 2;
-    case "BankingExpensesManager": return 3;
-    case "VehiclesManager": return 4;
-    case "Accountant": return 5;
-    default: return 0;
+  const username = payload.unique_name?.toLowerCase();   // ← ناخد اسم اليوزر
+
+  switch (username) {
+
+    // نايل – مدير HR
+    case "nail":
+      return 2;
+
+    // سامي – المدير العام
+    case "sami":
+      return 1;
+
+    // نزار – مدير المصاريف البنكية
+    case "nazar":
+      return 3;
+
+    // فيصل – مدير السيارات
+    case "faisal":
+      return 4;
+
+    // عبد الوهاب – مدير المبيعات
+    case "abdulwahab":
+      return 5;
+
+    // المحاسب
+    case "accountant":
+      return 6;
+
+    default:
+      return 0;
   }
 }
 

@@ -6,7 +6,9 @@
       <h2 class="text-2xl font-bold text-gray-800">سندات الصرف</h2>
 
       <button
+    
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow text-sm md:text-base transition"
+        *hasPermission="['Permissions.Manage']"  
         (click)="createNew()">
         + سند صرف جديد
       </button>
@@ -197,7 +199,6 @@
 </div>
 
 <!-- 🔵 جدول السندات (تم تصحيح شروط الحالات والأمان) -->
-
 <table *ngIf="resultType == 1 && pagedData && pagedData.length > 0"
        class="w-full text-blue-800 border-collapse text-xs md:text-sm mt-6">
 
@@ -228,23 +229,26 @@
       <td class="border p-2 text-center text-blue-800">
         <div class="flex flex-wrap justify-center gap-2">
 
+          <!-- تفاصيل -->
           <button
             (click)="openDetails(v)"
             class="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-xs md:text-sm">
             تفاصيل
           </button>
 
+          <!-- تعديل -->
           <button
             (click)="editVoucher(v.id)"
             class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
             تعديل
           </button>
 
-          <button
-            (click)="approveVoucher(v.id)"
-            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs md:text-sm">
-            اعتماد
-          </button>
+          <!-- اعتماد -->
+       <button
+  (click)="approveVoucher(v.id)"
+  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs md:text-sm">
+  اعتماد
+</button>
 
         </div>
       </td>
@@ -253,6 +257,8 @@
   </tbody>
 
 </table>
+
+
 
 <!-- 🔵 جدول البنود (تم حماية الحقول بـ ?. لضمان عدم انهيار الصفحة) -->
 <!-- 🔵 جدول البنود (منسق بالكامل مثل جدول السندات) -->
@@ -277,66 +283,49 @@
 
     <tr *ngFor="let l of pagedData" class="hover:bg-slate-50">
 
-      <!-- رقم السند -->
- <td class="border p-2 text-center font-bold text-blue-800">
-  {{ l?.expenseVoucherId || 'غير متوفر' }}
-</td>
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ l?.expenseVoucherId || 'غير متوفر' }}
+      </td>
 
-      <!-- التاريخ -->
-<td class="border p-2 text-center font-bold text-blue-800">
-  {{ l?.voucherDate | date:'yyyy/MM/dd' }}
-</td>
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ l?.voucherDate | date:'yyyy/MM/dd' }}
+      </td>
 
-      <!-- اسم البند -->
-<td class="border p-2 text-center font-bold text-blue-800">
-  {{ l?.expenseType?.name || 'غير متوفر' }}
-</td>
+      <td class="border p-2 text-center font-bold text-blue-800">
+        {{ l?.expenseType?.name || 'غير متوفر' }}
+      </td>
 
-      <!-- المبلغ -->
       <td class="border p-2 text-center font-bold text-blue-800">
         {{ l?.amount | number:'1.2-2' }}
       </td>
 
-      <!-- الفرع -->
-<td class="border p-2 text-center text-blue-800">
-  {{ l?.branch?.branchName || '—' }}
-</td>
+      <td class="border p-2 text-center text-blue-800">
+        {{ l?.branch?.branchName || '—' }}
+      </td>
 
-      <!-- صاحب العهدة -->
-<td class="border p-2 text-center text-blue-800">
-  {{ l?.pettyHolder?.name || '—' }}
-</td>
+      <td class="border p-2 text-center text-blue-800">
+        {{ l?.pettyHolder?.name || '—' }}
+      </td>
 
-      <!-- الإدخال المحاسبي -->
       <td class="border p-2 text-center text-blue-800">
         <span
           class="px-2 py-1 rounded text-xs md:text-sm"
           [ngClass]="l?.isAccounted ? 'bg-green-500 text-white' : 'bg-red-500 text-white'">
-
           {{ l?.isAccounted ? 'تم الإدخال' : 'لم يتم الإدخال' }}
-
         </span>
       </td>
 
-      <!-- الاعتماد -->
+      <!-- اعتماد -->
       <td class="border p-2 text-center text-blue-800">
-
-        <span
-          *ngIf="l?.approvals?.length > 0"
-          class="bg-green-500 text-white px-2 py-1 rounded text-xs">
-
-          معتمد
-
-        </span>
-
-        <span
-          *ngIf="!l?.approvals || l.approvals.length === 0"
-          class="bg-red-500 text-white px-2 py-1 rounded text-xs">
-
-          غير معتمد
-
-        </span>
-
+        <button
+          [disabled]="!canApprove(currentUserRole)"
+          (click)="approveVoucherFromLine(l.expenseVoucherId)"
+          [ngClass]="canApprove(currentUserRole)
+            ? 'bg-green-600 hover:bg-green-700 text-white'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'"
+          class="px-3 py-1 rounded text-xs md:text-sm transition">
+          اعتماد
+        </button>
       </td>
 
       <!-- الإجراءات -->
@@ -355,13 +344,6 @@
             تعديل
           </button>
 
-     <button
-  (click)="approveVoucherFromLine(l.expenseVoucherId)"
-  class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-xs md:text-sm">
-  اعتماد
-</button>
-
-
         </div>
       </td>
 
@@ -370,6 +352,8 @@
   </tbody>
 
 </table>
+
+
 
 <!-- Pagination -->
 <div *ngIf="pagedData && pagedData.length > 0" class="flex flex-col md:flex-row justify-between items-center p-4 bg-slate-100 mt-2 border rounded-lg gap-2">

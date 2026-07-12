@@ -12,11 +12,13 @@ import { UserCashCityService } from '../../../services/Expenses/user-cash-city.s
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
+import { HasPermissionDirective } from '../../../core/directives/has-permission.directive';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-expense-voucher-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, CustomSelectComponent, ReactiveFormsModule, HasPermissionDirective],
   templateUrl: './expense-voucher-list.component.html',
 })
 export class ExpenseVoucherListComponent implements OnInit {
@@ -67,16 +69,20 @@ export class ExpenseVoucherListComponent implements OnInit {
 
   approvalNoteVisible = false;
 
+  currentUserRole: number = 0;
+
   constructor(
     private service: ExpenseVoucherService,
     private expenseTypeService: ExpenseTypeService,
     private pettyHolderService: PettyHolderService,
     private depositCollectorService: DepositCollectorService,
     private userCashCityService: UserCashCityService,
+    private auth: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.currentUserRole = this.auth.getUserRole();
     this.loadFilterData();
     this.loadData();
   }
@@ -137,7 +143,6 @@ export class ExpenseVoucherListComponent implements OnInit {
     };
   }
 
-  // ⭐ NEW — دالة تجيب رأس السند
   loadVoucherHeader(voucherId: number, line: any) {
     this.service.getById(voucherId).subscribe({
       next: (header: any) => {
@@ -163,7 +168,6 @@ export class ExpenseVoucherListComponent implements OnInit {
           this.lines = Array.isArray(res) ? res : [];
           this.vouchers = [];
 
-          // ⭐ NEW — دمج رأس السند داخل البنود
           this.lines.forEach(line => {
             this.loadVoucherHeader(line.expenseVoucherId, line);
           });
@@ -173,7 +177,7 @@ export class ExpenseVoucherListComponent implements OnInit {
         this.updatePagination();
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.vouchers = [];
         this.lines = [];
         this.pagedData = [];
@@ -295,4 +299,14 @@ export class ExpenseVoucherListComponent implements OnInit {
       this.form.controls['isAccounted'].reset();
     }
   }
+
+  // ⭐ NEW — دالة تحديد صلاحية الاعتماد
+  canApprove(voucher: any): boolean {
+    if (!this.currentUserRole) return false;
+
+    const requiredRole = voucher?.approvalRole;
+
+    return requiredRole === this.currentUserRole;
+  }
+
 }

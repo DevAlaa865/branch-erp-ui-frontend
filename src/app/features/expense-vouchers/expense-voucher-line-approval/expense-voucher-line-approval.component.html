@@ -78,36 +78,36 @@
           <div class="md:col-span-2 mt-4 p-4 bg-white rounded border">
             <h4 class="font-bold text-gray-800 mb-3">الاعتمادات</h4>
 
-            <div *ngFor="let role of [1,2,3,4,5]" class="flex items-center justify-between py-2 border-b">
+            <div *ngFor="let r of approvalRoles" class="flex items-center justify-between py-2 border-b">
 
               <!-- اسم الدور -->
               <div class="font-semibold text-gray-700">
-                {{ getRoleName(role) }}
+                {{ r.name }}
               </div>
 
               <!-- حالة الاعتماد -->
-              <div *ngIf="isApproved(line, role)">
+              <div *ngIf="isApproved(line, r.id)">
                 <span class="text-green-700 font-bold">✔ معتمد</span>
                 <span class="text-gray-600">
-                  ({{ getApproval(line, role)?.approvedByUserName }} –
-                   {{ getApproval(line, role)?.approvedDate | date:'short' }})
+                  ({{ getApproval(line, r.id)?.approvedByUserName }} –
+                   {{ getApproval(line, r.id)?.approvedDate | date:'short' }})
                 </span>
-                <span *ngIf="getApproval(line, role)?.notes" class="text-gray-500">
-                  – {{ getApproval(line, role)?.notes }}
+                <span *ngIf="getApproval(line, r.id)?.notes" class="text-gray-500">
+                  – {{ getApproval(line, r.id)?.notes }}
                 </span>
               </div>
 
               <!-- زر الاعتماد -->
-              <div *ngIf="!isApproved(line, role)">
+              <div *ngIf="!isApproved(line, r.id)">
                 <button
-                  *ngIf="canApprove(role)"
+                  *ngIf="canApprove(r.id)"
                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                  (click)="approveLineRole(line.id, role)"
+                  (click)="approveLineRole(line.id, r.id)"
                 >
                   اعتماد
                 </button>
 
-                <span *ngIf="!canApprove(role)" class="text-gray-400">
+                <span *ngIf="!canApprove(r.id)" class="text-gray-400">
                   لا تملك صلاحية الاعتماد
                 </span>
               </div>
