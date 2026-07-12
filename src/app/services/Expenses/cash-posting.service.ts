@@ -13,7 +13,7 @@ import { PostingDetails } from '../../shared/models/posting-details.model';
 export class CashPostingService {
 
   private baseUrl = `${API_BASE_URL}/CashPosting`;
-
+   private cashBoxUrl = `${API_BASE_URL}/CashBox`;
   constructor(private http: HttpClient) {}
 
   postDailyCash(model: PostDailyCashRequestDto): Observable<CashPostingResultDto> {
@@ -23,9 +23,14 @@ export class CashPostingService {
     );
   }
 
-   // 🔥 الترحيل اليدوي
+  // 🔥 الترحيل اليدوي
   manualPost(body: ManualPostingRequest): Observable<ManualPostingResult> {
     return this.http.post<ManualPostingResult>(`${this.baseUrl}/manual`, body);
+  }
+
+  // 🔥 النقدية المرحّلة من اليوميات
+  getPostedAmount(branchId: number, date: string): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/daily-cash?branchId=${branchId}&date=${date}`);
   }
 
   getPostingHistory(date: string): Observable<PostingHistory[]> {
@@ -34,5 +39,10 @@ export class CashPostingService {
 
 getPostingDetails(id: number): Observable<PostingDetails> {
   return this.http.get<PostingDetails>(`${this.baseUrl}/details/${id}`);
+}
+getMyCashBox(userId: string): Observable<{ cashBoxId: number; cashBoxName: string }> {
+  return this.http.get<{ cashBoxId: number; cashBoxName: string }>(
+    `${this.cashBoxUrl}/my-cashbox?userId=${userId}`
+  );
 }
 }

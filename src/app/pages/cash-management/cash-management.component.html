@@ -36,7 +36,7 @@
     <!--ترحيل نقديه الفروع للصناديق يدوى-->
     <div
     class="group p-6 bg-yellow-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-     *hasPermission="['Permissions.Manage']"
+     *hasPermission="['Permissions.Manage','DepositColect.view']"
     [routerLink]="['manual-posting']">
     <div class="flex items-center gap-4">
       <div
@@ -119,7 +119,7 @@
 <!-- سندات الصرف  -->
 <div
   class="group p-6 bg-rose-600 from-blue-500 to-blue-600 text-white rounded-xl shadow-lg cursor-pointer transform transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-   *hasPermission="['Permissions.Manage']"
+   *hasPermission="['Permissions.Manage','Discounts.View']"
   [routerLink]="['/cash-management/expenses/expense-voucher']">
   <div class="flex items-center gap-4">
     <div
@@ -127,6 +127,7 @@
       👤
     </div>
     <div>
+      
       <h3 class="text-xl font-bold">سندات الصرف</h3>
       <p class="text-sm opacity-90">عرض وتعديل وحذف السندات</p>
     </div>

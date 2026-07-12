@@ -85,14 +85,14 @@
 
       <tbody>
         <tr *ngFor="let issue of pagedIssues; let i = index" class="hover:bg-slate-50">
-          <td class="border p-2 text-center">{{ issue.branchNumber }}</td>
-          <td class="border p-2 text-center">{{ issue.branchName }}</td>
-          <td class="border p-2 text-center">{{ issue.salesDate | date:'yyyy-MM-dd' }}</td>
-          <td class="border p-2 text-center">{{ issue.differenceAmount }}</td>
-          <td class="border p-2 text-center">{{ issue.controlNotes || '-' }}</td>
+          <td class="border p-2 text-center text-blue-500 font-bold">{{ issue.branchNumber }}</td>
+          <td class="border p-2 text-center text-blue-500 font-bold">{{ issue.branchName }}</td>
+          <td class="border p-2 text-center text-blue-500 font-bold">{{ issue.salesDate | date:'yyyy-MM-dd' }}</td>
+          <td class="border p-2 text-center text-blue-500 font-bold">{{ issue.differenceAmount }}</td>
+          <td class="border p-2 text-center text-blue-500 font-bold">{{ issue.controlNotes || '-' }}</td>
 
           <!-- قرار الرقابة -->
-          <td class="border p-2 text-center">
+          <td class="border p-2 text-center text-blue-500 font-bold">
             {{ issue.resolutionType === 1 ? 'خطأ موظف' :
                issue.resolutionType === 2 ? 'خطأ نظام' :
                issue.resolutionType === 3 ? 'فرق جرد' :
@@ -101,7 +101,7 @@
           </td>
 
           <!-- اعتماد المدير -->
-          <td class="border p-2 text-center">
+          <td class="border p-2 text-center text-blue-500 font-bold">
             <span *ngIf="issue.isManagerApproved"
                   class="bg-green-200 text-green-800 px-2 py-1 rounded text-xs font-semibold">
               معتمد
@@ -113,7 +113,7 @@
             </span>
           </td>
 
-          <td class="border p-2 text-center no-print">
+          <td class="border p-2 text-center no-print text-blue-500 font-bold">
             <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded shadow text-sm"
                     (click)="openDetails(issue)">
               تفاصيل

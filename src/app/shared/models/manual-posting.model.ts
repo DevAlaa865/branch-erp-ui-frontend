@@ -1,16 +1,23 @@
 export interface ManualPostingRequest {
   branchId: number;
   date: string;
-  depositCollectorId?: number;
-  amount: number;   // 🔥 المبلغ اليدوي الجديد
+  cashBoxId: number;     // 🔥 جديد
+
+  postedAmount: number;     // يجي من API اليوميات
+  actualAmount: number;     // اليوزر يكتبه
+  notes?: string;           // اختياري
 }
+
 
 export interface ManualPostingResult {
   success: boolean;
+
   branchName: string;
-  cityName: string;
   cashBoxName: string;
-  amount: number;
-  
+
+  postedAmount: number;
+  actualAmount: number;
+  finalAmount: number;
+
   date: string;
 }

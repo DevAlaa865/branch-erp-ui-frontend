@@ -118,8 +118,8 @@
       <tbody>
         <tr *ngFor="let i of pagedIssues; let idx = index" class="hover:bg-slate-50">
               <!-- رقم الفرع -->
-          <td class="border p-2 text-center">{{ i.branchNumber }}</td>
-          <td class="border p-2 text-center">{{ i.branchName }}</td>
+          <td class="border p-2 text-center text-blue-500">{{ i.branchNumber }}</td>
+          <td class="border p-2 text-center text-blue-500 ">{{ i.branchName }}</td>
           <td class="border p-2 text-center">{{ i.salesDate | date:'yyyy-MM-dd' }}</td>
           <td class="border p-2 text-center">{{ i.differenceAmount }}</td>
 
