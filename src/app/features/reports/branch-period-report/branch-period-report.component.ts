@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { BranchTargetPeriodReport } from '../../../shared/models/branch-target-period-report.model';
-import { BranchDailyTargetService } from '../../../services/branch-daily-target.service';
+import { BranchDailyTargetSeasonService } from '../../../services/branch-daily-target.service';
 import { CommonModule } from '@angular/common';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 import { MasterDataService } from '../../../services/master-data.service';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { Router } from '@angular/router';
+import { BranchTargetPeriodReport } from '../../../shared/models/branch-target-period-report.model';
 @Component({
   selector: 'app-branch-period-report',
   standalone: true,
@@ -34,7 +34,7 @@ export class BranchPeriodReportComponent implements OnInit {
   pagedRows: any[] = [];
   constructor(
     private fb: FormBuilder,
-    private targetService: BranchDailyTargetService,
+    private targetService: BranchDailyTargetSeasonService,
     private masterService:MasterDataService,
       private router: Router
   ) {}
@@ -114,7 +114,7 @@ export class BranchPeriodReportComponent implements OnInit {
     });
   }
 
-  // تحميل التقرير
+/*   // تحميل التقرير
   loadReport() {
     const { branchId, fromDate, toDate } = this.filterForm.value;
 
@@ -126,7 +126,7 @@ export class BranchPeriodReportComponent implements OnInit {
       this.currentPage = 1; // نرجع لأول صفحة
       this.updatePagination();
       });
-  }
+  } */
 
   updatePagination() {
   if (!this.reportData?.rows) return;

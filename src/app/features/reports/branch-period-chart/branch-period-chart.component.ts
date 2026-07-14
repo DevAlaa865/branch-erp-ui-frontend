@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Chart from 'chart.js/auto';
-import { BranchDailyTargetService } from '../../../services/branch-daily-target.service';
 
 @Component({
   selector: 'app-branch-period-chart',
@@ -44,7 +43,6 @@ supervisorName!: string;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private targetService: BranchDailyTargetService
   ) {}
 
   ngOnInit(): void {
@@ -54,12 +52,12 @@ supervisorName!: string;
       this.toDate = params.get('toDate') ?? '';
 
       if (this.branchId && this.fromDate && this.toDate) {
-        this.loadReport();
-      }
+/*         this.loadReport();
+ */      }
     });
   }
 
-loadReport(): void {
+/* loadReport(): void {
   this.targetService
     .getBranchPeriodReport(this.branchId, this.fromDate, this.toDate)
     .subscribe((res: any) => {
@@ -76,7 +74,7 @@ loadReport(): void {
       setTimeout(() => this.buildPercentageChart(), 300);
     });
 }
-
+ */
 
   // ============================
   //   الشارت الأول (Bar Chart)

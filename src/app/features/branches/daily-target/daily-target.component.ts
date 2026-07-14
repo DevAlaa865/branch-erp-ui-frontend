@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CustomSelectComponent } from '../../../shared/custom-select/custom-select.component';
 import { AuthService } from '../../../services/auth.service';
 import { MasterDataService } from '../../../services/master-data.service';
-import { BranchDailyTargetService } from '../../../services/branch-daily-target.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -40,7 +39,6 @@ export class DailyTargetComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private targetService: BranchDailyTargetService,
     private master: MasterDataService,
     private auth: AuthService,
     private router: Router,
@@ -48,7 +46,7 @@ export class DailyTargetComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.buildForm();
+   /*  this.buildForm();
     this.loadLookups();
 
     this.route.queryParams.subscribe(params => {
@@ -63,7 +61,7 @@ export class DailyTargetComponent implements OnInit {
         this.initHeaderFromUser();
         this.setupAutoLoadTodayTarget();
       }
-    });
+    }); */
   }
 
   buildForm() {
@@ -108,7 +106,7 @@ export class DailyTargetComponent implements OnInit {
     this.form.get('branchId')?.disable({ emitEvent: false });
   }
 
-  setupAutoLoadTodayTarget(): void {
+/*   setupAutoLoadTodayTarget(): void {
     if (this.currentTargetId) return;
 
     this.form.get('branchId')?.valueChanges.subscribe(branchId => {
@@ -116,10 +114,10 @@ export class DailyTargetComponent implements OnInit {
     });
 
     this.form.get('targetDate')?.valueChanges.subscribe(() => {
-      this.loadTodayTarget();
-    });
-  }
-
+             this.loadTodayTarget();
+   });
+  } */
+/* 
   loadTodayTarget() {
     if (this.viewMode || this.currentTargetId) return;
 
@@ -157,9 +155,9 @@ export class DailyTargetComponent implements OnInit {
         });
       }
     });
-  }
+  } */
 
-  loadTargetById(id: number): void {
+/*   loadTargetById(id: number): void {
     this.targetService.getById(id).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -187,7 +185,7 @@ export class DailyTargetComponent implements OnInit {
         this.applyModeLocking();
       }
     });
-  }
+  } */
 
   addDetail() {
     this.details.push(this.fb.group({
@@ -202,7 +200,7 @@ export class DailyTargetComponent implements OnInit {
     this.details.removeAt(index);
   }
 
-  save() {
+/*   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       Swal.fire({
@@ -261,7 +259,7 @@ export class DailyTargetComponent implements OnInit {
         this.router.navigate(['/branch-targets']);
       }
     });
-  }
+  } */
 
   goBackToDashboard() {
     this.router.navigate(['/dashboard']);

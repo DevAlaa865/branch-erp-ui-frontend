@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CustomSelectComponent } from "../../../../shared/custom-select/custom-select.component";
 import { Component, OnInit } from "@angular/core";
 import { MasterDataService } from "../../../../services/master-data.service";
-import { BranchDailyTargetService } from "../../../../services/branch-daily-target.service";
 import { Router } from "@angular/router";
 import * as XLSX from 'xlsx';
 
@@ -34,7 +33,6 @@ export class BranchTargetListComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private master: MasterDataService,
-    private targetService: BranchDailyTargetService,
     private router: Router
   ) {}
 
@@ -106,7 +104,7 @@ export class BranchTargetListComponent implements OnInit {
     this.targetsToShow = this.targets.slice(start, end);
   }
 
-  loadTargets(): void {
+/*   loadTargets(): void {
     const filters = this.filterForm.value;
 
     const cityId = filters.cityId;
@@ -174,7 +172,7 @@ export class BranchTargetListComponent implements OnInit {
         });
       }
     });
-  }
+  } */
 
   // 🔵 زر الشارت العام
   openChartForAll(): void {
@@ -219,7 +217,7 @@ edit(e: any): void {
     });
   }
 
-  delete(id: number): void {
+/*   delete(id: number): void {
     if (!confirm('هل تريد حذف التارجت؟')) return;
 
     this.targetService.delete(id).subscribe({
@@ -231,5 +229,5 @@ edit(e: any): void {
         alert('حدث خطأ أثناء الحذف');
       }
     });
-  }
+  } */
 }

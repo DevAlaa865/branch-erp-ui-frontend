@@ -1,0 +1,90 @@
+<div class="min-h-screen bg-slate-100 p-6">
+
+  <!-- عنوان التقرير -->
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-6 animate-[fadeIn_0.6s_ease]">
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">
+      📊 نتيجة تقرير التارجت اليومي - Season
+    </h2>
+    <p class="text-slate-600 text-sm">
+      يعرض هذا التقرير تفاصيل التارجت والمتحقق ونسبة الإنجاز لكل فرع.
+    </p>
+  </div>
+
+  <!-- جدول التقرير -->
+  <div class="bg-white rounded-2xl shadow-xl p-4 overflow-hidden animate-[slideUp_0.7s_ease]">
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+
+        <!-- رأس الجدول -->
+        <thead>
+          <tr class="bg-indigo-600 text-white">
+            <th class="p-4 text-left font-semibold">الفرع</th>
+            <th class="p-4 text-left font-semibold">التارجت</th>
+            <th class="p-4 text-left font-semibold">المتحقق</th>
+            <th class="p-4 text-left font-semibold">نسبة الإنجاز</th>
+            <th class="p-4 text-left font-semibold">الحالة</th>
+          </tr>
+        </thead>
+
+        <!-- جسم الجدول -->
+        <tbody>
+          <tr *ngFor="let row of reportData"
+              class="border-b border-slate-200 hover:bg-slate-50 transition-all duration-300">
+
+            <!-- الفرع -->
+            <td class="p-4 font-medium text-slate-800">
+              {{ row.branchName }}
+            </td>
+
+            <!-- التارجت -->
+            <td class="p-4 text-slate-700">
+              {{ row.totalTargetAmount | number }}
+            </td>
+
+            <!-- المتحقق -->
+            <td class="p-4 text-slate-700">
+              {{ row.totalAchievedAmount | number }}
+            </td>
+
+            <!-- نسبة الإنجاز -->
+            <td class="p-4 font-semibold"
+                [ngClass]="{
+                  'text-green-600': row.achievementPercentage >= 100,
+                  'text-yellow-600': row.achievementPercentage >= 70 && row.achievementPercentage < 100,
+                  'text-red-600': row.achievementPercentage < 70
+                }">
+              {{ row.achievementPercentage }}%
+            </td>
+
+            <!-- الحالة -->
+            <td class="p-4">
+              <span
+                class="px-3 py-1 rounded-full text-sm font-semibold"
+                [ngClass]="{
+                  'bg-green-100 text-green-700': row.achievementPercentage >= 100,
+                  'bg-yellow-100 text-yellow-700': row.achievementPercentage >= 70 && row.achievementPercentage < 100,
+                  'bg-red-100 text-red-700': row.achievementPercentage < 70
+                }">
+                {{
+                  row.achievementPercentage >= 100 ? 'ممتاز' :
+                  row.achievementPercentage >= 70 ? 'جيد' :
+                  'ضعيف'
+                }}
+              </span>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+  <!-- فوتر -->
+  <div class="text-center mt-6 text-slate-500 text-sm animate-[fadeIn_1s_ease]">
+    تم إنشاء التقرير تلقائيًا بناءً على البيانات المدخلة.
+  </div>
+
+</div>

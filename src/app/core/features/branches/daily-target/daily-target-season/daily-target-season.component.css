@@ -1,0 +1,602 @@
+/* ===========================
+   الصفحة
+=========================== */
+
+.page-container{
+
+    min-height:100vh;
+
+    background:#f3f6fb;
+
+    padding:30px;
+
+}
+
+.card{
+
+    max-width:900px;
+
+    margin:auto;
+
+    background:#fff;
+
+    border-radius:22px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    padding:35px;
+
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.page-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.title{
+
+    margin:0;
+
+    font-size:32px;
+
+    color:#1e3a8a;
+
+    font-weight:700;
+
+}
+
+.subtitle{
+
+    margin-top:8px;
+
+    color:#64748b;
+
+    font-size:15px;
+
+}
+
+/* ===========================
+   Alert
+=========================== */
+
+.alert{
+
+    margin-bottom:20px;
+
+    padding:16px;
+
+    border-radius:14px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    background:#fff8dc;
+
+    color:#92400e;
+
+    border:1px solid #fde68a;
+
+}
+
+/* ===========================
+   معلومات الفرع
+=========================== */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+}
+
+.info-card{
+
+    background:#f8fafc;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:18px;
+
+    padding:18px;
+
+}
+
+.info-label{
+
+    color:#64748b;
+
+    font-size:14px;
+
+    margin-bottom:10px;
+
+}
+
+.info-value{
+
+    font-size:22px;
+
+    color:#0f172a;
+
+    font-weight:700;
+
+}
+
+.date-input{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    border:1px solid #cbd5e1;
+
+    font-size:16px;
+
+    background:white;
+
+}
+
+.date-input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+/* ===========================
+   Section
+=========================== */
+
+.section-title{
+
+    font-size:22px;
+
+    color:#1e293b;
+
+    font-weight:700;
+
+    margin:35px 0 20px;
+
+}
+/* ==========================================
+   Stats Cards
+========================================== */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+
+    margin-bottom:30px;
+
+}
+
+.stat-card{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    border:1px solid #e2e8f0;
+
+    padding:25px;
+
+    text-align:center;
+
+    transition:.3s;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.stat-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:5px;
+
+    background:#2563eb;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 35px rgba(37,99,235,.12);
+
+}
+
+.stat-icon{
+
+    font-size:42px;
+
+    margin-bottom:15px;
+
+}
+
+.stat-title{
+
+    color:#64748b;
+
+    font-size:15px;
+
+    margin-bottom:12px;
+
+}
+
+.stat-value{
+
+    font-size:36px;
+
+    font-weight:700;
+
+    color:#2563eb;
+
+}
+
+.stat-note{
+
+    margin-top:10px;
+
+    color:#94a3b8;
+
+    font-size:13px;
+
+}
+
+/* ==========================================
+   Progress
+========================================== */
+
+.progress{
+
+    margin-top:20px;
+
+    height:12px;
+
+    background:#e2e8f0;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+}
+
+.progress-bar{
+
+    height:100%;
+
+    width:0;
+
+    background:linear-gradient(90deg,#10b981,#22c55e);
+
+    transition:width .5s ease;
+
+}
+
+/* ==========================================
+   Form
+========================================== */
+
+.form-card{
+
+    background:#f8fafc;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    border:1px solid #e2e8f0;
+
+}
+
+.form-group{
+
+    margin-bottom:22px;
+
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#334155;
+
+}
+
+.form-group small{
+
+    display:block;
+
+    margin-top:8px;
+
+    color:#64748b;
+
+}
+
+.input{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    border:1px solid #cbd5e1;
+
+    border-radius:12px;
+
+    padding:13px;
+
+    font-size:17px;
+
+    transition:.3s;
+
+    background:white;
+
+}
+
+.input:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+
+.readonly{
+
+    background:#eef2f7;
+
+    color:#334155;
+
+    cursor:not-allowed;
+
+    font-weight:bold;
+
+}
+
+.textarea{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    min-height:120px;
+
+    resize:vertical;
+
+    border-radius:12px;
+
+    border:1px solid #cbd5e1;
+
+    padding:13px;
+
+    font-size:16px;
+
+}
+
+.textarea:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+
+}
+/* =====================================
+   زر الحفظ
+===================================== */
+
+.btn-save{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    color:white;
+
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+    transition:.3s;
+
+}
+
+.btn-save:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 15px 30px rgba(37,99,235,.25);
+
+}
+
+.btn-save:disabled{
+
+    cursor:not-allowed;
+
+    background:#94a3b8;
+
+    transform:none;
+
+    box-shadow:none;
+
+}
+
+/* =====================================
+   لا يوجد تارجت
+===================================== */
+
+.empty-box{
+
+    margin-top:30px;
+
+    padding:35px;
+
+    text-align:center;
+
+    border:2px dashed #cbd5e1;
+
+    border-radius:18px;
+
+    background:#f8fafc;
+
+}
+
+.empty-icon{
+
+    font-size:50px;
+
+    margin-bottom:15px;
+
+}
+
+.empty-title{
+
+    font-size:22px;
+
+    color:#1e293b;
+
+    font-weight:bold;
+
+}
+
+.empty-text{
+
+    margin-top:10px;
+
+    color:#64748b;
+
+    font-size:16px;
+
+}
+
+/* =====================================
+   Responsive
+===================================== */
+
+@media(max-width:768px){
+
+.page-container{
+
+padding:15px;
+
+}
+
+.card{
+
+padding:20px;
+
+}
+
+.title{
+
+font-size:26px;
+
+}
+
+.subtitle{
+
+font-size:14px;
+
+}
+
+.stat-value{
+
+font-size:28px;
+
+}
+
+.info-value{
+
+font-size:18px;
+
+}
+
+.btn-save{
+
+font-size:17px;
+
+}
+
+}
+.toast-inline {
+  background: #1e293b;
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  margin: 20px auto;        /* يخليه في النص */
+  text-align: center;
+  width: fit-content;
+  max-width: 90%;
+  display: block;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+
+
+
+
+
+@media (max-width: 600px) {
+  .toast {
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    text-align: center;
+  }
+}

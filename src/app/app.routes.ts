@@ -239,7 +239,7 @@ export const routes: Routes = [
             .then(m => m.GeneralManagementComponent)
         },
       
-
+        
 
         {
             path: 'general-management/users',
@@ -314,6 +314,28 @@ export const routes: Routes = [
               import('./features/admin/authorization/role-permissions/role-permissions.component')
                 .then(m => m.RolePermissionsComponent)
           },
+              // 📌 شاشة التارجت اليومي (Season)
+        {
+          path: 'branches/daily-target/season',
+          loadComponent: () =>
+            import('./core/features/branches/daily-target/daily-target-season/daily-target-season.component')
+              .then(m => m.DailyTargetSeasonComponent)
+        },
+
+
+          {
+          path: 'reports/branch-daily-target/season',
+          loadComponent: () =>
+            import('./features/reports/branch-daily-target-season-report/branch-daily-target-season-report.component')
+              .then(m => m.BranchDailyTargetSeasonReportComponent)
+        },
+        {
+          path: 'reports/branch-daily-target/season/result',
+          loadComponent: () =>
+            import('./features/reports/branch-daily-target-season-report-result/branch-daily-target-season-report-result.component')
+              .then(m => m.BranchDailyTargetSeasonReportResultComponent)
+        },
+
           {
           path: 'bank-transfer-request/create',
           loadComponent: () =>

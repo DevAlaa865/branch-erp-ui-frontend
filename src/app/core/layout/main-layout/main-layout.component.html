@@ -29,11 +29,15 @@
       <li *hasPermission="['Permissions.Manage', 'Returns.View']" [routerLink]="['/bank-transfer-request/create']" class="nav-link">نموذج</li>
       <li *hasPermission="['GeneralManagement.View']" [routerLink]="['/revenue-management/branch-daily-summary']" class="nav-link">يوميه مبيعات الفروع</li>
       <li *hasPermission="['GeneralManagement.View']"  [routerLink]="['/revenue-management/branch-sales-daily-list']" class="nav-link">بحث اليوميه برقم الفرع</li>
-      <li *hasPermission="['Permissions.Manage', 'Returns.View','Countries.Create']"  [routerLink]="['/bank-transfer-request/list']" class="nav-link">ادارة الطلبات البنكيه</li>
+      <li *hasPermission="['Permissions.Manage', 'Returns.View','Countries.Create','Customer.Query']"  [routerLink]="['/bank-transfer-request/list']" class="nav-link">ادارة الطلبات البنكيه</li>
       <li *hasPermission="['Permissions.Manage','create.Voucher','Discounts.View']"  [routerLink]="['cash-management']" class="nav-link">ادارة الصناديق</li>
-      <li *hasPermission="['Permissions.Manage']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
+<!--       <li *hasPermission="['Permissions.Manage','target.daily']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
+ -->      <li *hasPermission="['Permissions.Manage','target.daily']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
+      <li *hasPermission="['Permissions.Manage','target.daily']"  [routerLink]="['reports/branch-daily-target/season']" class="nav-link">تقرير نسبه الانجاز اليومى</li>
+
+         
       <li>
-        
+         
 <button
   *hasPermission="['Permissions.Manage']"
   (click)="toggleExpiry()"

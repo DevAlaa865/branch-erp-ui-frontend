@@ -1,0 +1,312 @@
+<div class="page-container">
+
+
+  <div class="card">
+
+    <div class="page-header">
+
+      <div>
+
+        <h2 class="title">
+          🎯 التارجت اليومي
+        </h2>
+
+        <p class="subtitle">
+          متابعة تحقيق التارجت اليومي للفرع
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- رسالة -->
+
+    <div
+      *ngIf="showMessage"
+      class="alert">
+
+      {{message}}
+
+    </div>
+
+    <!-- بيانات الفرع -->
+
+    <div class="info-grid">
+
+      <!-- الفرع -->
+
+      <div class="info-card">
+
+        <div class="info-label">
+
+          🏢 الفرع
+
+        </div>
+
+        <div class="info-value">
+
+          {{branchName}}
+
+        </div>
+
+      </div>
+
+      <!-- التاريخ -->
+
+      <div class="info-card">
+
+        <div class="info-label">
+
+          📅 التاريخ
+
+        </div>
+
+        <input
+
+          type="date"
+
+          class="date-input text-blue-500 font-bold"
+          
+          [(ngModel)]="selectedDate"
+
+          (change)="onDateChange()">
+
+      </div>
+
+    </div>
+
+    <!-- التارجت -->
+
+    <div class="section-title">
+
+      بيانات التارجت
+
+    </div>
+    <!-- كروت الإحصائيات -->
+
+<div class="stats-grid">
+
+  <!-- التارجت -->
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+
+      🎯
+
+    </div>
+
+    <div class="stat-title">
+
+      التارجت اليومى
+
+    </div>
+
+    <div class="stat-value">
+
+      {{data.dailyTargetAmount || 0 | number}}
+
+    </div>
+
+    <div class="stat-note">
+
+      يتم رفعه بواسطة الإدارة
+
+    </div>
+
+  </div>
+
+  <!-- نسبة الإنجاز -->
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+
+      📈
+
+    </div>
+
+    <div class="stat-title">
+
+      نسبة الإنجاز
+
+    </div>
+
+    <div class="stat-value">
+
+      {{calcPercentage() | number:'1.0-2'}} %
+
+    </div>
+
+    <!-- Progress -->
+
+    <div class="progress">
+
+      <div
+
+        class="progress-bar"
+
+        [style.width.%]="getProgressWidth()">
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ================================= -->
+
+<div class="section-title">
+
+إدخال البيانات
+
+</div>
+
+<div class="form-card">
+
+  <!-- التارجت -->
+
+  <div class="form-group">
+
+    <label>
+
+      🎯 التارجت
+
+    </label>
+
+    <input
+
+      class="input readonly"
+
+      [value]="data.dailyTargetAmount || 0"
+
+      readonly>
+
+  </div>
+  <!-- المتحقق -->
+
+  <div class="form-group">
+
+    <label>
+
+      💰 المتحقق الفعلى
+
+    </label>
+
+    <input
+
+      type="number"
+
+      class="input text-blue-500 font-bold"
+
+      [(ngModel)]="data.achievedAmount"
+
+      placeholder="أدخل المتحقق الفعلى"
+
+       [disabled]="!hasTarget || isAchievedLocked">
+
+    <small>
+
+      هذا هو الحقل الوحيد الذى يتم إدخاله.
+
+    </small>
+
+  </div>
+
+  <!-- نسبة الإنجاز -->
+
+  <div class="form-group">
+
+    <label>
+
+      📊 نسبة الإنجاز
+
+    </label>
+
+    <input
+
+      class="input readonly"
+
+      [value]="calcPercentage() | number:'1.0-2'"
+
+      readonly>
+
+  </div>
+
+    <!-- الملاحظات -->
+
+  <div class="form-group">
+
+    <label>
+
+      📝 ملاحظات
+
+    </label>
+
+    <textarea
+
+      class="textarea"
+
+      [(ngModel)]="data.notes"
+
+      [disabled]="!hasTarget"
+
+      placeholder="اكتب أى ملاحظات إن وجدت">
+
+    </textarea>
+
+  </div>
+<div *ngIf="showToast" class="toast-inline">
+  {{ toastMessage }}
+</div>
+  <!-- حفظ -->
+
+  <button
+
+    class="btn-save"
+
+    (click)="save()"
+
+    [disabled]="!hasTarget">
+
+    💾 حفظ البيانات
+
+  </button>
+
+</div>
+
+<!-- ================================= -->
+
+<!-- رسالة عدم وجود تارجت -->
+
+<div
+
+  class="empty-box"
+
+  *ngIf="!hasTarget">
+
+  <div class="empty-icon">
+
+    ⚠️
+
+  </div>
+
+  <div class="empty-title">
+
+    لا يوجد تارجت لهذا اليوم
+
+  </div>
+
+  <div class="empty-text">
+
+    لم يتم رفع تارجت لهذا الفرع فى التاريخ المحدد.
+
+  </div>
+
+</div>
+
+</div>
+
+</div>

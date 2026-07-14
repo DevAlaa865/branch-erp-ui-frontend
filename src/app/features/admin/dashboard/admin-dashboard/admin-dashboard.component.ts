@@ -36,6 +36,10 @@ export class AdminDashboardComponent implements OnInit {
   opendailySales() {
     this.router.navigate(['/branches/daily-sales']);
   }
+ opendailytargetBranch() {
+    this.router.navigate(['/branches/daily-target/season']);
+  }
+ 
   openReportOfSales()
   {
       this.router.navigate(['/reports/city-branch-sales-summary']);

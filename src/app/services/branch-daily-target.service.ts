@@ -1,64 +1,32 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { API_BASE_URL } from '../api.config';
-import { BranchDailyTargetHeaderCreateUpdateDto, BranchTargetPeriodReport } from '../shared/models/branch-target-period-report.model';
-
+import { 
+  BranchDailyTargetSeasonExcelUploadDto,
+  BranchDailyTargetSeasonDto,
+  BranchDailyTargetSeasonUpdateDto
+} from '../shared/models/branch-daily-target-season.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BranchDailyTargetService {
+export class BranchDailyTargetSeasonService {
 
-  private baseUrl = `${API_BASE_URL}/BranchDailyTarget`;
+  private baseUrl = `${API_BASE_URL}/BranchDailyTargetSeason`;
 
   constructor(private http: HttpClient) {}
-  // رفع ملف الإكسل
-importExcel(file: File): Observable<any> {
-  const formData = new FormData();
-  formData.append('file', file);
-  return this.http.post<any>(`${this.baseUrl}/import-excel`, formData);
+
+  uploadExcel(data: BranchDailyTargetSeasonExcelUploadDto) {
+    return this.http.post(`${this.baseUrl}/upload-excel`, data);
+  }
+
+getDailyTarget(branchId: number, date: string) {
+  return this.http.get<BranchDailyTargetSeasonDto | null>(
+    `${this.baseUrl}/daily-target?branchId=${branchId}&date=${date}`
+  );
 }
 
-// جلب تارجت اليوم للفرع
-getTodayTarget(branchId: number): Observable<any> {
-  return this.http.get<any>(`${this.baseUrl}/today-target/${branchId}`);
-}
-
-
-  getById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  updateTarget(dto: BranchDailyTargetSeasonUpdateDto) {
+    return this.http.put(`${this.baseUrl}/update`, dto);
   }
-
-  getByBranchAndDate(branchId: number, date: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/by-branch-date`, {
-      params: {
-        branchId: branchId.toString(),
-        date
-      }
-    });
-  }
-
-  create(model: BranchDailyTargetHeaderCreateUpdateDto): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}`, model);
-  }
-
-  update(id: number, model: BranchDailyTargetHeaderCreateUpdateDto): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}/${id}`, model);
-  }
-
-  delete(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${id}`);
-  }
-
-getBranchPeriodReport(branchId: number, fromDate: string, toDate: string) {
-  return this.http.get(`${this.baseUrl}/branch-period-report`, {
-    params: {
-      branchId,
-      fromDate,
-      toDate
-    }
-  });
-}
-
 }
