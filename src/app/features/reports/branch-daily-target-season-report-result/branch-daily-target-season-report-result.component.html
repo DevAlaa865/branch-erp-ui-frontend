@@ -81,6 +81,28 @@
     </div>
 
   </div>
+  <!-- Pagination -->
+<div class="flex justify-center items-center gap-4 p-4">
+
+  <button
+    (click)="previousPage()"
+    [disabled]="currentPage === 1"
+    class="px-4 py-2 bg-slate-300 text-blue-800 font-bold hover:bg-slate-400 rounded disabled:opacity-50">
+    ⬅️ السابق
+  </button>
+
+  <span class="text-slate-700 font-semibold">
+    صفحة {{ currentPage }} من {{ totalPages }}
+  </span>
+
+  <button
+    (click)="nextPage()"
+    [disabled]="currentPage === totalPages"
+    class="px-4 py-2 bg-slate-300 text-blue-800 font-bold hover:bg-slate-400 rounded disabled:opacity-50">
+    التالي ➡️
+  </button>
+
+</div>
 
   <!-- فوتر -->
   <div class="text-center mt-6 text-slate-500 text-sm animate-[fadeIn_1s_ease]">

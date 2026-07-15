@@ -50,4 +50,5 @@ export interface BranchDailyTargetSeasonChartDto {
   achievementPercentage: number;
   branchId: number;
   branchName: string;
+  
 }

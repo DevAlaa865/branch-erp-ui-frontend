@@ -335,7 +335,12 @@ export const routes: Routes = [
             import('./features/reports/branch-daily-target-season-report-result/branch-daily-target-season-report-result.component')
               .then(m => m.BranchDailyTargetSeasonReportResultComponent)
         },
-
+          {
+        path: 'reports/branch-daily-target/season/chart',
+        loadComponent: () =>
+          import('./features/reports/branch-daily-target-season-chart/branch-daily-target-season-chart.component')
+          .then(m => m.BranchDailyTargetSeasonChartComponent)
+         },
           {
           path: 'bank-transfer-request/create',
           loadComponent: () =>

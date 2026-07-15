@@ -14,6 +14,31 @@ export class BranchDailyTargetSeasonReportResultComponent implements OnInit {
 
   reportData: any[] = [];
 
+  // 🔥 الباجينيشن
+  currentPage = 1;
+  pageSize = 10;
+
+  get paginatedData() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.reportData.slice(start, start + this.pageSize);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.reportData.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
   constructor(
     private route: ActivatedRoute,
     private reportService: BranchDailyTargetSeasonReportService

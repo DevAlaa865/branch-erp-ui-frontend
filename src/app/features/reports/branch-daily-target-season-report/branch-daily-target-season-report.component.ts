@@ -16,7 +16,7 @@ import { CustomSelectComponent } from '../../../shared/custom-select/custom-sele
 export class BranchDailyTargetSeasonReportComponent implements OnInit {
 
   filterForm!: FormGroup;
-
+ 
   regions: any[] = [];
   cities: any[] = [];
   branches: any[] = [];
@@ -106,7 +106,7 @@ submit() {
   window.open(`/reports/branch-daily-target/season/result?${query}`, '_blank');
 }
 openChartWindow() {
-  /* const raw = this.filterForm.value;
+  const raw = this.filterForm.value;
 
   const query = new URLSearchParams({
     fromDate: raw.fromDate,
@@ -115,8 +115,9 @@ openChartWindow() {
     branchIds: raw.branchId ? raw.branchId.toString() : ''
   }).toString();
 
-  window.open(`/reports/branch-daily-target/season/chart?${query}`, '_blank'); */
+  window.open(`/reports/branch-daily-target/season/chart?${query}`, '_blank');
 }
+
 
 
 }
