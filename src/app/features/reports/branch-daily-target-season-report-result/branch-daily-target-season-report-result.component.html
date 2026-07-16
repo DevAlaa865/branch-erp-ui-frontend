@@ -177,15 +177,19 @@
     المتبقي لتحقيق الهدف:
   </p>
 
-  <p class="text-red-900 text-2xl font-bold">
-    {{
-      (selectedSlides[currentSlideIndex].totalTargetAmount -
-       selectedSlides[currentSlideIndex].totalAchievedAmount) > 0
-        ? (selectedSlides[currentSlideIndex].totalTargetAmount -
-           selectedSlides[currentSlideIndex].totalAchievedAmount)
-        : 0
-     | number:'1.0-2' }}
-  </p>
+ <p class="text-red-900 text-2xl font-bold">
+  {{
+    (
+      selectedSlides[currentSlideIndex].totalTargetAmount -
+      selectedSlides[currentSlideIndex].totalAchievedAmount
+    ) > 0
+      ? (
+          selectedSlides[currentSlideIndex].totalTargetAmount -
+          selectedSlides[currentSlideIndex].totalAchievedAmount
+        ).toFixed(2)
+      : 0
+  }}
+</p>
 </div>
 
 
