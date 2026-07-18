@@ -14,6 +14,7 @@ import { ModuleRegistry } from 'ag-grid-community';
 import { AllCommunityModule } from 'ag-grid-community';
 import 'ag-grid-enterprise';
 import { AgGridModule } from 'ag-grid-angular';
+import { HasPermissionDirective } from '../../../../core/directives/has-permission.directive';
 
 // 🔥 تسجيل كل Modules المطلوبة
 ModuleRegistry.registerModules([
@@ -24,7 +25,7 @@ ModuleRegistry.registerModules([
 @Component({
   selector: 'app-result',
   standalone: true,
-  imports: [CommonModule,AgGridModule],
+  imports: [CommonModule,AgGridModule,HasPermissionDirective],
   templateUrl: './result.component.html',
   styleUrls: ['./result.component.css']
 })

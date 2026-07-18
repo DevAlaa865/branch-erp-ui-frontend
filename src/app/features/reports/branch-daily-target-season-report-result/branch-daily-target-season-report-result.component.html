@@ -67,12 +67,27 @@
 
 
   <!-- زر عرض النتائج -->
+<div class="flex justify-end gap-3 mb-6">
+
   <button
     (click)="applyFilters()"
-    class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 mb-6">
+    class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
     عرض النتائج
   </button>
 
+  <button
+    (click)="exportExcel()"
+    class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700">
+    📥 تصدير Excel
+  </button>
+
+  <button
+    (click)="exportPDF()"
+    class="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
+    📄 تصدير PDF
+  </button>
+
+</div>
   <!-- أزرار السلايدز -->
   <div class="flex gap-4 mb-6">
 

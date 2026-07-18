@@ -57,14 +57,17 @@
   </div>
 
   <!-- زرار التوجل -->
+ 
   <button (click)="toggleFilters()"
+    *hasPermission="['Permissions.Manage','sales.Security']" 
           class="px-3 py-1 bg-blue-600 text-white rounded">
     {{ showFilters ? 'إخفاء الفلاتر' : 'إظهار الفلاتر' }}
   </button>
 
   <!-- الملخص السفلي (يظهر فقط عند إظهار الفلاتر) -->
-  <div *ngIf="showFilters" class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-4">
-
+   <ng-container *hasPermission="['Permissions.Manage','sales.Security']">
+  <div 
+      *ngIf="showFilters" class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-4"  >
     <div class="bg-blue-50 p-4 rounded-xl">
       <div class="text-blue-900 font-bold">صافي البيع</div>
       <div class="font-bold text-blue-700">
@@ -108,7 +111,7 @@
     </div>
 
   </div>
-
+</ng-container>
   <!-- =============================== -->
   <!-- 🔥 ag-Grid (فلترة من الهيدر) -->
   <!-- =============================== -->
