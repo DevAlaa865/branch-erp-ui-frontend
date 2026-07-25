@@ -1,0 +1,81 @@
+<div class="card shadow-lg rounded-3 border-0 p-4 bg-white">
+
+  <h3 class="mb-4 text-blue-900 fw-bold">
+    🎯 تارجت الموظفات (Season)
+  </h3>
+
+  <!-- اختيار الشيفت -->
+  <div class="mb-4">
+    <label class="fw-bold text-gray-700 mb-2 d-block">اختيار الشيفت</label>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="radio" name="shiftType"
+             value="1" (change)="onShiftSelect(1)">
+      <label class="form-check-label fw-semibold text-blue-800">
+        🌅 شيفت صباحي
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="shiftType"
+             value="2" (change)="onShiftSelect(2)">
+      <label class="form-check-label fw-semibold text-blue-800">
+        🌙 شيفت مسائي
+      </label>
+    </div>
+  </div>
+
+  <!-- لو الهيدر موجود -->
+  <div *ngIf="header" class="animate__animated animate__fadeIn">
+
+    <!-- بيانات الهيدر (تفضل ظاهرة دائمًا) -->
+    <div class="bg-blue-50 p-3 rounded-3 mb-4 border-start border-4 border-blue-600">
+      <p class="mb-1 text-blue-900 font-bold"><strong>📅 التاريخ:</strong> {{ header.targetDate | date }}</p>
+      <p class="mb-1 text-blue-900 font-bold"><strong>🕒 الشيفت:</strong> {{ header.shiftType === 1 ? 'صباحي' : 'مسائي' }}</p>
+      <p class="mb-1 text-blue-900 font-bold"><strong>🎯 التارجت الكلي للفرع:</strong> {{ header.totalShiftTargetAmount }}</p>
+      <p class="mb-0 text-blue-900 font-bold"><strong>👥 عدد الموظفات:</strong> {{ header.employeesCount }}</p>
+    </div>
+
+    <!-- نموذج الإدخال -->
+    <form [formGroup]="form">
+
+      <div class="row g-4">
+
+        <!-- اختيار الموظفة -->
+        <div class="col-md-6 text-blue-900 font-bold">
+          <label class="fw-bold text-blue-900 mb-2 font-bold">اختيار الموظفة</label>
+
+        <app-custom-select
+          label="الموظفة"
+          [items]="employees"
+          bindLabel="fullName"
+          bindValue="id"
+          placeholder="اختر الموظفة"
+          [control]="form.controls['employeeId']"
+         (selectionChange)="selectEmployee(form.controls['employeeId'].value)"
+>
+    </app-custom-select>
+
+        </div>
+
+        <!-- التارجت الشخصي -->
+        <div class="col-md-6" *ngIf="personalTargetAmount">
+          <label class="fw-bold text-blue-900 mb-2">🎯 تارجتك الشخصي</label>
+          <div class="form-control bg-green-50 fw-bold text-green-900 border border-success">
+            {{ personalTargetAmount }} ريال
+          </div>
+        </div>
+
+      </div>
+
+      <!-- زر الحفظ -->
+      <button class="btn btn-success w-100 mt-4 py-2 fw-bold fs-5 shadow-sm"
+              (click)="save()">
+        💾 حفظ التارجت
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

@@ -1,0 +1,29 @@
+<div class="upload-card">
+
+  <h2 class="upload-title">📤 رفع ملف التارجت الشهري</h2>
+
+  <p class="upload-subtitle text-purple-500 font-bold">
+    قم برفع ملف Excel الخاص بالتارجت الشهري ليتم معالجته مباشرة.
+  </p>
+
+  <div class="upload-input-wrapper">
+    <input 
+      type="file" 
+      class="upload-input text-blue-500 font-bold"
+      (change)="onFileSelected($event)"
+    />
+  </div>
+
+  <button
+    (click)="upload()"
+    [disabled]="!selectedFile"
+    class="upload-btn"
+  >
+    رفع الملف
+  </button>
+
+  <p *ngIf="message" class="upload-message">
+    {{ message }}
+  </p>
+
+</div>

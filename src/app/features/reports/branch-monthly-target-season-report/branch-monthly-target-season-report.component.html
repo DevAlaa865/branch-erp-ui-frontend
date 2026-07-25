@@ -1,0 +1,71 @@
+<div class="bg-slate-100 border border-slate-300 rounded-2xl p-6 shadow-md">
+
+  <h2 class="text-xl font-bold text-slate-800 mb-6">
+    تقرير التارجت الشهري - Season
+  </h2>
+
+  <form [formGroup]="filterForm"
+        (ngSubmit)="submit()"
+        class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end text-blue-800">
+
+    <!-- الشهر -->
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">الشهر</label>
+      <select formControlName="month"
+              class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 shadow-sm">
+        <option *ngFor="let m of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="m">
+          {{ m }}
+        </option>
+      </select>
+    </div>
+
+    <!-- السنة -->
+    <div>
+      <label class="block text-sm font-medium text-slate-700 mb-1">السنة</label>
+      <input type="number"
+             formControlName="year"
+             class="w-full bg-white border border-blue-300 rounded-lg px-3 py-2 shadow-sm">
+    </div>
+
+    <!-- المدن -->
+    <div>
+      <app-custom-select
+        label="المدينة"
+        [items]="filteredCities"
+        bindLabel="label"
+        bindValue="id"
+        placeholder="اختر المدينة"
+        [control]="filterForm.get('cityId')"
+        [multiple]="true"
+        [searchable]="true"
+        [clearable]="true"
+        dropdownPosition="bottom">
+      </app-custom-select>
+    </div>
+
+    <!-- الفروع -->
+    <div>
+      <app-custom-select
+        label="الفرع"
+        [items]="filteredBranches"
+        bindLabel="label"
+        bindValue="id"
+        placeholder="اختر الفرع"
+        [control]="filterForm.get('branchId')"
+        [searchable]="true"
+        [clearable]="true"
+        dropdownPosition="bottom">
+      </app-custom-select>
+    </div>
+
+    <!-- زر عرض التقرير -->
+    <div class="lg:col-span-5 flex justify-end mt-4">
+      <button type="submit"
+              class="bg-indigo-600 m-1 hover:bg-indigo-700 text-white px-8 py-2.5 rounded-lg shadow-md transition">
+        🔍 عرض التقرير
+      </button>
+    </div>
+
+  </form>
+
+</div>

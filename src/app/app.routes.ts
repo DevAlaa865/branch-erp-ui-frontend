@@ -541,6 +541,13 @@ export const routes: Routes = [
             .then(m => m.DailyTargetUploadComponent)
       },
       {
+        path: 'branches/monthly-target-upload',
+        loadComponent: () =>
+          import('./core/features/branches/daily-target/monthly-target-upload/monthly-target-upload.component')
+            .then(m => m.MonthlyTargetUploadComponent)
+      },
+
+      {
       path: 'branch-targets',
       loadComponent: () =>
         import('./features/branches/daily-target/branch-target-list/branch-target-list.component')
@@ -582,6 +589,48 @@ export const routes: Routes = [
         import('./features/branches/daily-performance-target-upload/daily-performance-target-upload.component')
           .then(m => m.DailyPerformanceTargetUploadComponent)
       },
+        {
+        path: 'branches/daily-target/employee-target-season/upload',
+        loadComponent: () =>
+          import('./core/features/branches/daily-target/employee-target-season-upload/employee-target-season-upload.component')
+            .then(m => m.EmployeeTargetSeasonUploadComponent)
+      },
+
+      {
+      path: 'branches/daily-target/employee-target-season/headers',
+      loadComponent: () =>
+        import('./core/features/branches/daily-target/employee-target-season/employee-target-season-headers/employee-target-season-headers.component')
+          .then(m => m.EmployeeTargetSeasonHeadersComponent)
+    },
+    {
+      path: 'branches/daily-target/employee-target-season/achievement',
+      loadComponent: () =>
+        import('./core/features/branches/daily-target/employee-target-season/employee-target-season-achievement/employee-target-season-achievement.component')
+          .then(m => m.EmployeeTargetSeasonAchievementComponent)
+    },
+
+
+      {
+      path: 'branches/daily-target/employee-target-season/personal-target',
+      loadComponent: () =>
+        import('./core/features/branches/daily-target/employee-target-season/employee-target-season-personal-target/employee-target-season-personal-target.component')
+          .then(m => m.EmployeeTargetSeasonPersonalTargetComponent)
+    },
+
+
+      {
+        path: 'reports/branch-monthly-target-season',
+        loadComponent: () =>
+          import('./features/reports/branch-monthly-target-season-report/branch-monthly-target-season-report.component')
+            .then(m => m.BranchMonthlyTargetSeasonReportComponent)
+      },
+      {
+        path: 'reports/branch-monthly-target-season/result',
+        loadComponent: () =>
+          import('./features/reports/branch-monthly-target-season-result/branch-monthly-target-season-report-result.component')
+            .then(m => m.BranchMonthlyTargetSeasonReportResultComponent)
+      },
+
       {
         path: 'branches/daily-performance',
         loadComponent: () =>

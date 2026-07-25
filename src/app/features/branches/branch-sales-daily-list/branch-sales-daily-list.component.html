@@ -90,7 +90,7 @@
 
         <td class="border p-2 text-center">
           <div class="flex justify-center gap-2">
-            <button  *hasPermission="['Permissions.Manage', 'Cities.Edit']"   (click)="edit(row)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
+            <button  *hasPermission="['Permissions.Manage', 'Cities.Edit','GeneralManagement.View']"   (click)="edit(row)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs">
               تعديل
             </button>
             <button (click)="details(row.id)" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-xs">

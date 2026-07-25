@@ -3,11 +3,12 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BranchDailyDetailReportResponse } from '../../../../shared/models/branch-daily-details-report.model';
 import { BranchDailyDetailsReportService } from '../../../../services/reports/branch-daily-details-report.service';
 import { CommonModule } from '@angular/common';
+import { HasPermissionDirective } from '../../../../core/directives/has-permission.directive';
 
 @Component({
   selector: 'app-branch-daily-details',
   standalone: true,
-  imports:[CommonModule],
+  imports:[CommonModule,HasPermissionDirective],
   templateUrl: './branch-daily-details.component.html',
   styleUrls: ['./branch-daily-details.component.scss']
 })

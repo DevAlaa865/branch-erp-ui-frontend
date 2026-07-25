@@ -1,0 +1,41 @@
+<div class="upload-card">
+
+  <h2 class="upload-title">📤 رفع ملف تارجت الموظفات (Season)</h2>
+
+  <p class="upload-subtitle text-purple-500 font-bold">
+    قم برفع ملف Excel الخاص بتارجت الموظفات ليتم معالجته مباشرة.
+  </p>
+
+  <form [formGroup]="form">
+
+    <div class="mb-3">
+      <label class="font-bold text-blue-900 font-bold">نوع الشيفت</label>
+      <select class="form-control" formControlName="shiftType">
+        <option [value]="1">صباحي</option>
+        <option [value]="2">مسائي</option>
+      </select>
+    </div>
+
+    <div class="upload-input-wrapper">
+      <input 
+        type="file" 
+        class="upload-input text-blue-500 font-bold"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+
+    <button
+      (click)="upload()"
+      [disabled]="!selectedFile"
+      class="upload-btn"
+    >
+      رفع الملف
+    </button>
+
+  </form>
+
+  <p *ngIf="message" class="upload-message">
+    {{ message }}
+  </p>
+
+</div>

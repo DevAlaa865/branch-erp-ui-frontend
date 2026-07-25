@@ -1,0 +1,55 @@
+<div class="card p-3">
+
+  <h4 class="mb-3">هيدرز تارجت الموظفات (Season)</h4>
+
+  <div class="row mb-3">
+
+    <div class="col-md-3">
+      <label>رقم الفرع</label>
+      <input type="number" class="form-control" [(ngModel)]="branchId">
+    </div>
+
+    <div class="col-md-3">
+      <label>التاريخ</label>
+      <input type="date" class="form-control" [(ngModel)]="date">
+    </div>
+
+    <div class="col-md-3">
+      <label>نوع الشيفت</label>
+      <select class="form-control" [(ngModel)]="shiftType">
+        <option [value]="1">صباحي</option>
+        <option [value]="2">مسائي</option>
+      </select>
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end">
+      <button class="btn btn-primary w-100" (click)="loadHeaders()">
+        بحث
+      </button>
+    </div>
+
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>الفرع</th>
+        <th>التاريخ</th>
+        <th>الشيفت</th>
+        <th>إجمالي التارجت</th>
+        <th>عدد الموظفات</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let h of headers">
+        <td>{{ h.branchName }}</td>
+        <td>{{ h.targetDate | date }}</td>
+        <td>{{ h.shiftType === 1 ? 'صباحي' : 'مسائي' }}</td>
+        <td>{{ h.totalShiftTargetAmount }}</td>
+        <td>{{ h.employeesCount }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

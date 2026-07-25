@@ -33,7 +33,13 @@
       <li *hasPermission="['Permissions.Manage','create.Voucher','Discounts.View']"  [routerLink]="['cash-management']" class="nav-link">ادارة الصناديق</li>
 <!--       <li *hasPermission="['Permissions.Manage','target.daily']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
  -->      <li *hasPermission="['Permissions.Manage','target.daily']"  [routerLink]="['branches/daily-target-upload']" class="nav-link">رفع التارجت اليومى للفروع</li>
-      <li *hasPermission="['Permissions.Manage','target.daily','Target.Report']"  [routerLink]="['reports/branch-daily-target/season']" class="nav-link">تقرير نسبه الانجاز اليومى</li>
+     <li *hasPermission="['Permissions.Manage']"  [routerLink]="['branches/monthly-target-upload']" class="nav-link">رفع التارجت الشهري للفروع</li>
+<!-- ,'target.daily' -->
+ <li *hasPermission="['Permissions.Manage','target.daily','Target.Report']"  [routerLink]="['reports/branch-daily-target/season']" class="nav-link">تقرير نسبه الانجاز اليومى</li>
+ <li *hasPermission="['Permissions.Manage']"  [routerLink]="['reports/branch-monthly-target-season']" class="nav-link">تقرير نسبه الانجاز الشهري</li>
+<!--  ,'target.daily','Target.Report' -->
+ <li *hasPermission="['Permissions.Manage']"  [routerLink]="['branches/daily-target/employee-target-season/upload']" class="nav-link">رفع تارجت الموظفات اليومي</li>
+
 
          
       <li>

@@ -1,0 +1,180 @@
+<div class="card shadow-lg rounded-3 border-0 p-4 bg-white">
+
+    <h3 class="mb-4 text-blue-900 fw-bold">
+        🎯 إدخال المتحقق (Season)
+    </h3>
+
+    <!-- اختيار الشيفت -->
+
+    <div class="mb-4">
+
+        <label class="fw-bold text-gray-700 mb-2 d-block">
+            اختيار الشيفت
+        </label>
+
+        <div class="form-check mb-2">
+
+            <input
+                class="form-check-input"
+                type="radio"
+                name="shiftType"
+                (change)="onShiftSelect(1)">
+
+            <label class="form-check-label fw-semibold">
+
+                🌅 شيفت صباحى
+
+            </label>
+
+        </div>
+
+        <div class="form-check">
+
+            <input
+                class="form-check-input"
+                type="radio"
+                name="shiftType"
+                (change)="onShiftSelect(2)">
+
+            <label class="form-check-label fw-semibold">
+
+                🌙 شيفت مسائى
+
+            </label>
+
+        </div>
+
+    </div>
+
+    <!-- بيانات الهيدر -->
+
+    <div
+        *ngIf="header"
+        class="bg-blue-50 rounded-3 p-3 mb-4 border-start border-4 border-primary">
+
+        <p class="mb-1">
+
+            <strong>📅 التاريخ :</strong>
+
+            {{header.targetDate | date}}
+
+        </p>
+
+        <p class="mb-1">
+
+            <strong>🕒 الشيفت :</strong>
+
+            {{header.shiftType==1?'صباحى':'مسائى'}}
+
+        </p>
+
+        <p class="mb-1">
+
+            <strong>🎯 تارجت الشيفت :</strong>
+
+            {{header.totalShiftTargetAmount}}
+
+        </p>
+
+        <p class="mb-0">
+
+            <strong>👥 عدد الموظفات :</strong>
+
+            {{header.employeesCount}}
+
+        </p>
+
+    </div>
+
+    <form
+        [formGroup]="form"
+        *ngIf="header">
+
+        <div class="row">
+
+            <div class="col-md-6">
+
+                <label class="fw-bold mb-2">
+
+                    الموظفة
+
+                </label>
+
+                <app-custom-select
+
+                    [items]="personalTargets"
+
+                    bindLabel="employeeName"
+
+                    bindValue="id"
+
+                    placeholder="اختر الموظفة"
+
+                    [control]="form.controls['employeePersonalTargetId']"
+
+                    (selectionChange)="onSelectTarget($event)">
+
+                </app-custom-select>
+
+            </div>
+
+            <div
+                class="col-md-6"
+                *ngIf="selectedTarget">
+
+                <label class="fw-bold mb-2">
+
+                    التارجت الشخصى
+
+                </label>
+
+                <div
+                    class="form-control bg-success-subtle fw-bold">
+
+                    {{selectedTarget.personalTargetAmount}}
+
+                    ريال
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="row mt-4">
+
+            <div class="col-md-6">
+
+                <label class="fw-bold mb-2">
+
+                    المتحقق
+
+                </label>
+
+                <input
+
+                    type="number"
+
+                    class="form-control"
+
+                    formControlName="achievedAmount">
+
+            </div>
+
+        </div>
+
+        <button
+
+            type="button"
+
+            class="btn btn-success w-100 mt-4"
+
+            (click)="save()">
+
+            💾 حفظ المتحقق
+
+        </button>
+
+    </form>
+
+</div>
